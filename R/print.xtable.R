@@ -1,8 +1,8 @@
-### xtable 1.2-2  (2003/12/10)
+### xtable 1.2-3  (2004/05/07)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2003 David B. Dahl <dbdahl@stat.wisc.edu>
+### Copyright 2000-2004 David B. Dahl <dbdahl@stat.wisc.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -116,12 +116,12 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
     ETH <- " </TH> "
     STH <- " </TH> <TH> "
     PHEADER <- ""
-    BTD1 <- " <TD align="
+    BTD1 <- " <TD align=\""
     BTD2 <- matrix(attr(x,"align"),nrow=nrow(x),ncol=ncol(x)+1,byrow=TRUE)
     BTD2[BTD2=="r"] <- "right"
     BTD2[BTD2=="l"] <- "left"
     BTD2[BTD2=="c"] <- "center"
-    BTD3 <- "> "
+    BTD3 <- "\"> "
     ETD  <- " </TD>"
     sanitize <- function(str) {
       result <- str
@@ -139,7 +139,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.2-2 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.2-3 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
   result <- result + BENVIRONMENT

@@ -179,7 +179,7 @@ glm.D93 <- glm(counts ~ outcome + treatment, family=poisson())
 print(xtable(glm.D93))
 print(xtable(anova(glm.D93)))
 
-if(require(mva,quietly=TRUE)) {
+if(require(stats,quietly=TRUE)) {
   ## Demonstrate prcomp
   ## Taken from help(prcomp) in mva package of R 1.1.1
   data(USArrests)
@@ -216,7 +216,7 @@ if(require(mva,quietly=TRUE)) {
     print(xtable(anova(lm.D9)),type=i,file=outFileName,append=TRUE)
     print(xtable(glm.D93),type=i,file=outFileName,append=TRUE)
     print(xtable(anova(glm.D93,test="Chisq")),type=i,file=outFileName,append=TRUE)
-    if(require(mva,quietly=TRUE)) {
+    if(require(stats,quietly=TRUE)) {
       print(xtable(pr1),type=i,file=outFileName,append=TRUE)
       print(xtable(summary(pr1)),type=i,file=outFileName,append=TRUE)
 #      print(xtable(pr2),type=i,file=outFileName,append=TRUE)
