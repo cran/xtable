@@ -1,0 +1,167 @@
+### xtable 1.0-1  (2000/12/12)
+###
+### Produce LaTeX and HTML tables from R objects.
+###
+### Copyright 2000 David B. Dahl <dbdahl@stat.wisc.edu>
+###
+### This file is part of the `xtable' library for R and related languages.
+### It is made available under the terms of the GNU General Public
+### License, version 2, or at your option, any later version,
+### incorporated herein by reference.
+### 
+### This program is distributed in the hope that it will be
+### useful, but WITHOUT ANY WARRANTY; without even the implied
+### warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+### PURPOSE.  See the GNU General Public License for more
+### details.
+### 
+### You should have received a copy of the GNU General Public
+### License along with this program; if not, write to the Free
+### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+### MA 02111-1307, USA
+
+print.xtable <- function(x,type="latex",file="",append=FALSE) {
+
+  if (length(type)>1)
+    stop("\"type\" must have length 1")
+  if (!all(!is.na(match(type,c("latex","html")))))
+    stop("\"type\" must be in {\"latex\", \"html\"}")
+ 
+  if (type=="latex") {
+    BCOMMENT <- "% "
+    ECOMMENT <- "\n"
+    BTABLE <- "\\begin{table}\n\\begin{center}\n"
+    ETABLE <- "\\end{center}\n\\end{table}\n"
+    BTABULAR <- string("\\begin{tabular}{|") + paste(attr(x,"align"),collapse="|") + "|}\n\\hline\n"
+    ETABULAR <- "\\hline\n\\end{tabular}\n"
+    BLABEL <- "\\label{"
+    ELABEL <- "}\n"
+    BCAPTION <- "\\caption{"
+    ECAPTION <- "}\n"
+    BROW <- ""
+    EROW <- " \\\\\n"
+    BTH <- ""
+    ETH <- ""
+    STH <- " & "
+    PHEADER <- "\\hline\n"
+    BTD1 <- " & "
+    BTD2 <- ""
+    BTD3 <- ""
+    ETD  <- ""
+    sanitize <- function(str) {
+      result <- str
+      result <- gsub(">","$>$",result)
+      result <- gsub("<","$<$",result)
+      result <- gsub("\\|","$\|$",result)
+      return(result)
+    }
+  } else {
+    BCOMMENT <- "<!-- "
+    ECOMMENT <- " -->\n"
+    BTABLE <- "<TABLE border=1>\n"
+    ETABLE <- "</TABLE>\n"
+    BTABULAR <- ""
+    ETABULAR <- ""
+    BLABEL <- "<A NAME="
+    ELABEL <- "></A>\n"
+    BCAPTION <- "<CAPTION> "
+    ECAPTION <- " </CAPTION>\n"
+    BROW <- "<TR>"
+    EROW <- " </TR>\n"
+    BTH <- " <TH> "
+    ETH <- " </TH> "
+    STH <- " </TH> <TH> "
+    PHEADER <- ""
+    BTD1 <- " <TD align="
+    BTD2 <- matrix(attr(x,"align"),nrow=nrow(x),ncol=ncol(x)+1,byrow=TRUE)
+    BTD2[BTD2=="r"] <- "right"
+    BTD2[BTD2=="l"] <- "left"
+    BTD2[BTD2=="c"] <- "center"
+    BTD3 <- "> "
+    ETD  <- " </TD>"
+    sanitize <- function(str) {
+      result <- str
+      result <- gsub("&","&amp ",result)
+      result <- gsub(">","&gt ",result)
+      result <- gsub("<","&lt ",result)
+      return(result)
+    }
+  }
+
+  result <- string("",file=file,append=append)
+  info <- R.Version()
+  result <- result + BCOMMENT + type + " table generated in " +
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.0-1 package" + ECOMMENT
+  result <- result + BCOMMENT + date() + ECOMMENT
+  result <- result + BTABLE
+  if (!is.null(attr(x,"label"))) result <- result + BLABEL + attr(x,"label") + ELABEL
+  if ((!is.null(attr(x,"caption"))) && (type=="html")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION 
+  result <- result + BTABULAR
+  result <- result + BROW + BTH + STH + paste(sanitize(names(x)),collapse=STH) + ETH + EROW
+  result <- result + PHEADER
+
+  cols <- matrix("",nrow=nrow(x),ncol=ncol(x)+1)
+  cols[,1] <- row.names(x)
+  disp <- function(y) {
+    if (is.factor(y)) {
+      y <- levels(y)[y]
+    }
+    return(y)
+  }
+  for(i in 1:ncol(x)) {
+    ina <- is.na(x[,i])
+    cols[,i+1] <- formatC(disp(x[,i]),format=attr(x,"display")[i+1],digits=attr(x,"digits")[i+1])
+    if (any(ina)) cols[ina,i+1] <- ""
+  }
+
+  multiplier <- 5
+  full <- matrix("",nrow=nrow(x),ncol=multiplier*(ncol(x)+1)+2)
+  full[,1] <- BROW
+  full[,multiplier*(0:ncol(x))+2] <- BTD1
+  full[,multiplier*(0:ncol(x))+3] <- BTD2
+  full[,multiplier*(0:ncol(x))+4] <- BTD3
+  full[,multiplier*(0:ncol(x))+5] <- cols
+  full[,multiplier*(0:ncol(x))+6] <- ETD
+  full[,multiplier*(ncol(x)+1)+2] <- EROW
+  if (type=="latex") full[,2] <- ""
+
+  result <- result + paste(t(full),collapse="")
+  result <- result + ETABULAR
+  if ((!is.null(attr(x,"caption"))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION 
+  result <- result + ETABLE
+  print(result)
+
+  return(invisible())
+}
+
+"+.string" <- function(x,y) {
+  x$text <- paste(x$text,as.string(y)$text,sep="")
+  return(x)
+}
+
+print.string <- function(x) {
+  cat(x$text,file=x$file,append=x$append)
+  return(invisible())
+}
+
+string <- function(text,file="",append=FALSE) {
+  x <- list(text=text,file=file,append=append)
+  class(x) <- "string"
+  return(x)
+}
+
+as.string <- function(x,file="",append=FALSE) {
+  if (is.null(class(x)))
+  switch(data.class(x),
+      character=return(string(x,file,append)),
+      numeric=return(string(as.character(x),file,append)),
+      stop("Cannot coerse argument to a string"))
+  if (class(x)=="string")
+    return(x)
+  stop("Cannot coerse argument to a string")
+}
+
+is.string <- function(x) {
+  return(class(x)=="string")
+}
+
