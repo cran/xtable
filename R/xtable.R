@@ -1,4 +1,4 @@
-### xtable 1.0-6  (2001/06/13)
+### xtable 1.0-8  (2001/12/15)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -144,17 +144,18 @@ xtable.summary.prcomp <- function(x,caption=NULL,label=NULL,align=NULL,digits=NU
 }
 
 
-## princomp objects
-
-xtable.princomp <- function(x,caption=NULL,label=NULL,align=NULL,digits=NULL,display=NULL) {
-  x <- data.frame(x$loadings,check.names=FALSE)
-
-  class(x) <- c("xtable","data.frame")
-  caption(x) <- caption
-  label(x) <- label
-  align(x) <- switch(1+is.null(align),align,c("r",rep("r",ncol(x))))
-  digits(x) <- switch(1+is.null(digits),digits,c(0,rep(4,ncol(x))))
-  display(x) <- switch(1+is.null(display),display,c("s",rep("f",ncol(x))))
-  return(x)
-}
+# Broken in R 1.4.0:  x$loadings cannot be coerce "loadings" into a "data.frame".
+# ## princomp objects
+# 
+# xtable.princomp <- function(x,caption=NULL,label=NULL,align=NULL,digits=NULL,display=NULL) {
+#   x <- data.frame(x$loadings,check.names=FALSE)
+# 
+#   class(x) <- c("xtable","data.frame")
+#   caption(x) <- caption
+#   label(x) <- label
+#   align(x) <- switch(1+is.null(align),align,c("r",rep("r",ncol(x))))
+#   digits(x) <- switch(1+is.null(digits),digits,c(0,rep(4,ncol(x))))
+#   display(x) <- switch(1+is.null(display),display,c("s",rep("f",ncol(x))))
+#   return(x)
+# }
 

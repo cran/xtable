@@ -1,4 +1,4 @@
-### xtable 1.0-6  (2001/06/13)
+### xtable 1.0-8  (2001/12/15)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -20,7 +20,7 @@
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
 
-print.xtable <- function(x,type="latex",file="",append=FALSE) {
+print.xtable <- function(x,type="latex",file="",append=FALSE, vsep="", ...) {
 
   if (length(type)>1)
     stop("\"type\" must have length 1")
@@ -32,7 +32,9 @@ print.xtable <- function(x,type="latex",file="",append=FALSE) {
     ECOMMENT <- "\n"
     BTABLE <- "\\begin{table}\n\\begin{center}\n"
     ETABLE <- "\\end{center}\n\\end{table}\n"
-    BTABULAR <- string("\\begin{tabular}{|") + paste(attr(x,"align"),collapse="|") + "|}\n\\hline\n"
+#    BTABULAR <- string("\\begin{tabular}{|") + paste(attr(x,"align"),collapse="|") + "|}\n\\hline\n"
+#    See e-mail from "BXC (Bendix Carstensen)" <bxc@novonordisk.com> dated Mon, 27 Aug 2001 10:11:54 +0200
+    BTABULAR <- paste( "\\begin{tabular}{", vsep, paste(attr(x, "align"), collapse = vsep), vsep, "}\n\\hline\n" )
     ETABULAR <- "\\hline\n\\end{tabular}\n"
     BLABEL <- "\\label{"
     ELABEL <- "}\n"
@@ -102,7 +104,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE) {
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.0-6 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.0-8 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
   if ((!is.null(attr(x,"caption"))) && (type=="html")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION 
@@ -151,7 +153,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE) {
   return(x)
 }
 
-print.string <- function(x) {
+print.string <- function(x,...) {
   cat(x$text,file=x$file,append=x$append)
   return(invisible())
 }

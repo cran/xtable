@@ -8,7 +8,7 @@
 \description{Private functions for conveniently working with strings.}
 \usage{
   string(text,file="",append=FALSE) 
-  print.string(x)
+  print.string(x,...)
   "+.string"(x,y)
   as.string(x,file="",append=FALSE)
   is.string(x)
@@ -19,6 +19,7 @@
   \item{append}{Should the printed string be appended to the file?}
   \item{x}{A \code{string} object.}
   \item{y}{A \code{string} object.}
+  \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{
   These functions are private functions used by \code{print.xtable}.  They are

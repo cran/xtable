@@ -1,4 +1,4 @@
-### xtable 1.0-6  (2001/06/13)
+### xtable 1.0-8  (2001/12/15)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -29,7 +29,7 @@
 }
 
 caption <- function(x,...) UseMethod("caption")
-caption.xtable <- function(x) {
+caption.xtable <- function(x,...) {
   return(attr(x,"caption"))
 }
 
@@ -42,7 +42,7 @@ caption.xtable <- function(x) {
 }
 
 label <- function(x,...) UseMethod("label")
-label.xtable <- function(x) {
+label.xtable <- function(x,...) {
   return(attr(x,"label"))
 }
 
@@ -57,7 +57,7 @@ label.xtable <- function(x) {
 }
 
 align <- function(x,...) UseMethod("align")
-align.xtable <- function(x) {
+align.xtable <- function(x,...) {
   return(attr(x,"align"))
 }
 
@@ -72,7 +72,7 @@ align.xtable <- function(x) {
 }
 
 digits <- function(x,...) UseMethod("digits")
-digits.xtable <- function(x) {
+digits.xtable <- function(x,...) {
   return(attr(x,"digits"))
 }
 
@@ -87,7 +87,7 @@ digits.xtable <- function(x) {
 }
 
 display <- function(x,...) UseMethod("display")
-display.xtable <- function(x) {
+display.xtable <- function(x,...) {
   return(attr(x,"display"))
 }
 

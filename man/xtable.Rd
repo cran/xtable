@@ -8,7 +8,7 @@
 \alias{xtable.lm}
 \alias{xtable.matrix}
 \alias{xtable.prcomp}
-\alias{xtable.princomp}
+% \alias{xtable.princomp}
 \alias{xtable.summary.aov}
 \alias{xtable.summary.aovlist}
 \alias{xtable.summary.glm}
@@ -51,6 +51,7 @@ xtable(x,...)
                  space to do so.  \code{"fg"} uses fixed format as \code{"f"}, but \code{digits} as
                  number of \emph{significant} digits.  Note that this can lead to
                  quite long result strings.  Default depends on the class of \code{x}.}
+  \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{
   This function extracts tabular information from \code{x} and returns an object of class \code{"xtable"}.
@@ -174,10 +175,10 @@ if(require(mva,quietly=TRUE)) {
   print(xtable(pr1))
   print(xtable(summary(pr1)))
 
-  ## Demonstrate princomp
-  ## Taken from help(princomp) in mva package of R 1.1.1
-  pr2 <- princomp(USArrests)
-  print(xtable(pr2))
+#  ## Demonstrate princomp
+#  ## Taken from help(princomp) in mva package of R 1.1.1
+#  pr2 <- princomp(USArrests)
+#  print(xtable(pr2))
 }
 
 \testonly{
@@ -203,7 +204,7 @@ if(require(mva,quietly=TRUE)) {
     if(require(mva,quietly=TRUE)) {
       print(xtable(pr1),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
       print(xtable(summary(pr1)),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-      print(xtable(pr2),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
+#      print(xtable(pr2),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
     }
   }
 } 

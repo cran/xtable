@@ -35,6 +35,7 @@
 }
 \arguments{
   \item{x}{An \code{"xtable"} object.}
+  \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{
   These functions retrieve or set table attributes of the object \code{x} of class \code{"xtable"}.  See
