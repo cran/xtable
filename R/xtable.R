@@ -1,8 +1,8 @@
-### xtable 1.0-12  (2003/01/23)
+### xtable 1.1-1  (2003/05/19)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2002 David B. Dahl <dbdahl@stat.wisc.edu>
+### Copyright 2000-2003 David B. Dahl <dbdahl@stat.wisc.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -20,7 +20,8 @@
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
 
-xtable <- function(x,...) {
+xtable <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                   digits=NULL,display=NULL,...) {
   if(is.null(class(x))) class(x) <- data.class(x)
   UseMethod("xtable",x,...)
 }
@@ -28,8 +29,8 @@ xtable <- function(x,...) {
 
 ## data.frame and matrix objects
 
-xtable.data.frame <- function(x,caption=NULL,label=NULL,align=NULL,
-                              digits=NULL,display=NULL, vsep=NULL) {
+xtable.data.frame <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                              digits=NULL,display=NULL,...) {
   characters <- unlist(lapply(x,is.character))
   factors <- unlist(lapply(x,is.factor))
 
@@ -45,8 +46,8 @@ xtable.data.frame <- function(x,caption=NULL,label=NULL,align=NULL,
   return(x)
 }
 
-xtable.matrix <- function(x,caption=NULL,label=NULL,align=NULL,
-                          vsep=NULL, digits=NULL,display=NULL) {
+xtable.matrix <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                          digits=NULL,display=NULL,...) {
   return(xtable.data.frame(data.frame(x,check.names=FALSE),
                            caption=caption,label=label,align=align, vsep=vsep,
                            digits=digits,display=display))
@@ -55,8 +56,8 @@ xtable.matrix <- function(x,caption=NULL,label=NULL,align=NULL,
 
 ## anova objects
 
-xtable.anova <- function(x,caption=NULL,label=NULL,align=NULL, vsep=NULL,
-                         digits=NULL,display=NULL) {
+xtable.anova <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                         digits=NULL,display=NULL,...) {
   suggested.digits <- c(0,rep(2,ncol(x)))
   suggested.digits[grep("Pr\\(>",names(x))+1] <- 4
   suggested.digits[grep("P\\(>",names(x))+1] <- 4
@@ -74,28 +75,27 @@ xtable.anova <- function(x,caption=NULL,label=NULL,align=NULL, vsep=NULL,
 
 ## aov objects
 
-xtable.aov <- function(x,caption=NULL,label=NULL,align=NULL, vsep=NULL,
+xtable.aov <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
                        digits=NULL,display=NULL,...) {
   return(xtable.anova(anova(x,...),caption=caption,label=label,
                       align=align, vsep=vsep, digits=digits,display=display))
 }
 
-xtable.summary.aov <- function(x,caption=NULL,label=NULL,align=NULL, vsep=NULL,
-                               digits=NULL,display=NULL) {
+xtable.summary.aov <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                               digits=NULL,display=NULL,...) {
   return(xtable.anova(x[[1]],caption=caption,label=label,
                       align=align, vsep=vsep, digits=digits,display=display))
 }
 
-xtable.aovlist <- function(x,caption=NULL,label=NULL,
-                           align=NULL, vsep=NULL, digits=NULL,display=NULL) {
+xtable.aovlist <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                           digits=NULL,display=NULL,...) {
   return(xtable.summary.aovlist(summary(x),caption=caption,label=label,
                                 align=align, vsep=vsep,
                                 digits=digits,display=display))
 }
 
-xtable.summary.aovlist <- function(x,caption=NULL,label=NULL,
-                                   align=NULL, vsep=NULL,
-                                   digits=NULL,display=NULL) {
+xtable.summary.aovlist <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                                   digits=NULL,display=NULL,...) {
   for(i in 1:length(x)) {
     if (i==1) result <- xtable.summary.aov(x[[i]],caption=caption,label=label,
           align=align, vsep=vsep, digits=digits,display=display)
@@ -110,14 +110,14 @@ xtable.summary.aovlist <- function(x,caption=NULL,label=NULL,
 
 ## lm objects
 
-xtable.lm <- function(x,caption=NULL,label=NULL,
-                      align=NULL, vsep=NULL, digits=NULL,display=NULL) {
+xtable.lm <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                      digits=NULL,display=NULL,...) {
   return(xtable.summary.lm(summary(x),caption=caption,label=label,
                            align=align, vsep=vsep, digits=digits,display=display))
 }
 
-xtable.summary.lm <- function(x,caption=NULL,label=NULL,
-                              align=NULL, vsep=NULL, digits=NULL,display=NULL) {
+xtable.summary.lm <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                              digits=NULL,display=NULL,...) {
   x <- data.frame(x$coef,check.names=FALSE)
 
   class(x) <- c("xtable","data.frame")
@@ -134,15 +134,14 @@ xtable.summary.lm <- function(x,caption=NULL,label=NULL,
 
 ## glm objects
 
-xtable.glm <- function(x,caption=NULL,label=NULL,
-                       align=NULL, vsep=NULL, digits=NULL,display=NULL) {
-  return(xtable.summary.glm(summary(x),caption=caption,label=label,
-                            align=align, vsep=vsep,
+xtable.glm <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                       digits=NULL,display=NULL,...) {
+  return(xtable.summary.glm(summary(x),caption=caption,label=label,align=align,vsep=vsep,
                             digits=digits,display=display))
 }
 
-xtable.summary.glm <- function(x,caption=NULL,label=NULL,
-                               align=NULL, vsep=NULL, digits=NULL,display=NULL) {
+xtable.summary.glm <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                               digits=NULL,display=NULL,...) {
   return(xtable.summary.lm(x,caption=caption,label=label,
                            align=align, vsep=vsep, digits=digits,display=display))
 }
@@ -150,8 +149,8 @@ xtable.summary.glm <- function(x,caption=NULL,label=NULL,
 
 ## prcomp objects
 
-xtable.prcomp <- function(x,caption=NULL,label=NULL,
-                          align=NULL, vsep=NULL, digits=NULL,display=NULL) {
+xtable.prcomp <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                          digits=NULL,display=NULL,...) {
   x <- data.frame(x$rotation,check.names=FALSE)
 
   class(x) <- c("xtable","data.frame")
@@ -164,8 +163,8 @@ xtable.prcomp <- function(x,caption=NULL,label=NULL,
   return(x)
 }
 
-xtable.summary.prcomp <- function(x, caption=NULL, label=NULL,
-                                  align=NULL, vsep=NULL, digits=NULL, display=NULL) {
+xtable.summary.prcomp <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                                  digits=NULL,display=NULL,...) {
   x <- data.frame(x$importance,check.names=FALSE)
 
   class(x) <- c("xtable","data.frame")
@@ -183,8 +182,8 @@ xtable.summary.prcomp <- function(x, caption=NULL, label=NULL,
 #   Date: Wed, 2 Oct 2002 17:47:56 -0500 (CDT)
 #   From: Jun Yan <jyan@stat.wisc.edu>
 #   Subject: Re: [R] xtable for Cox model output
-xtable.coxph <- function (x, caption = NULL, label = NULL, align = NULL,
-                          vsep = NULL, digits = NULL, display = NULL)
+xtable.coxph <- function (x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                          digits=NULL,display=NULL,...)
 {
     cox <- x
     beta <- cox$coef
@@ -203,20 +202,3 @@ xtable.coxph <- function (x, caption = NULL, label = NULL, align = NULL,
     return(xtable(tmp, caption = caption, label = label, align = align,
                   vsep = vsep, digits = digits, display = display))
 }
-
-
-# Broken in R 1.4.0:  x$loadings cannot be coerce "loadings" into a "data.frame".
-# ## princomp objects
-#
-# xtable.princomp <- function(x,caption=NULL,label=NULL,align=NULL,digits=NULL,display=NULL) {
-#   x <- data.frame(x$loadings,check.names=FALSE)
-#
-#   class(x) <- c("xtable","data.frame")
-#   caption(x) <- caption
-#   label(x) <- label
-#   align(x) <- switch(1+is.null(align),align,c("r",rep("r",ncol(x))))
-#   digits(x) <- switch(1+is.null(digits),digits,c(0,rep(4,ncol(x))))
-#   display(x) <- switch(1+is.null(display),display,c("s",rep("f",ncol(x))))
-#   return(x)
-# }
-

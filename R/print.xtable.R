@@ -1,8 +1,8 @@
-### xtable 1.0-12  (2003/01/23)
+### xtable 1.1-1  (2003/05/19)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2002 David B. Dahl <dbdahl@stat.wisc.edu>
+### Copyright 2000-2003 David B. Dahl <dbdahl@stat.wisc.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -19,18 +19,26 @@
 ### License along with this program; if not, write to the Free
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
-print.xtable <- function(x,type="latex",file="",append=FALSE, ...) {
+print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,...) {
 
   if (length(type)>1)
     stop("\"type\" must have length 1")
+  type <- tolower(type)
   if (!all(!is.na(match(type,c("latex","html")))))
     stop("\"type\" must be in {\"latex\", \"html\"}")
 
   if (type=="latex") {
     BCOMMENT <- "% "
     ECOMMENT <- "\n"
-    BTABLE <- "\\begin{table}\n\\begin{center}\n"
-    ETABLE <- "\\end{center}\n\\end{table}\n"
+# See e-mail from "John S. Walker <jsw9c@uic.edu>" dated 5-19-2003 regarding "texfloat"
+    if ( floating == TRUE ) {
+      BTABLE <- "\\begin{table}\n\\begin{center}\n"
+      ETABLE <- "\\end{center}\n\\end{table}\n"
+    }
+    else {
+      BTABLE <- ""
+      ETABLE <- ""
+    }
 #    BTABULAR <- string("\\begin{tabular}{|") + paste(attr(x,"align"),collapse="|") + "|}\n\\hline\n"
 #    See e-mail from "BXC (Bendix Carstensen)" <bxc@novonordisk.com> dated Mon, 27 Aug 2001 10:11:54 +0200
     BTABULAR <- paste("\\begin{tabular}{",
@@ -107,7 +115,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE, ...) {
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.0-12 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.1-1 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
   if ((!is.null(attr(x,"caption"))) && (type=="html")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION

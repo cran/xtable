@@ -9,7 +9,6 @@
 \alias{xtable.matrix}
 \alias{xtable.prcomp}
 \alias{xtable.coxph}
-% \alias{xtable.princomp}
 \alias{xtable.summary.aov}
 \alias{xtable.summary.aovlist}
 \alias{xtable.summary.glm}
@@ -18,9 +17,8 @@
 \title{Create Export Tables}
 \description{Function converting an R object to an \code{xtable} object, which can then be printed as a LaTeX or HTML table.}
 \usage{
-xtable(x,...)
-%xtable(x, caption=NULL, label=NULL, align=NULL, vsep=NULL, digits=NULL,
-        display=NULL)
+xtable(x, caption=NULL, label=NULL, align=NULL, vsep=NULL, digits=NULL,
+       display=NULL, ...)
 }
 \arguments{
   \item{x}{An R object of class found among \code{methods(xtable)}.  See below on how to write additional method functions

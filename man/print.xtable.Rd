@@ -2,7 +2,7 @@
 \alias{print.xtable}
 \title{Print Export Tables}
 \description{Function displaying or writing to disk the LaTeX or HTML code associated with the supplied object of class \code{xtable}.}
-\usage{print.xtable(x, type="latex", file="", append=FALSE, ...)}
+\usage{print.xtable(x, type="latex", file="", append=FALSE, floating=TRUE, ...)}
 \arguments{
   \item{x}{An object of class \code{"xtable"}.}
   \item{type}{Type of table to produce.  Possible values for \code{type} are \code{"latex"} or \code{"html"}.
@@ -11,6 +11,8 @@
               Default value is \code{""}.}
   \item{append}{If \code{TRUE} and \code{file!=""}, code will be appended to \code{file} instead of overwriting \code{file}.
                 Default value is \code{FALSE}.}
+  \item{floating}{If \code{TRUE} and \code{type="latex"}, the resulting table will be a floating table (using \code{\\begin\{table\} \\begin\{center\}} and \code{\\end\{center\} \\end\{table\}}).
+                Default value is \code{TRUE}.}
   \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{
