@@ -1,4 +1,4 @@
-### xtable 1.0-10  (2002/08/23)
+### xtable 1.0-11  (2002/10/04)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -164,8 +164,8 @@ xtable.prcomp <- function(x,caption=NULL,label=NULL,
   return(x)
 }
 
-xtable.summary.prcomp <- function(x,caption=NULL,label=NULL,
-                                  align=NULL, vsep=NULL, digits=NULL,display=NULL) {
+xtable.summary.prcomp <- function(x, caption=NULL, label=NULL,
+                                  align=NULL, vsep=NULL, digits=NULL, display=NULL) {
   x <- data.frame(x$importance,check.names=FALSE)
 
   class(x) <- c("xtable","data.frame")
@@ -176,6 +176,32 @@ xtable.summary.prcomp <- function(x,caption=NULL,label=NULL,
   digits(x) <- switch(1+is.null(digits),digits,c(0,rep(4,ncol(x))))
   display(x) <- switch(1+is.null(display),display,c("s",rep("f",ncol(x))))
   return(x)
+}
+
+
+# Slightly modified version of xtable.coxph contributed on r-help by
+#   Date: Wed, 2 Oct 2002 17:47:56 -0500 (CDT)
+#   From: Jun Yan <jyan@stat.wisc.edu>
+#   Subject: Re: [R] xtable for Cox model output
+xtable.coxph <- function (x, caption = NULL, label = NULL, align = NULL,
+                          vsep = NULL, digits = NULL, display = NULL) 
+{
+    cox <- x
+    beta <- cox$coef
+    se <- sqrt(diag(cox$var))
+    if (is.null(cox$naive.var)) {
+      tmp <- cbind(beta, exp(beta), se, beta/se, 1 - pchisq((beta/se)^2, 1))
+      dimnames(tmp) <- list(names(beta),
+        c("coef", "exp(coef)", "se(coef)", "z", "p"))
+    }
+    else {
+      tmp <- cbind( beta, exp(beta), nse, se, beta/se,
+        signif(1 - pchisq((beta/se)^2, 1), digits - 1))
+      dimnames(tmp) <- list(names(beta),
+        c("coef", "exp(coef)", "se(coef)", "robust se", "z", "p"))
+    }
+    return(xtable(tmp, caption = caption, label = label, align = align,
+                  vsep = vsep, digits = digits, display = display))
 }
 
 

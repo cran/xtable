@@ -8,6 +8,7 @@
 \alias{xtable.lm}
 \alias{xtable.matrix}
 \alias{xtable.prcomp}
+\alias{xtable.coxph}
 % \alias{xtable.princomp}
 \alias{xtable.summary.aov}
 \alias{xtable.summary.aovlist}
