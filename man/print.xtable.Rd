@@ -25,7 +25,7 @@
   This function displays or writes to disk the code to produce a table associated with an object \code{x} of class \code{"xtable"}.
   The resulting code is either a LaTeX or HTML table, depending on the value of \code{type}.
 }
-\author{David Dahl \email{dbdahl@stat.wisc.edu}}
+\author{David Dahl \email{dahl@stat.tamu.edu}}
 \seealso{\code{\link{xtable}}, \code{\link{caption}}, \code{\link{label}}, \code{\link{vsep}},
          \code{\link{align}}, \code{\link{digits}}, \code{\link{display}}, \code{\link{formatC}}}
 \keyword{print}

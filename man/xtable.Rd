@@ -87,7 +87,7 @@ xtable(x, caption=NULL, label=NULL, align=NULL, vsep=NULL, digits=NULL,
   An object of class \code{"xtable"} which inherits the \code{data.frame} class and contains several additional attributes
   specifying the table formatting options.
 }
-\author{David Dahl \email{dbdahl@stat.wisc.edu}}
+\author{David Dahl \email{dahl@stat.tamu.edu}}
 \seealso{\code{\link{print.xtable}}, \code{\link{caption}}, \code{\link{label}},
          \code{\link{align}}, \code{\link{digits}}, \code{\link{display}}, \code{\link{formatC}}, \code{\link{methods}}}
 \examples{

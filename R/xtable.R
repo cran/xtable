@@ -1,8 +1,8 @@
-### xtable 1.2-3  (2004/05/07)
+### xtable 1.2-4  (2004/09/20)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2004 David B. Dahl <dbdahl@stat.wisc.edu>
+### Copyright 2000-2004 David B. Dahl <dahl@stat.tamu.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -47,11 +47,7 @@ xtable.data.frame <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
 
 xtable.matrix <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
                           digits=NULL,display=NULL,...) {
-  savedDimNames <- dimnames(x)
-  dimnames(x) <- NULL
-  df <- data.frame(x,check.names=FALSE)
-  dimnames(df) <- savedDimNames
-  return(xtable.data.frame(df,
+  return(xtable.data.frame(data.frame(x,check.names=FALSE),
                            caption=caption,label=label,align=align, vsep=vsep,
                            digits=digits,display=display))
 }

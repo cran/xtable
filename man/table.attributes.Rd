@@ -48,6 +48,6 @@
   These functions retrieve or set table attributes of the object \code{x} of class \code{"xtable"}.  See
   \code{xtable} for a description of the options.
 }
-\author{David Dahl \email{dbdahl@stat.wisc.edu}}
+\author{David Dahl \email{dahl@stat.tamu.edu}}
 \seealso{\code{\link{xtable}}, \code{\link{print.xtable}}, \code{\link{formatC}}}
 \keyword{print}

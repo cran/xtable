@@ -25,6 +25,6 @@
   These functions are private functions used by \code{print.xtable}.  They are
   not intended to be used elsewhere.
 }
-\author{David Dahl \email{dbdahl@stat.wisc.edu}}
+\author{David Dahl \email{dahl@stat.tamu.edu}}
 \seealso{\code{\link{print.xtable}}}
 \keyword{print}
