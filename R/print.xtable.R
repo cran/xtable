@@ -1,4 +1,4 @@
-### xtable 1.1-2  (2003/05/29)
+### xtable 1.2-1  (2003/11/04)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -19,21 +19,41 @@
 ### License along with this program; if not, write to the Free
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
-print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,...) {
+print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table.placement="ht",caption.placement="bottom",latex.environments=c("center"),...) {
 
   if (length(type)>1)
     stop("\"type\" must have length 1")
   type <- tolower(type)
   if (!all(!is.na(match(type,c("latex","html")))))
     stop("\"type\" must be in {\"latex\", \"html\"}")
+  if (!all(!is.na(match(unlist(strsplit(table.placement, split="")),c("h","t","b","p","!")))))
+    stop("\"table.placement\" must contain only elements of {\"h\",\"t\",\"b\",\"p\",\"!\"}")
+  if (!all(!is.na(match(caption.placement,c("bottom","top")))))
+    stop("\"caption.placement\" must be either {\"bottom\",\"top\"}")
 
   if (type=="latex") {
     BCOMMENT <- "% "
     ECOMMENT <- "\n"
 # See e-mail from "John S. Walker <jsw9c@uic.edu>" dated 5-19-2003 regarding "texfloat"
     if ( floating == TRUE ) {
-      BTABLE <- "\\begin{table}\n\\begin{center}\n"
-      ETABLE <- "\\end{center}\n\\end{table}\n"
+      # See e-mail from "Pfaff, Bernhard <Bernhard.Pfaff@drkw.com>" dated 7-09-2003 regarding "suggestion for an amendment of the source"
+      # See e-mail from "Mitchell, David" <David.Mitchell@dotars.gov.au>" dated 2003-07-09 regarding "Additions to R xtable package"
+      BTABLE <- paste("\\begin{table}",ifelse(!is.null(table.placement),
+        paste("[",table.placement,"]",sep=""),""),"\n",sep="")
+      if ( is.null(latex.environments) || (length(latex.environments)==0) ) {
+        BENVIRONMENT <- ""
+        EENVIRONMENT <- ""
+      }
+      else {
+        BENVIRONMENT <- ""
+        EENVIRONMENT <- ""
+        for ( i in 1:length(latex.environments) ) {
+          if ( latex.environments[i] == "" ) next
+          BENVIRONMENT <- paste(BENVIRONMENT, "\\begin{",latex.environments[i],"}\n",sep="")
+          EENVIRONMENT <- paste("\\end{",latex.environments[i],"}\n",EENVIRONMENT,sep="")
+        }
+      }
+      ETABLE <- "\\end{table}\n"
     }
     else {
       BTABLE <- ""
@@ -80,11 +100,13 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,...) 
     ECOMMENT <- " -->\n"
     BTABLE <- "<TABLE border=1>\n"
     ETABLE <- "</TABLE>\n"
+    BENVIRONMENT <- ""
+    EENVIRONMENT <- ""
     BTABULAR <- ""
     ETABULAR <- ""
     BLABEL <- "<A NAME="
     ELABEL <- "></A>\n"
-    BCAPTION <- "<CAPTION> "
+    BCAPTION <- paste("<CAPTION ALIGN=\"",caption.placement,"\"> ",sep="")
     ECAPTION <- " </CAPTION>\n"
     BROW <- "<TR>"
     EROW <- " </TR>\n"
@@ -115,10 +137,12 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,...) 
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.1-2 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.2-1 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
-  if ((!is.null(attr(x,"caption"))) && (type=="html")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
+  result <- result + BENVIRONMENT
+  if ((!is.null(attr(x,"caption"))) && (type=="html" || caption.placement=="top")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
+  if (!is.null(attr(x,"label")) && (type=="latex" && caption.placement=="top")) result <- result + BLABEL + attr(x,"label") + ELABEL  
   result <- result + BTABULAR
   result <- result + BROW + BTH + STH + paste(sanitize(names(x)),collapse=STH) + ETH + EROW
   result <- result + PHEADER
@@ -151,8 +175,9 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,...) 
 
   result <- result + paste(t(full),collapse="")
   result <- result + ETABULAR
-  if ((!is.null(attr(x,"caption"))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
-  if (!is.null(attr(x,"label"))) result <- result + BLABEL + attr(x,"label") + ELABEL
+  if ((!is.null(attr(x,"caption"))) && (type=="latex" && caption.placement=="bottom")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
+  if (!is.null(attr(x,"label")) && caption.placement=="bottom") result <- result + BLABEL + attr(x,"label") + ELABEL  
+  result <- result + EENVIRONMENT
   result <- result + ETABLE
   print(result)
 

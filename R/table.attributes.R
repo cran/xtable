@@ -1,4 +1,4 @@
-### xtable 1.1-2  (2003/05/29)
+### xtable 1.2-1  (2003/11/04)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -65,9 +65,9 @@ align.xtable <- function(x,...) {
 "vsep<-.xtable" <- function(x, value) {
   if(is.null(value))
     vsep <- ""
-  if(length(value) == 1)
-    value <- rep(value, ncol(x) + 2)
-  if (length(value) != ncol(x) + 2)
+    if(length(value) == 1)
+      value <- rep(value, ncol(x) + 2)
+    if (length(value) != ncol(x) + 2)
                                         # +2 due to table edges
     stop(paste("\"vsep\" must have length equal to", ncol(x)+2,
                "( ncol(x) + 2 )"))

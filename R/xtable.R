@@ -1,4 +1,4 @@
-### xtable 1.1-2  (2003/05/29)
+### xtable 1.2-1  (2003/11/04)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -184,20 +184,60 @@ xtable.summary.prcomp <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL
 xtable.coxph <- function (x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
                           digits=NULL,display=NULL,...)
 {
-    cox <- x
-    beta <- cox$coef
-    se <- sqrt(diag(cox$var))
-    if (is.null(cox$naive.var)) {
-      tmp <- cbind(beta, exp(beta), se, beta/se, 1 - pchisq((beta/se)^2, 1))
-      dimnames(tmp) <- list(names(beta),
-        c("coef", "exp(coef)", "se(coef)", "z", "p"))
-    }
-    else {
-      tmp <- cbind( beta, exp(beta), nse, se, beta/se,
-        signif(1 - pchisq((beta/se)^2, 1), digits - 1))
-      dimnames(tmp) <- list(names(beta),
-        c("coef", "exp(coef)", "se(coef)", "robust se", "z", "p"))
-    }
-    return(xtable(tmp, caption = caption, label = label, align = align,
-                  vsep = vsep, digits = digits, display = display))
+  cox <- x
+  beta <- cox$coef
+  se <- sqrt(diag(cox$var))
+  if (is.null(cox$naive.var)) {
+    tmp <- cbind(beta, exp(beta), se, beta/se, 1 - pchisq((beta/se)^2, 1))
+    dimnames(tmp) <- list(names(beta),
+      c("coef", "exp(coef)", "se(coef)", "z", "p"))
+  }
+  else {
+    tmp <- cbind( beta, exp(beta), nse, se, beta/se,
+      signif(1 - pchisq((beta/se)^2, 1), digits - 1))
+    dimnames(tmp) <- list(names(beta),
+      c("coef", "exp(coef)", "se(coef)", "robust se", "z", "p"))
+  }
+  return(xtable(tmp, caption = caption, label = label, align = align,
+                vsep = vsep, digits = digits, display = display))
+}
+
+# Additional method: xtable.ts
+# Contributed by David Mitchell (davidm@netspeed.com.au)
+# Date: July 2003
+xtable.ts <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
+                      digits=NULL,display=NULL,...) {
+
+  if (inherits(x, "ts") && !is.null(ncol(x))) {
+    # COLNAMES <- paste(colnames(x));
+    tp.1 <- trunc(time(x))
+    tp.2 <- trunc(cycle(x))
+    day.abb <- c("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
+    ROWNAMES <- switch(frequency(x),
+                       tp.1,
+                       "Arg2", "Arg3",              ## Dummy arguments
+                       paste(tp.1, c("Q1", "Q2", "Q3", "Q4")[tp.2], sep=" "),
+                       "Arg5", "Arg6",
+                       paste("Wk.", tp.1, " ", day.abb[tp.2], sep=""),
+                       "Arg8", "Arg9", "Arg10", "Arg11",
+                       paste(tp.1, month.abb[tp.2], sep=" "))
+    tmp <- data.frame(x, row.names=ROWNAMES);
+  }
+  else if (inherits(x, "ts") && is.null(ncol(x))) {
+    COLNAMES <- switch(frequency(x),
+                       "Value",
+                       "Arg2", "Arg3",              ## Dummy arguments
+                       c("Q1", "Q2", "Q3", "Q4"),
+                       "Arg5", "Arg6",
+                       day.abb,
+                       "Arg8", "Arg9", "Arg10", "Arg11",
+                       month.abb)
+    ROWNAMES <- seq(from=start(x)[1], to=end(x)[1])
+    tmp <- data.frame(matrix(c(rep(NA, start(x)[2] - 1), x,
+                               rep(NA, frequency(x) - end(x)[2])),
+                             ncol=frequency(x)), row.names=ROWNAMES)
+    names(tmp) <- COLNAMES
+  }
+  return(xtable(tmp, caption = caption, label = label, align = align,
+                vsep = vsep, digits = digits, display = display))
 }

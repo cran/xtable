@@ -14,6 +14,7 @@
 \alias{xtable.summary.glm}
 \alias{xtable.summary.lm}
 \alias{xtable.summary.prcomp}
+\alias{xtable.ts}
 \title{Create Export Tables}
 \description{Function converting an R object to an \code{xtable} object, which can then be printed as a LaTeX or HTML table.}
 \usage{
@@ -194,29 +195,36 @@ if(require(mva,quietly=TRUE)) {
 
 \testonly{
   for(i in c("latex","html")) {
-    print(tli.table,type=i,file=paste("xtable.",i,sep=""),append=FALSE)
-    print(design.table,type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(fm1.table,type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(fm2.table,type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(anova(fm2)),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(anova(fm2b,fm2)),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(fm3.table,type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(anova(fm3)),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(npk.aov),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(anova(npk.aov)),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(summary(npk.aov)),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(npk.aovE),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(summary(npk.aovE)),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    if(i=="latex") cat("\\\clearpage\n",file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(lm.D9),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(anova(lm.D9)),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(glm.D93),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-    print(xtable(anova(glm.D93,test="Chisq")),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
+    outFileName = paste("xtable.",ifelse(i=="latex","tex",i),sep="")
+    print(tli.table,type=i,file=outFileName,append=FALSE)
+    print(design.table,type=i,file=outFileName,append=TRUE)
+    print(fm1.table,type=i,file=outFileName,append=TRUE)
+    print(fm2.table,type=i,file=outFileName,append=TRUE)
+    print(xtable(anova(fm2)),type=i,file=outFileName,append=TRUE)
+    print(xtable(anova(fm2b,fm2)),type=i,file=outFileName,append=TRUE)
+    print(fm3.table,type=i,file=outFileName,append=TRUE)
+    print(xtable(anova(fm3)),type=i,file=outFileName,append=TRUE)
+    print(xtable(npk.aov),type=i,file=outFileName,append=TRUE)
+    print(xtable(anova(npk.aov)),type=i,file=outFileName,append=TRUE)
+    print(xtable(summary(npk.aov)),type=i,file=outFileName,append=TRUE)
+    print(xtable(npk.aovE),type=i,file=outFileName,append=TRUE)
+    print(xtable(summary(npk.aovE)),type=i,file=outFileName,append=TRUE)
+    if(i=="latex") cat("\\\clearpage\n",file=outFileName,append=TRUE)
+    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environment=NULL)
+    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environment="")
+    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environment="center")
+    print(xtable(anova(lm.D9)),type=i,file=outFileName,append=TRUE)
+    print(xtable(glm.D93),type=i,file=outFileName,append=TRUE)
+    print(xtable(anova(glm.D93,test="Chisq")),type=i,file=outFileName,append=TRUE)
     if(require(mva,quietly=TRUE)) {
-      print(xtable(pr1),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-      print(xtable(summary(pr1)),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
-#      print(xtable(pr2),type=i,file=paste("xtable.",i,sep=""),append=TRUE)
+      print(xtable(pr1),type=i,file=outFileName,append=TRUE)
+      print(xtable(summary(pr1)),type=i,file=outFileName,append=TRUE)
+#      print(xtable(pr2),type=i,file=outFileName,append=TRUE)
     }
+    temp.table <- xtable(ts(cumsum(1+round(rnorm(100), 2)), start = c(1954, 7), frequency=12))
+    caption(temp.table) <- "Time series example"
+    print(temp.table,type=i,file=outFileName,append=TRUE,caption.placement="top",table.placement="h")
+    print(temp.table,type=i,file=outFileName,append=TRUE,caption.placement="bottom",table.placement="htb")
   }
 } 
 

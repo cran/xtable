@@ -27,20 +27,21 @@
 \description{Functions retrieving or setting table attributes for the supplied object of class \code{"xtable"}.}
 \usage{
   caption(x,...)
-  caption(x) <- table.title
+  caption(x) <- value
   label(x,...)
-  label(x) <- table.label
+  label(x) <- value
   align(x,...)
-  align(x) <- column.alignment
+  align(x) <- value
   vsep(x,...)
-  vsep(x) <- column.separation
+  vsep(x) <- value
   digits(x,...)
-  digits(x) <- column.digits
+  digits(x) <- value
   display(x,...)
-  display(x) <- column.format
+  display(x) <- value
 }
 \arguments{
   \item{x}{An \code{"xtable"} object.}
+  \item{value}{The value of the corresponding attribute.}
   \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{
