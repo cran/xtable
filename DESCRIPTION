@@ -1,6 +1,6 @@
 Package: xtable
-Version: 1.2-1
-Date: 2003/11/04
+Version: 1.2-2
+Date: 2003/12/10
 Title: Export tables to LaTeX or HTML
 Author: David Dahl <dbdahl@stat.wisc.edu>
 	with contributions from many others

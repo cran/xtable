@@ -1,4 +1,4 @@
-### xtable 1.2-1  (2003/11/04)
+### xtable 1.2-2  (2003/12/10)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -58,6 +58,8 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
     else {
       BTABLE <- ""
       ETABLE <- ""
+      BENVIRONMENT <- ""
+      EENVIRONMENT <- ""
     }
 #    BTABULAR <- string("\\begin{tabular}{|") + paste(attr(x,"align"),collapse="|") + "|}\n\\hline\n"
 #    See e-mail from "BXC (Bendix Carstensen)" <bxc@novonordisk.com> dated Mon, 27 Aug 2001 10:11:54 +0200
@@ -137,12 +139,14 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.2-1 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.2-2 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
   result <- result + BENVIRONMENT
-  if ((!is.null(attr(x,"caption"))) && (type=="html" || caption.placement=="top")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
-  if (!is.null(attr(x,"label")) && (type=="latex" && caption.placement=="top")) result <- result + BLABEL + attr(x,"label") + ELABEL  
+  if ( floating == TRUE ) {
+    if ((!is.null(attr(x,"caption"))) && (type=="html" || caption.placement=="top")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
+    if (!is.null(attr(x,"label")) && (type=="latex" && caption.placement=="top")) result <- result + BLABEL + attr(x,"label") + ELABEL  
+  }
   result <- result + BTABULAR
   result <- result + BROW + BTH + STH + paste(sanitize(names(x)),collapse=STH) + ETH + EROW
   result <- result + PHEADER
@@ -175,8 +179,10 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
 
   result <- result + paste(t(full),collapse="")
   result <- result + ETABULAR
-  if ((!is.null(attr(x,"caption"))) && (type=="latex" && caption.placement=="bottom")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
-  if (!is.null(attr(x,"label")) && caption.placement=="bottom") result <- result + BLABEL + attr(x,"label") + ELABEL  
+  if ( floating == TRUE ) {
+    if ((!is.null(attr(x,"caption"))) && (type=="latex" && caption.placement=="bottom")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
+    if (!is.null(attr(x,"label")) && caption.placement=="bottom") result <- result + BLABEL + attr(x,"label") + ELABEL  
+  }
   result <- result + EENVIRONMENT
   result <- result + ETABLE
   print(result)
