@@ -91,7 +91,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE) {
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.0-1 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.0-2 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
   if (!is.null(attr(x,"label"))) result <- result + BLABEL + attr(x,"label") + ELABEL

@@ -8,7 +8,7 @@ Assessment of Academic Skills (TAAS).
 }
 \usage{data(tli)}
 \format{A data.frame containing 100 observations with the following columns:
-        \itemize{
+        \describe{
           \item{\code{grade}}{Year in school of student}
           \item{\code{sex}}{Gender of student}
           \item{\code{disadvg}}{Is the student economically disadvantaged?}

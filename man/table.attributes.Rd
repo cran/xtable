@@ -20,7 +20,7 @@
 \alias{display<-}
 \alias{display<-.xtable}
 \title{Retrieve and Set Options for Export Tables}
-\description{Functions retrieving or setting table attributes for the supplied object of class \code{xtable}.}
+\description{Functions retrieving or setting table attributes for the supplied object of class \code{"xtable"}.}
 \usage{
   caption(x)
   caption(x) <- table.title
@@ -34,10 +34,10 @@
   display(x) <- column.format
 }
 \arguments{
-  \item{x}{An \code{xtable} object.}
+  \item{x}{An \code{"xtable"} object.}
 }
 \details{
-  These functions retrieve or set table attributes of the object \code{x} of class \code{xtable}.  See
+  These functions retrieve or set table attributes of the object \code{x} of class \code{"xtable"}.  See
   \code{xtable} for a description of the options.
 }
 \author{David Dahl \email{dbdahl@stat.wisc.edu}}

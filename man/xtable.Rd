@@ -52,7 +52,7 @@ xtable(x, caption=NULL, label=NULL, align=NULL, digits=NULL, display=NULL)
                  quite long result strings.  Default depends on the class of \code{x}.}
 }
 \details{
-  This function extracts tabular information from \code{x} and returns an object of class \code{xtable}.
+  This function extracts tabular information from \code{x} and returns an object of class \code{"xtable"}.
   The nature of the table generated depends on the class of \code{x}.
   For example, \code{aov} objects produce
   ANOVA tables while \code{data.frame} objects produce a table of the entire data.frame.  One can optionally provide a
@@ -70,7 +70,7 @@ xtable(x, caption=NULL, label=NULL, align=NULL, digits=NULL, display=NULL)
   provided replacement functions as they perform validity checks.
 }
 \value{
-  An object of class \code{xtable} which inherits the \code{data.frame} class and contains several additional attributes
+  An object of class \code{"xtable"} which inherits the \code{data.frame} class and contains several additional attributes
   specifying the table formatting options.
 }
 \author{David Dahl \email{dbdahl@stat.wisc.edu}}
