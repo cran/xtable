@@ -29,7 +29,10 @@ xtable(x, caption=NULL, label=NULL, align=NULL, vsep=NULL, digits=NULL,
   \item{label}{Character vector of length 1 containing the LaTeX label or HTML anchor.
                Set to \code{NULL} to suppress the label.  Default value is \code{NULL}.}
   \item{align}{Character vector of length equal to the number of columns of the resulting
-               table indicating the alignment of the corresponding columns.
+               table indicating the alignment of the corresponding columns.  Also, \code{"|"} maybe used
+               to produce vertical lines between columns in LaTeX tables, but these are effectively ignored
+               when considering the required length of the supplied vector.  If a character vector of length one
+               can be supplied, it is split as \code{strsplit(align,"")[[1]]} before processing.
                Since the row names are printed in the first column, the length of \code{align}
                is one greater than \code{ncol(x)} if \code{x} is a \code{data.frame}.
                Use \code{"l"}, \code{"r"}, and \code{"c"} to denote left, right, and
@@ -176,8 +179,8 @@ outcome <- gl(3,1,9)
 treatment <- gl(3,3)
 d.AD <- data.frame(treatment, outcome, counts)
 glm.D93 <- glm(counts ~ outcome + treatment, family=poisson())
-print(xtable(glm.D93))
-print(xtable(anova(glm.D93)))
+print(xtable(glm.D93,align="r|llrc"))
+print(xtable(anova(glm.D93)),hline.after=c(1),size="small")
 
 if(require(stats,quietly=TRUE)) {
   ## Demonstrate prcomp
@@ -216,6 +219,8 @@ if(require(stats,quietly=TRUE)) {
     print(xtable(anova(lm.D9)),type=i,file=outFileName,append=TRUE)
     print(xtable(glm.D93),type=i,file=outFileName,append=TRUE)
     print(xtable(anova(glm.D93,test="Chisq")),type=i,file=outFileName,append=TRUE)
+    print(xtable(glm.D93,align="r|llrc"),type=i,file=outFileName,append=TRUE)
+    print(xtable(anova(glm.D93)),hline.after=c(1),size="small",type=i,file=outFileName,append=TRUE)
     if(require(stats,quietly=TRUE)) {
       print(xtable(pr1),type=i,file=outFileName,append=TRUE)
       print(xtable(summary(pr1)),type=i,file=outFileName,append=TRUE)

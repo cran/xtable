@@ -1,4 +1,4 @@
-### xtable 1.2-4  (2004/09/20)
+### xtable 1.2-5  (2004/12/01)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -19,7 +19,7 @@
 ### License along with this program; if not, write to the Free
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
-print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table.placement="ht",caption.placement="bottom",latex.environments=c("center"),...) {
+print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table.placement="ht",caption.placement="bottom",latex.environments=c("center"),size=NULL,hline.after=NULL,...) {
 
   if (length(type)>1)
     stop("\"type\" must have length 1")
@@ -69,6 +69,17 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
                             sep="", collapse=""),
                       sep="")
     ETABULAR <- "\\hline\n\\end{tabular}\n"
+# BSIZE contributed by Benno Pütz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
+    if (is.null(size) || !is.character(size)){
+      BSIZE <- ""
+      ESIZE <- ""
+    } else {
+      if(length(grep("^\\\\",size))==0){
+        size <- paste("\\",size,sep="")
+      }
+      BSIZE <- paste("{",size,"\n",sep="")
+      ESIZE <- "}\n"
+    }
     BLABEL <- "\\label{"
     ELABEL <- "}\n"
     BCAPTION <- "\\caption{"
@@ -106,6 +117,8 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
     EENVIRONMENT <- ""
     BTABULAR <- ""
     ETABULAR <- ""
+    BSIZE <- ""
+    ESIZE <- ""
     BLABEL <- "<A NAME="
     ELABEL <- "></A>\n"
     BCAPTION <- paste("<CAPTION ALIGN=\"",caption.placement,"\"> ",sep="")
@@ -139,7 +152,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.2-4 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.2-5 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
   result <- result + BENVIRONMENT
@@ -147,6 +160,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
     if ((!is.null(attr(x,"caption"))) && (type=="html" || caption.placement=="top")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
     if (!is.null(attr(x,"label")) && (type=="latex" && caption.placement=="top")) result <- result + BLABEL + attr(x,"label") + ELABEL  
   }
+  result <- result + BSIZE
   result <- result + BTABULAR
   result <- result + BROW + BTH + STH + paste(sanitize(names(x)),collapse=STH) + ETH + EROW
   result <- result + PHEADER
@@ -177,11 +191,13 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
   full[,multiplier*(0:ncol(x))+4] <- BTD3
   full[,multiplier*(0:ncol(x))+5] <- cols
   full[,multiplier*(0:ncol(x))+6] <- ETD
-  full[,multiplier*(ncol(x)+1)+2] <- EROW
+# hline.after contributed by Benno Pütz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
+  full[,multiplier*(ncol(x)+1)+2] <- ifelse(1:nrow(x) %in% hline.after,paste(EROW,PHEADER,sep=""),EROW)
   if (type=="latex") full[,2] <- ""
 
   result <- result + paste(t(full),collapse="")
   result <- result + ETABULAR
+  result <- result + ESIZE
   if ( floating == TRUE ) {
     if ((!is.null(attr(x,"caption"))) && (type=="latex" && caption.placement=="bottom")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
     if (!is.null(attr(x,"label")) && caption.placement=="bottom") result <- result + BLABEL + attr(x,"label") + ELABEL  

@@ -2,7 +2,7 @@
 \alias{print.xtable}
 \title{Print Export Tables}
 \description{Function displaying or writing to disk the LaTeX or HTML code associated with the supplied object of class \code{xtable}.}
-\usage{print.xtable(x, type="latex", file="", append=FALSE, floating=TRUE, table.placement = "ht", caption.placement="bottom", latex.environments=c("center"), ...)}
+\usage{print.xtable(x, type="latex", file="", append=FALSE, floating=TRUE, table.placement = "ht", caption.placement="bottom", latex.environments=c("center"), size=NULL, hline.after=NULL, ...)}
 \arguments{
   \item{x}{An object of class \code{"xtable"}.}
   \item{type}{Type of table to produce.  Possible values for \code{type} are \code{"latex"} or \code{"html"}.
@@ -19,6 +19,8 @@
                 Default value is \code{"bottom"}.}
   \item{latex.environments}{If \code{floating=TRUE} and \code{type="latex"}, the specificed latex environments (provided as a character vector) will enclose the tabuluar environment.
                 Default value is \code{"center"}.}
+  \item{size}{An arbitrary character vector intended to be used to set the font size in a LaTeX table.  The supplied value (if not \code{NULL}) is inserted just before the tabular environment starts. Default value is \code{NULL}.}
+  \item{hline.after}{When \code{type="latex"}, a vector of numbers between 1 and \code{"nrow(x)"}, inclusive, indicating the rows after which a horizontal line should appear.  If \code{NULL} is used, no extra lines are produced. Default value is \code{NULL}.}
   \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{

@@ -1,4 +1,4 @@
-### xtable 1.2-4  (2004/09/20)
+### xtable 1.2-5  (2004/12/01)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -48,10 +48,22 @@ label.xtable <- function(x,...) {
 
 "align<-" <- function(x,value) UseMethod("align<-")
 "align<-.xtable" <- function(x,value) {
-  if (length(value)!=ncol(x)+1)
-    stop(paste("\"align\" must have length equal to",ncol(x)+1,"( ncol(x) + 1 )"))
-  if (!all(!is.na(match(value,c("r","l","c")))))
-    stop("\"align\" must be containing elements of {\"r\",\"l\",\"c\"}")
+# Based on contribution from Benno Pütz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
+  # cat("%",value,"\n")
+  if ( (!is.null(value)) && ( is.character(value) ) && ( length(value) == 1 ) && ( nchar(value) > 1 ) ) {
+    value <- strsplit(value,"")[[1]]
+  }
+  if (!all(!is.na(match(value,c("r","l","c","|"))))){
+    stop("\"align\" must be containing elements of {\"r\",\"l\",\"c\",\"|\"}")
+  }
+  c.value <- if (any(!is.na(match(value,"|")))) {
+                value[-which(value=='|')]
+             } else {
+                value
+             }
+  if (length(c.value)!=ncol(x)+1)
+      stop(paste("\"align\" must have length equal to",ncol(x)+1,"( ncol(x) + 1 )"))
+
   attr(x,"align") <- value
   return(x)
 }
