@@ -1,8 +1,8 @@
-### xtable 1.0-9  (2001/08/21)
+### xtable 1.0-10  (2002/08/23)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2001 David B. Dahl <dbdahl@stat.wisc.edu>
+### Copyright 2000-2002 David B. Dahl <dbdahl@stat.wisc.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -99,8 +99,8 @@ digits.xtable <- function(x,...) {
 "display<-.xtable" <- function(x,value) {
   if (length(value)!=ncol(x)+1)
     stop(paste("\"display\" must have length equal to",ncol(x)+1,"( ncol(x) + 1 )"))
-  if (!all(!is.na(match(value,c("f","e","E","g","G","fg","s")))))
-    stop("\"display\" must be in {\"f\",\"e\",\"E\",\"g\",\"G\", \"fg\", \"s\"}")
+  if (!all(!is.na(match(value,c("d","f","e","E","g","G","fg","s")))))
+    stop("\"display\" must be in {\"d\",\"f\",\"e\",\"E\",\"g\",\"G\", \"fg\", \"s\"}")
   attr(x,"display") <- value
   return(x)
 }
