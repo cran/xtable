@@ -1,4 +1,4 @@
-### xtable 1.1-1  (2003/05/19)
+### xtable 1.1-2  (2003/05/29)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -22,8 +22,7 @@
 
 xtable <- function(x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
                    digits=NULL,display=NULL,...) {
-  if(is.null(class(x))) class(x) <- data.class(x)
-  UseMethod("xtable",x,...)
+  UseMethod("xtable")
 }
 
 

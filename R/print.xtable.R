@@ -1,4 +1,4 @@
-### xtable 1.1-1  (2003/05/19)
+### xtable 1.1-2  (2003/05/29)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -115,7 +115,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,...) 
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.1-1 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.1-2 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
   if ((!is.null(attr(x,"caption"))) && (type=="html")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
