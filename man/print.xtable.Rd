@@ -2,7 +2,7 @@
 \alias{print.xtable}
 \title{Print Export Tables}
 \description{Function displaying or writing to disk the LaTeX or HTML code associated with the supplied object of class \code{xtable}.}
-\usage{print.xtable(x, type="latex", file="", append=FALSE, vsep="", ...)}
+\usage{print.xtable(x, type="latex", file="", append=FALSE, ...)}
 \arguments{
   \item{x}{An object of class \code{"xtable"}.}
   \item{type}{Type of table to produce.  Possible values for \code{type} are \code{"latex"} or \code{"html"}.
@@ -11,8 +11,6 @@
               Default value is \code{""}.}
   \item{append}{If \code{TRUE} and \code{file!=""}, code will be appended to \code{file} instead of overwriting \code{file}.
                 Default value is \code{FALSE}.}
-  \item{vsep}{Vertical seperator for LaTeX tables.  The value \code{"|"} produces a vertible bar between columns.  Default value is \code{""},
-              which produces no seperator.}
   \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{
@@ -20,6 +18,6 @@
   The resulting code is either a LaTeX or HTML table, depending on the value of \code{type}.
 }
 \author{David Dahl \email{dbdahl@stat.wisc.edu}}
-\seealso{\code{\link{xtable}}, \code{\link{caption}}, \code{\link{label}},
+\seealso{\code{\link{xtable}}, \code{\link{caption}}, \code{\link{label}}, \code{\link{vsep}},
          \code{\link{align}}, \code{\link{digits}}, \code{\link{display}}, \code{\link{formatC}}}
 \keyword{print}

@@ -1,4 +1,4 @@
-### xtable 1.0-8  (2001/12/15)
+### xtable 1.0-9  (2001/08/21)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -59,6 +59,25 @@ label.xtable <- function(x,...) {
 align <- function(x,...) UseMethod("align")
 align.xtable <- function(x,...) {
   return(attr(x,"align"))
+}
+
+"vsep<-" <- function(x,value) UseMethod("vsep<-")
+"vsep<-.xtable" <- function(x, value) {
+  if(is.null(value))
+    vsep <- ""
+  if(length(value) == 1)
+    value <- rep(value, ncol(x) + 2)
+  if (length(value) != ncol(x) + 2)
+                                        # +2 due to table edges
+    stop(paste("\"vsep\" must have length equal to", ncol(x)+2,
+               "( ncol(x) + 2 )"))
+  attr(x, "vsep") <- value
+  return(x)
+}
+
+vsep <- function(x, ...) UseMethod("vsep")
+vsep.xtable <- function(x, ...) {
+  return(attr(x, "vsep"))
 }
 
 "digits<-" <- function(x,value) UseMethod("digits<-")

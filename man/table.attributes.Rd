@@ -11,6 +11,10 @@
 \alias{align.xtable}
 \alias{align<-}
 \alias{align<-.xtable}
+\alias{vsep}
+\alias{vsep.xtable}
+\alias{vsep<-}
+\alias{vsep<-.xtable}
 \alias{digits}
 \alias{digits.xtable}
 \alias{digits<-}
@@ -28,6 +32,8 @@
   label(x) <- table.label
   align(x,...)
   align(x) <- column.alignment
+  vsep(x,...)
+  vsep(x) <- column.separation
   digits(x,...)
   digits(x) <- column.digits
   display(x,...)
