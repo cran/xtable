@@ -17,7 +17,8 @@
 \title{Create Export Tables}
 \description{Function converting an R object to an \code{xtable} object, which can then be printed as a LaTeX or HTML table.}
 \usage{
-xtable(x, caption=NULL, label=NULL, align=NULL, digits=NULL, display=NULL)
+xtable(x,...)
+%xtable(x, caption=NULL, label=NULL, align=NULL, digits=NULL, display=NULL)
 }
 \arguments{
   \item{x}{An R object of class found among \code{methods(xtable)}.  See below on how to write additional method functions

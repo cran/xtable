@@ -1,8 +1,8 @@
-### xtable 1.0-1  (2000/12/12)
+### xtable 1.0-6  (2001/06/13)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000 David B. Dahl <dbdahl@stat.wisc.edu>
+### Copyright 2000-2001 David B. Dahl <dbdahl@stat.wisc.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -55,7 +55,14 @@ print.xtable <- function(x,type="latex",file="",append=FALSE) {
       result <- gsub("\\|","$\|$",result)
       return(result)
     }
-  } else {
+    sanitize.numbers <- function(x) {
+      result <- x
+      for(i in 1:length(x)) {
+        result[i] <- gsub("-","$-$",result[i])
+      }
+      return(result)
+    }
+ } else {
     BCOMMENT <- "<!-- "
     ECOMMENT <- " -->\n"
     BTABLE <- "<TABLE border=1>\n"
@@ -86,15 +93,18 @@ print.xtable <- function(x,type="latex",file="",append=FALSE) {
       result <- gsub("<","&lt ",result)
       return(result)
     }
+    sanitize.numbers <- function(x) {
+      return(x)
+    }
   }
+
 
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.0-2 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.0-6 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
-  if (!is.null(attr(x,"label"))) result <- result + BLABEL + attr(x,"label") + ELABEL
   if ((!is.null(attr(x,"caption"))) && (type=="html")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION 
   result <- result + BTABULAR
   result <- result + BROW + BTH + STH + paste(sanitize(names(x)),collapse=STH) + ETH + EROW
@@ -112,6 +122,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE) {
     ina <- is.na(x[,i])
     cols[,i+1] <- formatC(disp(x[,i]),format=attr(x,"display")[i+1],digits=attr(x,"digits")[i+1])
     if (any(ina)) cols[ina,i+1] <- ""
+    cols[,i+1] <- sanitize.numbers(cols[,i+1])
   }
 
   multiplier <- 5
@@ -128,6 +139,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE) {
   result <- result + paste(t(full),collapse="")
   result <- result + ETABULAR
   if ((!is.null(attr(x,"caption"))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION 
+  if (!is.null(attr(x,"label"))) result <- result + BLABEL + attr(x,"label") + ELABEL
   result <- result + ETABLE
   print(result)
 

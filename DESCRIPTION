@@ -1,6 +1,6 @@
 Package: xtable
-Version: 1.0-2
-Date: 2000/12/08
+Version: 1.0-6
+Date: 2001/06/13
 Title: Export tables
 Author: David Dahl <dbdahl@stat.wisc.edu>
 Maintainer: David Dahl <dbdahl@stat.wisc.edu>

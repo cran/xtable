@@ -22,15 +22,15 @@
 \title{Retrieve and Set Options for Export Tables}
 \description{Functions retrieving or setting table attributes for the supplied object of class \code{"xtable"}.}
 \usage{
-  caption(x)
+  caption(x,...)
   caption(x) <- table.title
-  label(x)
+  label(x,...)
   label(x) <- table.label
-  align(x)
+  align(x,...)
   align(x) <- column.alignment
-  digits(x)
+  digits(x,...)
   digits(x) <- column.digits
-  display(x)
+  display(x,...)
   display(x) <- column.format
 }
 \arguments{

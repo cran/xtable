@@ -9,8 +9,8 @@
 \usage{
   string(text,file="",append=FALSE) 
   print.string(x)
-  +.string(x,y)
-  as.string(x)
+  "+.string"(x,y)
+  as.string(x,file="",append=FALSE)
   is.string(x)
 }
 \arguments{
