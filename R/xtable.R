@@ -1,4 +1,4 @@
-### xtable 1.0-11  (2002/10/04)
+### xtable 1.0-12  (2003/01/23)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -8,13 +8,13 @@
 ### It is made available under the terms of the GNU General Public
 ### License, version 2, or at your option, any later version,
 ### incorporated herein by reference.
-### 
+###
 ### This program is distributed in the hope that it will be
 ### useful, but WITHOUT ANY WARRANTY; without even the implied
 ### warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ### PURPOSE.  See the GNU General Public License for more
 ### details.
-### 
+###
 ### You should have received a copy of the GNU General Public
 ### License along with this program; if not, write to the Free
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
@@ -44,7 +44,7 @@ xtable.data.frame <- function(x,caption=NULL,label=NULL,align=NULL,
   display(x) <- switch(1+is.null(display),display,c("s",c("f","s")[(characters|factors)+1]))
   return(x)
 }
- 
+
 xtable.matrix <- function(x,caption=NULL,label=NULL,align=NULL,
                           vsep=NULL, digits=NULL,display=NULL) {
   return(xtable.data.frame(data.frame(x,check.names=FALSE),
@@ -184,7 +184,7 @@ xtable.summary.prcomp <- function(x, caption=NULL, label=NULL,
 #   From: Jun Yan <jyan@stat.wisc.edu>
 #   Subject: Re: [R] xtable for Cox model output
 xtable.coxph <- function (x, caption = NULL, label = NULL, align = NULL,
-                          vsep = NULL, digits = NULL, display = NULL) 
+                          vsep = NULL, digits = NULL, display = NULL)
 {
     cox <- x
     beta <- cox$coef
@@ -207,10 +207,10 @@ xtable.coxph <- function (x, caption = NULL, label = NULL, align = NULL,
 
 # Broken in R 1.4.0:  x$loadings cannot be coerce "loadings" into a "data.frame".
 # ## princomp objects
-# 
+#
 # xtable.princomp <- function(x,caption=NULL,label=NULL,align=NULL,digits=NULL,display=NULL) {
 #   x <- data.frame(x$loadings,check.names=FALSE)
-# 
+#
 #   class(x) <- c("xtable","data.frame")
 #   caption(x) <- caption
 #   label(x) <- label

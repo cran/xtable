@@ -1,4 +1,4 @@
-### xtable 1.0-11  (2002/10/04)
+### xtable 1.0-12  (2003/01/23)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -8,13 +8,13 @@
 ### It is made available under the terms of the GNU General Public
 ### License, version 2, or at your option, any later version,
 ### incorporated herein by reference.
-### 
+###
 ### This program is distributed in the hope that it will be
 ### useful, but WITHOUT ANY WARRANTY; without even the implied
 ### warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ### PURPOSE.  See the GNU General Public License for more
 ### details.
-### 
+###
 ### You should have received a copy of the GNU General Public
 ### License along with this program; if not, write to the Free
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
@@ -25,7 +25,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE, ...) {
     stop("\"type\" must have length 1")
   if (!all(!is.na(match(type,c("latex","html")))))
     stop("\"type\" must be in {\"latex\", \"html\"}")
- 
+
   if (type=="latex") {
     BCOMMENT <- "% "
     ECOMMENT <- "\n"
@@ -33,7 +33,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE, ...) {
     ETABLE <- "\\end{center}\n\\end{table}\n"
 #    BTABULAR <- string("\\begin{tabular}{|") + paste(attr(x,"align"),collapse="|") + "|}\n\\hline\n"
 #    See e-mail from "BXC (Bendix Carstensen)" <bxc@novonordisk.com> dated Mon, 27 Aug 2001 10:11:54 +0200
-    BTABULAR <- paste("\\begin{tabular}{", 
+    BTABULAR <- paste("\\begin{tabular}{",
                       paste(attr(x, "vsep"),
                             c(attr(x, "align"), "}\n\\hline\n"),
                             sep="", collapse=""),
@@ -107,10 +107,10 @@ print.xtable <- function(x,type="latex",file="",append=FALSE, ...) {
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.0-11 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.0-12 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
-  if ((!is.null(attr(x,"caption"))) && (type=="html")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION 
+  if ((!is.null(attr(x,"caption"))) && (type=="html")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
   result <- result + BTABULAR
   result <- result + BROW + BTH + STH + paste(sanitize(names(x)),collapse=STH) + ETH + EROW
   result <- result + PHEADER
@@ -143,7 +143,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE, ...) {
 
   result <- result + paste(t(full),collapse="")
   result <- result + ETABULAR
-  if ((!is.null(attr(x,"caption"))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION 
+  if ((!is.null(attr(x,"caption"))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
   if (!is.null(attr(x,"label"))) result <- result + BLABEL + attr(x,"label") + ELABEL
   result <- result + ETABLE
   print(result)
@@ -168,7 +168,7 @@ string <- function(text,file="",append=FALSE) {
 }
 
 as.string <- function(x,file="",append=FALSE) {
-  if (is.null(class(x)))
+  if (is.null(attr(x,"class")))
   switch(data.class(x),
       character=return(string(x,file,append)),
       numeric=return(string(as.character(x),file,append)),
