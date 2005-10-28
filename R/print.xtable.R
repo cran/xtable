@@ -1,8 +1,8 @@
-### xtable 1.2-5  (2004/12/01)
+### xtable 1.2-995  (2005/10/28)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2004 David B. Dahl <dahl@stat.tamu.edu>
+### Copyright 2000-2005 David B. Dahl <dahl@stat.tamu.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -19,13 +19,14 @@
 ### License along with this program; if not, write to the Free
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
-print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table.placement="ht",caption.placement="bottom",latex.environments=c("center"),size=NULL,hline.after=NULL,...) {
+print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table.placement="ht",caption.placement="bottom",latex.environments=c("center"),tabular.environment="tabular",size=NULL,hline.after=NULL,NA.string="",...) {
 
   if (length(type)>1)
     stop("\"type\" must have length 1")
   type <- tolower(type)
   if (!all(!is.na(match(type,c("latex","html")))))
     stop("\"type\" must be in {\"latex\", \"html\"}")
+  table.placement <- tolower(table.placement)
   if (!all(!is.na(match(unlist(strsplit(table.placement, split="")),c("h","t","b","p","!")))))
     stop("\"table.placement\" must contain only elements of {\"h\",\"t\",\"b\",\"p\",\"!\"}")
   if (!all(!is.na(match(caption.placement,c("bottom","top")))))
@@ -35,6 +36,15 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
     BCOMMENT <- "% "
     ECOMMENT <- "\n"
 # See e-mail from "John S. Walker <jsw9c@uic.edu>" dated 5-19-2003 regarding "texfloat"
+# See e-mail form "Fernando Henrique Ferraz P. da Rosa" <academic@feferraz.net>" dated 10-28-2005 regarding "longtable"
+    if ( tabular.environment == "longtable" & floating == TRUE ) {
+      warning("Attempt to use \"longtable\" with floating=TRUE. Changing to FALSE.")
+      floating <- FALSE
+    }
+    if ( tabular.environment == "longtable" & caption.placement == "top" ) {
+      warning("Attempt to use \"longtable\" with caption.placement=\"top\". Changing to \"bottom\".")
+      caption.placement <- "bottom"
+    }
     if ( floating == TRUE ) {
       # See e-mail from "Pfaff, Bernhard <Bernhard.Pfaff@drkw.com>" dated 7-09-2003 regarding "suggestion for an amendment of the source"
       # See e-mail from "Mitchell, David" <David.Mitchell@dotars.gov.au>" dated 2003-07-09 regarding "Additions to R xtable package"
@@ -63,13 +73,13 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
     }
 #    BTABULAR <- string("\\begin{tabular}{|") + paste(attr(x,"align"),collapse="|") + "|}\n\\hline\n"
 #    See e-mail from "BXC (Bendix Carstensen)" <bxc@novonordisk.com> dated Mon, 27 Aug 2001 10:11:54 +0200
-    BTABULAR <- paste("\\begin{tabular}{",
+    BTABULAR <- paste("\\begin{",tabular.environment,"}{",
                       paste(attr(x, "vsep"),
                             c(attr(x, "align"), "}\n\\hline\n"),
                             sep="", collapse=""),
                       sep="")
-    ETABULAR <- "\\hline\n\\end{tabular}\n"
-# BSIZE contributed by Benno Pütz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
+    ETABULAR <- paste("\\hline\n\\end{",tabular.environment,"}\n",sep="")
+# BSIZE contributed by Benno PÃ¼tz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
     if (is.null(size) || !is.character(size)){
       BSIZE <- ""
       ESIZE <- ""
@@ -108,6 +118,9 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
       }
       return(result)
     }
+    sanitize.final <- function(result) {
+      return(result)
+    }
  } else {
     BCOMMENT <- "<!-- "
     ECOMMENT <- " -->\n"
@@ -130,7 +143,9 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
     STH <- " </TH> <TH> "
     PHEADER <- ""
     BTD1 <- " <TD align=\""
-    BTD2 <- matrix(attr(x,"align"),nrow=nrow(x),ncol=ncol(x)+1,byrow=TRUE)
+    align.tmp <- attr(x,"align")
+    align.tmp <- align.tmp[align.tmp!="|"]
+    BTD2 <- matrix(align.tmp,nrow=nrow(x),ncol=ncol(x)+1,byrow=TRUE)
     BTD2[BTD2=="r"] <- "right"
     BTD2[BTD2=="l"] <- "left"
     BTD2[BTD2=="c"] <- "center"
@@ -141,18 +156,24 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
       result <- gsub("&","&amp ",result)
       result <- gsub(">","&gt ",result)
       result <- gsub("<","&lt ",result)
+      result <- gsub("_", "\\_", result, fixed=TRUE)
       return(result)
     }
     sanitize.numbers <- function(x) {
       return(x)
     }
+    sanitize.final <- function(result) {
+      # Suggested by Uwe Ligges <ligges@statistik.uni-dortmund.de> in e-mail dated 2005-07-30.
+      result$text <- gsub("  *"," ", result$text)
+      result$text <- gsub(' align="left"', "", result$text)
+      return(result)
+    }
   }
-
 
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.2-5 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.2-995 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
   result <- result + BENVIRONMENT
@@ -176,11 +197,25 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
     }
     return(y)
   }
+  # Code for letting "digits" be a matrix was provided by Arne Henningsen <ahenningsen@agric-econ.uni-kiel.de> in e-mail dated 2005-06-04.
+  if( !is.matrix( attr( x, "digits" ) ) ) {
+    attr(x,"digits") <- matrix( attr( x, "digits" ),
+      nrow = nrow( cols ), ncol = ncol( cols ), byrow = TRUE )
+  }
   for(i in 1:ncol(x)) {
     ina <- is.na(x[,i])
-    cols[,i+1] <- formatC(disp(x[,i]),format=attr(x,"display")[i+1],digits=attr(x,"digits")[i+1])
-    if (any(ina)) cols[ina,i+1] <- ""
-    cols[,i+1] <- sanitize.numbers(cols[,i+1])
+    is.numeric.column <- is.numeric(x[,i])
+    for( j in 1:nrow( cols ) ) {
+      cols[j,i+1] <-
+        formatC( disp( x[j,i] ),
+          format = ifelse( attr( x, "digits" )[j,i+1] < 0, "E",
+            attr( x, "display" )[i+1] ),
+          digits = abs( attr( x, "digits" )[j,i+1] ) )
+    }
+    if (any(ina)) cols[ina,i+1] <- NA.string
+    if ( is.numeric.column ) {
+      cols[,i+1] <- sanitize.numbers(cols[,i+1])
+    }
   }
 
   multiplier <- 5
@@ -191,11 +226,18 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
   full[,multiplier*(0:ncol(x))+4] <- BTD3
   full[,multiplier*(0:ncol(x))+5] <- cols
   full[,multiplier*(0:ncol(x))+6] <- ETD
-# hline.after contributed by Benno Pütz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
+# hline.after contributed by Benno PÃ¼tz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
   full[,multiplier*(ncol(x)+1)+2] <- ifelse(1:nrow(x) %in% hline.after,paste(EROW,PHEADER,sep=""),EROW)
   if (type=="latex") full[,2] <- ""
 
   result <- result + paste(t(full),collapse="")
+
+  if ( tabular.environment == "longtable") { 
+    result <- result + "\\hline\n"
+    if ((!is.null(attr(x,"caption"))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
+    if (!is.null(attr(x,"label"))) result <- result + BLABEL + attr(x,"label") + ELABEL
+    ETABULAR <- "\\end{longtable}\n"
+  }
   result <- result + ETABULAR
   result <- result + ESIZE
   if ( floating == TRUE ) {
@@ -204,9 +246,10 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
   }
   result <- result + EENVIRONMENT
   result <- result + ETABLE
+  result <- sanitize.final(result)
   print(result)
 
-  return(invisible())
+  return(invisible(result$text))
 }
 
 "+.string" <- function(x,y) {

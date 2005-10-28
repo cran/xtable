@@ -1,8 +1,8 @@
-### xtable 1.2-5  (2004/12/01)
+### xtable 1.2-995  (2005/10/28)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2004 David B. Dahl <dahl@stat.tamu.edu>
+### Copyright 2000-2005 David B. Dahl <dahl@stat.tamu.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -48,7 +48,7 @@ label.xtable <- function(x,...) {
 
 "align<-" <- function(x,value) UseMethod("align<-")
 "align<-.xtable" <- function(x,value) {
-# Based on contribution from Benno Pütz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
+# Based on contribution from Benno PÃ¼tz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
   # cat("%",value,"\n")
   if ( (!is.null(value)) && ( is.character(value) ) && ( length(value) == 1 ) && ( nchar(value) > 1 ) ) {
     value <- strsplit(value,"")[[1]]
@@ -94,8 +94,18 @@ vsep.xtable <- function(x, ...) {
 
 "digits<-" <- function(x,value) UseMethod("digits<-")
 "digits<-.xtable" <- function(x,value) {
-  if (length(value)!=ncol(x)+1)
-    stop(paste("\"digits\" must have length equal to",ncol(x)+1,"( ncol(x) + 1 )"))
+  if( is.matrix( value ) ) {
+    if( ncol( value ) != ncol(x)+1 || nrow( value ) != nrow(x) ) {
+      stop( "if argument 'digits' is a matrix, it must have columns equal",
+        " to ", ncol(x)+1, " ( ncol(x) + 1 ) and rows equal to ", nrow(x),
+        " ( nrow( x )" )
+    }
+  } else {
+    if( length( value ) != ncol(x)+1 ) {
+      stop( "if argument 'digits' is a vector, it must have length equal",
+        " to", ncol(x)+1, " ( ncol(x) + 1 )" )
+    }
+  }
   if (!is.numeric(value))
     stop("\"digits\" must be numeric")
   attr(x,"digits") <- value

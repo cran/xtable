@@ -1,8 +1,8 @@
-### xtable 1.2-5  (2004/12/01)
+### xtable 1.2-995  (2005/10/28)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2004 David B. Dahl <dahl@stat.tamu.edu>
+### Copyright 2000-2005 David B. Dahl <dahl@stat.tamu.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public

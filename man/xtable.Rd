@@ -43,13 +43,18 @@ xtable(x, caption=NULL, label=NULL, align=NULL, vsep=NULL, digits=NULL,
 	       separators acceptable to LaTeX.  Default depends on the
 	       class of argument.  Ignored in HTML mode.}
 	     \item{digits}{Numeric vector of length equal to the number of columns of the resulting
-                table indicating the number of digits to display in the corresponding columns.
-                Since the row names are printed in the first column, the length of \code{align}
+                table \bold{or} matrix of the same size as the resulting table 
+                indicating the number of digits to display in the corresponding columns.
+                Since the row names are printed in the first column, the length of the 
+                vector \code{digits} or the number of columns of the matrix \code{digits}
                 is one greater than \code{ncol(x)} if \code{x} is a \code{data.frame}.
-                Default depends of class of \code{x}.}
+                Default depends of class of \code{x}.
+                If values of \code{digits} are negative, the corresponding values 
+                of \code{x} are displayed in scientific format with \code{abs(digits)}
+                digits.}
   \item{display}{Character vector of length equal to the number of columns of the resulting
                  table indicating the format for the corresponding columns.
-                 Since the row names are printed in the first column, the length of \code{align}
+                 Since the row names are printed in the first column, the length of \code{display}
                  is one greater than \code{ncol(x)} if \code{x} is a \code{data.frame}.
                  These values are passed to the \code{formatC} function.  Use \code{"d"} (for integers),
                  \code{"f"}, \code{"e"}, \code{"E"}, \code{"g"}, \code{"G"}, \code{"fg"} (for
@@ -90,7 +95,7 @@ xtable(x, caption=NULL, label=NULL, align=NULL, vsep=NULL, digits=NULL,
   An object of class \code{"xtable"} which inherits the \code{data.frame} class and contains several additional attributes
   specifying the table formatting options.
 }
-\author{David Dahl \email{dahl@stat.tamu.edu}}
+\author{David Dahl \email{dahl@stat.tamu.edu} with contributions and suggestions from many others (see source code).}
 \seealso{\code{\link{print.xtable}}, \code{\link{caption}}, \code{\link{label}},
          \code{\link{align}}, \code{\link{digits}}, \code{\link{display}}, \code{\link{formatC}}, \code{\link{methods}}}
 \examples{
@@ -101,6 +106,12 @@ data(tli)
 ## Demonstrate data.frame
 tli.table <- xtable(tli[1:20,])
 digits(tli.table)[c(2,6)] <- 0
+print(tli.table)
+print(tli.table,type="html")
+
+## Demonstrate data.frame with different digits in cells
+tli.table <- xtable(tli[1:20,])
+digits(tli.table) <- matrix( 0:4, nrow = 20, ncol = ncol(tli)+1 )
 print(tli.table)
 print(tli.table,type="html")
 
@@ -198,7 +209,7 @@ if(require(stats,quietly=TRUE)) {
 
 \testonly{
   for(i in c("latex","html")) {
-    outFileName = paste("xtable.",ifelse(i=="latex","tex",i),sep="")
+    outFileName <- paste("xtable.",ifelse(i=="latex","tex",i),sep="")
     print(tli.table,type=i,file=outFileName,append=FALSE)
     print(design.table,type=i,file=outFileName,append=TRUE)
     print(fm1.table,type=i,file=outFileName,append=TRUE)
@@ -224,7 +235,7 @@ if(require(stats,quietly=TRUE)) {
     if(require(stats,quietly=TRUE)) {
       print(xtable(pr1),type=i,file=outFileName,append=TRUE)
       print(xtable(summary(pr1)),type=i,file=outFileName,append=TRUE)
-#      print(xtable(pr2),type=i,file=outFileName,append=TRUE)
+      # print(xtable(pr2),type=i,file=outFileName,append=TRUE)
     }
     temp.table <- xtable(ts(cumsum(1+round(rnorm(100), 2)), start = c(1954, 7), frequency=12))
     caption(temp.table) <- "Time series example"
