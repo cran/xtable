@@ -1,4 +1,4 @@
-### xtable 1.2-995  (2005/10/28)
+### xtable 1.3-0  (2005/11/02)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -26,8 +26,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
   type <- tolower(type)
   if (!all(!is.na(match(type,c("latex","html")))))
     stop("\"type\" must be in {\"latex\", \"html\"}")
-  table.placement <- tolower(table.placement)
-  if (!all(!is.na(match(unlist(strsplit(table.placement, split="")),c("h","t","b","p","!")))))
+  if (!all(!is.na(match(unlist(strsplit(table.placement, split="")),c("H","h","t","b","p","!")))))
     stop("\"table.placement\" must contain only elements of {\"h\",\"t\",\"b\",\"p\",\"!\"}")
   if (!all(!is.na(match(caption.placement,c("bottom","top")))))
     stop("\"caption.placement\" must be either {\"bottom\",\"top\"}")
@@ -173,7 +172,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.2-995 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.3-0 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
   result <- result + BENVIRONMENT

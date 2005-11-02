@@ -14,7 +14,7 @@
                 Default value is \code{FALSE}.}
   \item{floating}{If \code{TRUE} and \code{type="latex"}, the resulting table will be a floating table (using \code{\\begin\{table\}} and \code{\\end\{table\}}).
                 Default value is \code{TRUE}.}
-  \item{table.placement}{If \code{floating=TRUE} and \code{type="latex"}, the floating table will have placement given by \code{table.placement} where \code{table.placement} must be \code{NULL} or contain only elements of {"h","t","b","p","!"}.
+  \item{table.placement}{If \code{floating=TRUE} and \code{type="latex"}, the floating table will have placement given by \code{table.placement} where \code{table.placement} must be \code{NULL} or contain only elements of {"h","t","b","p","!","H"}.
                 Default value is \code{"ht"}.}
   \item{caption.placement}{The caption will be have placed at the bottom of the table if \code{caption.placement} is \code{"bottom"} and at the top of the table if it equals \code{"top"}.
                 Default value is \code{"bottom"}.}

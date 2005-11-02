@@ -1,4 +1,4 @@
-### xtable 1.2-995  (2005/10/28)
+### xtable 1.3-0  (2005/11/02)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -187,17 +187,16 @@ xtable.coxph <- function (x,caption=NULL,label=NULL,align=NULL,vsep=NULL,
   cox <- x
   beta <- cox$coef
   se <- sqrt(diag(cox$var))
-  if (is.null(cox$naive.var)) {
+#  DBD: Nov 2, 2005:  Commented out this if/else statement because "nse" is never defined!
+#  if (is.null(cox$naive.var)) {
     tmp <- cbind(beta, exp(beta), se, beta/se, 1 - pchisq((beta/se)^2, 1))
     dimnames(tmp) <- list(names(beta),
       c("coef", "exp(coef)", "se(coef)", "z", "p"))
-  }
-  else {
-    tmp <- cbind( beta, exp(beta), nse, se, beta/se,
-      signif(1 - pchisq((beta/se)^2, 1), digits - 1))
-    dimnames(tmp) <- list(names(beta),
-      c("coef", "exp(coef)", "se(coef)", "robust se", "z", "p"))
-  }
+#  }
+#  else {
+#    tmp <- cbind( beta, exp(beta), nse, se, beta/se, signif(1 - pchisq((beta/se)^2, 1), digits - 1))
+#    dimnames(tmp) <- list(names(beta),c("coef", "exp(coef)", "se(coef)", "robust se", "z", "p"))
+#  }
   return(xtable(tmp, caption = caption, label = label, align = align,
                 vsep = vsep, digits = digits, display = display))
 }

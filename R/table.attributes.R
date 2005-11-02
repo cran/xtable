@@ -1,4 +1,4 @@
-### xtable 1.2-995  (2005/10/28)
+### xtable 1.3-0  (2005/11/02)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###

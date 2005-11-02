@@ -193,6 +193,15 @@ glm.D93 <- glm(counts ~ outcome + treatment, family=poisson())
 print(xtable(glm.D93,align="r|llrc"))
 print(xtable(anova(glm.D93)),hline.after=c(1),size="small")
 
+## Demonstration of longtable support.
+## Remember to insert \usepackage{longtable} on your LaTeX preamble
+x <- matrix(rnorm(1000), ncol = 10)
+x.big <- xtable(x,label='tabbig',caption='Example of longtable spanning several pages')
+print(x.big,tabular.environment='longtable',floating=FALSE) 
+x <- x[1:30,]
+x.small <- xtable(x,label='tabsmall',caption='regular table env')
+print(x.small)  # default, no longtable 
+
 if(require(stats,quietly=TRUE)) {
   ## Demonstrate prcomp
   ## Taken from help(prcomp) in mva package of R 1.1.1
