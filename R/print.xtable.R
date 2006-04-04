@@ -1,8 +1,8 @@
-### xtable 1.3-0  (2005/11/02)
+### xtable 1.3-1  (2006/04/04)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2005 David B. Dahl <dahl@stat.tamu.edu>
+### Copyright 2000-2006 David B. Dahl <dahl@stat.tamu.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -172,7 +172,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.3-0 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.3-1 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
   result <- result + BENVIRONMENT
