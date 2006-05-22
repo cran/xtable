@@ -1,4 +1,4 @@
-### xtable 1.3-1  (2006/04/04)
+### xtable 1.3-2  (2006/05/22)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -19,12 +19,14 @@
 ### License along with this program; if not, write to the Free
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
-print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table.placement="ht",caption.placement="bottom",latex.environments=c("center"),tabular.environment="tabular",size=NULL,hline.after=NULL,NA.string="",...) {
+print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,floating.environment="table",table.placement="ht",caption.placement="bottom",latex.environments=c("center"),tabular.environment="tabular",size=NULL,hline.after=NULL,NA.string="",...) {
 
   if (length(type)>1)
     stop("\"type\" must have length 1")
   type <- tolower(type)
   if (!all(!is.na(match(type,c("latex","html")))))
+    stop("\"type\" must be in {\"latex\", \"html\"}")
+  if (!all(!is.na(match(floating.environment,c("table","sidewaystable")))))
     stop("\"type\" must be in {\"latex\", \"html\"}")
   if (!all(!is.na(match(unlist(strsplit(table.placement, split="")),c("H","h","t","b","p","!")))))
     stop("\"table.placement\" must contain only elements of {\"h\",\"t\",\"b\",\"p\",\"!\"}")
@@ -47,7 +49,8 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
     if ( floating == TRUE ) {
       # See e-mail from "Pfaff, Bernhard <Bernhard.Pfaff@drkw.com>" dated 7-09-2003 regarding "suggestion for an amendment of the source"
       # See e-mail from "Mitchell, David" <David.Mitchell@dotars.gov.au>" dated 2003-07-09 regarding "Additions to R xtable package"
-      BTABLE <- paste("\\begin{table}",ifelse(!is.null(table.placement),
+      # See e-mail from "Garbade, Sven" <Sven.Garbade@med.uni-heidelberg.de> dated 2006-05-22 regarding the floating environment.
+      BTABLE <- paste("\\begin{", floating.environment, "}",ifelse(!is.null(table.placement),
         paste("[",table.placement,"]",sep=""),""),"\n",sep="")
       if ( is.null(latex.environments) || (length(latex.environments)==0) ) {
         BENVIRONMENT <- ""
@@ -62,7 +65,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
           EENVIRONMENT <- paste("\\end{",latex.environments[i],"}\n",EENVIRONMENT,sep="")
         }
       }
-      ETABLE <- "\\end{table}\n"
+      ETABLE <- paste("\\end{", floating.environment, "}\n", sep="")
     }
     else {
       BTABLE <- ""
@@ -172,7 +175,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,table
   result <- string("",file=file,append=append)
   info <- R.Version()
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.3-1 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable 1.3-2 package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
   result <- result + BTABLE
   result <- result + BENVIRONMENT

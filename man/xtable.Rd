@@ -202,6 +202,10 @@ x <- x[1:30,]
 x.small <- xtable(x,label='tabsmall',caption='regular table env')
 print(x.small)  # default, no longtable 
 
+## Demonstration of sidewaystable support.
+## Remember to insert \usepackage{rotating} on your LaTeX preamble
+print(x.small,floating.environment='sidewaystable') 
+
 if(require(stats,quietly=TRUE)) {
   ## Demonstrate prcomp
   ## Taken from help(prcomp) in mva package of R 1.1.1
