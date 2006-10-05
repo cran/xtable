@@ -1,4 +1,4 @@
-### xtable 1.3-2  (2006/05/22)
+### xtable 1.4-1  (2006/10/05)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -19,25 +19,87 @@
 ### License along with this program; if not, write to the Free
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
-print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,floating.environment="table",table.placement="ht",caption.placement="bottom",latex.environments=c("center"),tabular.environment="tabular",size=NULL,hline.after=NULL,NA.string="",...) {
+print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,floating.environment="table",table.placement="ht",caption.placement="bottom",latex.environments=c("center"),tabular.environment="tabular",size=NULL,hline.after=c(-1,0,nrow(x)),NA.string="",include.rownames=TRUE,include.colnames=TRUE,only.contents=FALSE,add.to.row=NULL, ...) {
 
-  if (length(type)>1)
-    stop("\"type\" must have length 1")
+  # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 hline.after
+  # By default it print an \hline before and after the columns names independently they are printed or not and at the end of the table
+  # Old code that set hline.after should include c(-1, 0, nrow(x)) in the hline.after vector
+  # If you do not want any \hline inside the data, set hline.after to NULL 
+  # PHEADER instead the string '\\hline\n' is used in the code
+  # Now hline.after counts how many time a position appear  
+  # I left an automatic PHEADER in the longtable is this correct?
+
+  # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 include.rownames, include.colnames  
+  pos <- 0
+  if (include.rownames) pos <- 1
+  
+  # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 hline.after checks
+  if (any(hline.after < -1) | any(hline.after > nrow(x))) stop("'hline.after' must be inside [-1, nrow(x)]")
+  
+  # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 add.to.row checks
+  if (!is.null(add.to.row)) {
+    if (is.list(add.to.row) && length(add.to.row)==2) {
+      if (is.null(names(add.to.row))) {
+        names(add.to.row) <- c('pos', 'command')
+      } else if (any(sort(names(add.to.row))!=c('command', 'pos'))) {
+        stop("the names of the elements of 'add.to.row' must be 'pos' and 'command'")
+      }
+      if (is.list(add.to.row$pos) && is.vector(add.to.row$command, mode='character')) {
+        if ((npos <- length(add.to.row$pos)) != length(add.to.row$command)) {
+          stop("the length of 'add.to.row$pos' must be equal to the length of 'add.to.row$command'")
+        }
+        if (any(unlist(add.to.row$pos) < -1) | any(unlist(add.to.row$pos) > nrow(x))) {
+          stop("the values in add.to.row$pos must be inside the interval [-1, nrow(x)]")
+        }
+      } else {
+        stop("the first argument ('pos') of 'add.to.row' must be a list, the second argument ('command') must be a verctor of mode character")
+      }
+    } else {
+      stop("'add.to.row' argument must be a list of length 2")
+    }
+  } else {
+     add.to.row <- list(pos=list(), command=vector(length=0, mode="character"))
+     npos <- 0
+  }
+
+  # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 add.to.row
+  # Add further commands at the end of rows
+  if (type=="latex") {
+     PHEADER <- "\\hline\n"
+  } else {
+     PHEADER <- ""
+  }
+   
+  lastcol <- rep(" ", nrow(x)+2)
+  if (!is.null(hline.after)) {
+     add.to.row$pos[[npos+1]] <- hline.after
+     add.to.row$command <- c(add.to.row$command, PHEADER)
+  }
+  if (!is.null(add.to.row)) {
+     for (i in 1:length(add.to.row$command)) {
+       addpos <- add.to.row$pos[[i]]
+       freq <- table(addpos)
+       addpos <- unique(addpos)
+       for (j in 1:length(addpos)) {
+          lastcol[addpos[j]+2] <- paste(lastcol[addpos[j]+2], paste(rep(add.to.row$command[i], freq[j]), sep="", collapse=""), sep=" ")
+       }
+     }
+  }
+  
+  if (length(type)>1) stop("\"type\" must have length 1")
   type <- tolower(type)
-  if (!all(!is.na(match(type,c("latex","html")))))
-    stop("\"type\" must be in {\"latex\", \"html\"}")
-  if (!all(!is.na(match(floating.environment,c("table","sidewaystable")))))
-    stop("\"type\" must be in {\"latex\", \"html\"}")
-  if (!all(!is.na(match(unlist(strsplit(table.placement, split="")),c("H","h","t","b","p","!")))))
+  if (!all(!is.na(match(type,c("latex","html"))))) stop("\"type\" must be in {\"latex\", \"html\"}")
+  if (!all(!is.na(match(floating.environment,c("table","sidewaystable"))))) stop("\"type\" must be in {\"latex\", \"html\"}")
+  if (!all(!is.na(match(unlist(strsplit(table.placement, split="")),c("H","h","t","b","p","!"))))) {
     stop("\"table.placement\" must contain only elements of {\"h\",\"t\",\"b\",\"p\",\"!\"}")
-  if (!all(!is.na(match(caption.placement,c("bottom","top")))))
-    stop("\"caption.placement\" must be either {\"bottom\",\"top\"}")
+  }
+  if (!all(!is.na(match(caption.placement,c("bottom","top"))))) stop("\"caption.placement\" must be either {\"bottom\",\"top\"}")
 
   if (type=="latex") {
     BCOMMENT <- "% "
     ECOMMENT <- "\n"
-# See e-mail from "John S. Walker <jsw9c@uic.edu>" dated 5-19-2003 regarding "texfloat"
-# See e-mail form "Fernando Henrique Ferraz P. da Rosa" <academic@feferraz.net>" dated 10-28-2005 regarding "longtable"
+    # See e-mail from "John S. Walker <jsw9c@uic.edu>" dated 5-19-2003 regarding "texfloat"
+    # See e-mail form "Fernando Henrique Ferraz P. da Rosa" <academic@feferraz.net>" dated 10-28-2005 regarding "longtable"
     if ( tabular.environment == "longtable" & floating == TRUE ) {
       warning("Attempt to use \"longtable\" with floating=TRUE. Changing to FALSE.")
       floating <- FALSE
@@ -73,16 +135,23 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
       BENVIRONMENT <- ""
       EENVIRONMENT <- ""
     }
-#    BTABULAR <- string("\\begin{tabular}{|") + paste(attr(x,"align"),collapse="|") + "|}\n\\hline\n"
-#    See e-mail from "BXC (Bendix Carstensen)" <bxc@novonordisk.com> dated Mon, 27 Aug 2001 10:11:54 +0200
+
+    tmp.index.start <- 2-pos
+    if ( tmp.index.start > 1 ) {
+      while ( attr(x,"align")[tmp.index.start] == '|' ) tmp.index.start <- tmp.index.start + 1
+    }
     BTABULAR <- paste("\\begin{",tabular.environment,"}{",
-                      paste(attr(x, "vsep"),
-                            c(attr(x, "align"), "}\n\\hline\n"),
+                      paste(c(attr(x, "align")[tmp.index.start:length(attr(x,"align"))], "}\n"),
                             sep="", collapse=""),
                       sep="")
-    ETABULAR <- paste("\\hline\n\\end{",tabular.environment,"}\n",sep="")
-# BSIZE contributed by Benno PÃ¼tz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
-    if (is.null(size) || !is.character(size)){
+    
+    # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 add.to.row position -1
+    BTABULAR <- paste(BTABULAR,lastcol[1], sep="")
+    # the \hline at the end, if present, is set in full matrix    
+    ETABULAR <- paste("\\end{",tabular.environment,"}\n",sep="")
+    
+    # BSIZE contributed by Benno <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
+    if (is.null(size) || !is.character(size)) {
       BSIZE <- ""
       ESIZE <- ""
     } else {
@@ -101,29 +170,28 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
     BTH <- ""
     ETH <- ""
     STH <- " & "
-    PHEADER <- "\\hline\n"
     BTD1 <- " & "
     BTD2 <- ""
     BTD3 <- ""
     ETD  <- ""
     sanitize <- function(str) {
       result <- str
-      result <- gsub(">","$>$",result)
-      result <- gsub("<","$<$",result)
-      result <- gsub("\\|","$\|$",result)
+      result <- gsub(">","$>$",result,fixed=TRUE)
+      result <- gsub("<","$<$",result,fixed=TRUE)
+      result <- gsub("|","$|$",result,fixed=TRUE)
       return(result)
     }
     sanitize.numbers <- function(x) {
       result <- x
       for(i in 1:length(x)) {
-        result[i] <- gsub("-","$-$",result[i])
+        result[i] <- gsub("-","$-$",result[i],fixed=TRUE)
       }
       return(result)
     }
     sanitize.final <- function(result) {
       return(result)
     }
- } else {
+  } else {
     BCOMMENT <- "<!-- "
     ECOMMENT <- " -->\n"
     BTABLE <- "<TABLE border=1>\n"
@@ -143,11 +211,10 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
     BTH <- " <TH> "
     ETH <- " </TH> "
     STH <- " </TH> <TH> "
-    PHEADER <- ""
     BTD1 <- " <TD align=\""
     align.tmp <- attr(x,"align")
     align.tmp <- align.tmp[align.tmp!="|"]
-    BTD2 <- matrix(align.tmp,nrow=nrow(x),ncol=ncol(x)+1,byrow=TRUE)
+    BTD2 <- matrix(align.tmp[(2-pos):(ncol(x)+1)],nrow=nrow(x),ncol=ncol(x)+pos,byrow=TRUE)
     BTD2[BTD2=="r"] <- "right"
     BTD2[BTD2=="l"] <- "left"
     BTD2[BTD2=="c"] <- "center"
@@ -155,10 +222,11 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
     ETD  <- " </TD>"
     sanitize <- function(str) {
       result <- str
-      result <- gsub("&","&amp ",result)
-      result <- gsub(">","&gt ",result)
-      result <- gsub("<","&lt ",result)
-      result <- gsub("_", "\\_", result, fixed=TRUE)
+      result <- gsub("&","&amp ",result,fixed=TRUE)
+      result <- gsub(">","&gt ",result,fixed=TRUE)
+      result <- gsub("<","&lt ",result,fixed=TRUE)
+      # Kurt Hornik <Kurt.Hornik@wu-wien.ac.at> on 2006/10/05 recommended not escaping underscores.
+      # result <- gsub("_", "\\_", result, fixed=TRUE)
       return(result)
     }
     sanitize.numbers <- function(x) {
@@ -166,30 +234,39 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
     }
     sanitize.final <- function(result) {
       # Suggested by Uwe Ligges <ligges@statistik.uni-dortmund.de> in e-mail dated 2005-07-30.
-      result$text <- gsub("  *"," ", result$text)
-      result$text <- gsub(' align="left"', "", result$text)
+      result$text <- gsub("  *"," ", result$text,fixed=TRUE)
+      result$text <- gsub(' align="left"', "", result$text,fixed=TRUE)
       return(result)
     }
   }
 
   result <- string("",file=file,append=append)
   info <- R.Version()
+  # modified Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 to set automatically the package version
   result <- result + BCOMMENT + type + " table generated in " +
-            info$language + " " + info$major + "." + info$minor + " by xtable 1.3-2 package" + ECOMMENT
+            info$language + " " + info$major + "." + info$minor + " by xtable " + packageDescription('xtable')$Version + " package" + ECOMMENT
   result <- result + BCOMMENT + date() + ECOMMENT
-  result <- result + BTABLE
-  result <- result + BENVIRONMENT
-  if ( floating == TRUE ) {
-    if ((!is.null(attr(x,"caption"))) && (type=="html" || caption.placement=="top")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
-    if (!is.null(attr(x,"label")) && (type=="latex" && caption.placement=="top")) result <- result + BLABEL + attr(x,"label") + ELABEL  
+  # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 only.contents
+  if (!only.contents) {
+    result <- result + BTABLE
+    result <- result + BENVIRONMENT
+    if ( floating == TRUE ) {
+      if ((!is.null(attr(x,"caption"))) && (type=="html" || caption.placement=="top")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
+      if (!is.null(attr(x,"label")) && (type=="latex" && caption.placement=="top")) result <- result + BLABEL + attr(x,"label") + ELABEL  
+    }
+    result <- result + BSIZE
+    result <- result + BTABULAR
   }
-  result <- result + BSIZE
-  result <- result + BTABULAR
-  result <- result + BROW + BTH + STH + paste(sanitize(names(x)),collapse=STH) + ETH + EROW
-  result <- result + PHEADER
+  # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 include.colnames, include.rownames 
+  if (include.colnames) {
+    result <- result + BROW + BTH
+    if (include.rownames) result <- result + STH
+    result <- result + paste(sanitize(names(x)),collapse=STH) + ETH + EROW
+  }
 
-  cols <- matrix("",nrow=nrow(x),ncol=ncol(x)+1)
-  cols[,1] <- row.names(x)
+  cols <- matrix("",nrow=nrow(x),ncol=ncol(x)+pos)
+  if (include.rownames) cols[,1] <- row.names(x)
+
   disp <- function(y) {
     if (is.factor(y)) {
       y <- levels(y)[y]
@@ -201,53 +278,49 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
   }
   # Code for letting "digits" be a matrix was provided by Arne Henningsen <ahenningsen@agric-econ.uni-kiel.de> in e-mail dated 2005-06-04.
   if( !is.matrix( attr( x, "digits" ) ) ) {
-    attr(x,"digits") <- matrix( attr( x, "digits" ),
-      nrow = nrow( cols ), ncol = ncol( cols ), byrow = TRUE )
+    # modified Claudio Agostinelli <claudio@unive.it> dated 2006-07-28
+    attr(x,"digits") <- matrix( attr( x, "digits" ), nrow = nrow(x), ncol = ncol(x)+1, byrow = TRUE )
   }
   for(i in 1:ncol(x)) {
     ina <- is.na(x[,i])
     is.numeric.column <- is.numeric(x[,i])
     for( j in 1:nrow( cols ) ) {
-      cols[j,i+1] <-
+      cols[j,i+pos] <-
         formatC( disp( x[j,i] ),
-          format = ifelse( attr( x, "digits" )[j,i+1] < 0, "E",
-            attr( x, "display" )[i+1] ),
-          digits = abs( attr( x, "digits" )[j,i+1] ) )
+          format = ifelse( attr( x, "digits" )[j,i+1] < 0, "E", attr( x, "display" )[i+1] ), digits = abs( attr( x, "digits" )[j,i+1] ) )
     }
-    if (any(ina)) cols[ina,i+1] <- NA.string
-    if ( is.numeric.column ) {
-      cols[,i+1] <- sanitize.numbers(cols[,i+1])
-    }
+    if ( any(ina) ) cols[ina,i+pos] <- NA.string
+    if ( is.numeric.column ) cols[,i+pos] <- sanitize.numbers(cols[,i+pos])
   }
 
   multiplier <- 5
-  full <- matrix("",nrow=nrow(x),ncol=multiplier*(ncol(x)+1)+2)
+  full <- matrix("",nrow=nrow(x),ncol=multiplier*(ncol(x)+pos)+2)
   full[,1] <- BROW
-  full[,multiplier*(0:ncol(x))+2] <- BTD1
-  full[,multiplier*(0:ncol(x))+3] <- BTD2
-  full[,multiplier*(0:ncol(x))+4] <- BTD3
-  full[,multiplier*(0:ncol(x))+5] <- cols
-  full[,multiplier*(0:ncol(x))+6] <- ETD
-# hline.after contributed by Benno PÃ¼tz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
-  full[,multiplier*(ncol(x)+1)+2] <- ifelse(1:nrow(x) %in% hline.after,paste(EROW,PHEADER,sep=""),EROW)
+  full[,multiplier*(0:(ncol(x)+pos-1))+2] <- BTD1
+  full[,multiplier*(0:(ncol(x)+pos-1))+3] <- BTD2
+  full[,multiplier*(0:(ncol(x)+pos-1))+4] <- BTD3
+  full[,multiplier*(0:(ncol(x)+pos-1))+5] <- cols
+  full[,multiplier*(0:(ncol(x)+pos-1))+6] <- ETD
+
+  full[,multiplier*(ncol(x)+pos)+2] <- paste(EROW, lastcol[-(1:2)], sep=" ")
   if (type=="latex") full[,2] <- ""
-
-  result <- result + paste(t(full),collapse="")
-
-  if ( tabular.environment == "longtable") { 
-    result <- result + "\\hline\n"
-    if ((!is.null(attr(x,"caption"))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
-    if (!is.null(attr(x,"label"))) result <- result + BLABEL + attr(x,"label") + ELABEL
-    ETABULAR <- "\\end{longtable}\n"
-  }
-  result <- result + ETABULAR
-  result <- result + ESIZE
-  if ( floating == TRUE ) {
-    if ((!is.null(attr(x,"caption"))) && (type=="latex" && caption.placement=="bottom")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
-    if (!is.null(attr(x,"label")) && caption.placement=="bottom") result <- result + BLABEL + attr(x,"label") + ELABEL  
-  }
-  result <- result + EENVIRONMENT
-  result <- result + ETABLE
+  result <- result + lastcol[2] + paste(t(full),collapse="")
+  if (!only.contents) {
+    if (tabular.environment == "longtable") {
+      result <- result + PHEADER
+      if ((!is.null(attr(x,"caption"))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
+      if (!is.null(attr(x,"label"))) result <- result + BLABEL + attr(x,"label") + ELABEL
+      ETABULAR <- "\\end{longtable}\n"
+    }
+    result <- result + ETABULAR
+    result <- result + ESIZE
+    if ( floating == TRUE ) {
+      if ((!is.null(attr(x,"caption"))) && (type=="latex" && caption.placement=="bottom")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
+      if (!is.null(attr(x,"label")) && caption.placement=="bottom") result <- result + BLABEL + attr(x,"label") + ELABEL  
+    }
+    result <- result + EENVIRONMENT
+    result <- result + ETABLE
+  }   
   result <- sanitize.final(result)
   print(result)
 

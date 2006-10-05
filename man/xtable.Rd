@@ -15,10 +15,11 @@
 \alias{xtable.summary.lm}
 \alias{xtable.summary.prcomp}
 \alias{xtable.ts}
+\alias{xtable.zoo}
 \title{Create Export Tables}
 \description{Function converting an R object to an \code{xtable} object, which can then be printed as a LaTeX or HTML table.}
 \usage{
-xtable(x, caption=NULL, label=NULL, align=NULL, vsep=NULL, digits=NULL,
+xtable(x, caption=NULL, label=NULL, align=NULL, digits=NULL,
        display=NULL, ...)
 }
 \arguments{
@@ -29,7 +30,7 @@ xtable(x, caption=NULL, label=NULL, align=NULL, vsep=NULL, digits=NULL,
   \item{label}{Character vector of length 1 containing the LaTeX label or HTML anchor.
                Set to \code{NULL} to suppress the label.  Default value is \code{NULL}.}
   \item{align}{Character vector of length equal to the number of columns of the resulting
-               table indicating the alignment of the corresponding columns.  Also, \code{"|"} maybe used
+               table indicating the alignment of the corresponding columns.  Also, \code{"|"} may be used
                to produce vertical lines between columns in LaTeX tables, but these are effectively ignored
                when considering the required length of the supplied vector.  If a character vector of length one
                can be supplied, it is split as \code{strsplit(align,"")[[1]]} before processing.
@@ -37,11 +38,6 @@ xtable(x, caption=NULL, label=NULL, align=NULL, vsep=NULL, digits=NULL,
                is one greater than \code{ncol(x)} if \code{x} is a \code{data.frame}.
                Use \code{"l"}, \code{"r"}, and \code{"c"} to denote left, right, and
                center alignment, respectively.  Default depends on the class of \code{x}.}
-	     \item{vsep}{Character vector with length equal to one or
-	       the number of columns in the resulting table + 2 (one for
-	       left and one for right margin).  These may be any column
-	       separators acceptable to LaTeX.  Default depends on the
-	       class of argument.  Ignored in HTML mode.}
 	     \item{digits}{Numeric vector of length equal to the number of columns of the resulting
                 table \bold{or} matrix of the same size as the resulting table 
                 indicating the number of digits to display in the corresponding columns.
@@ -74,14 +70,14 @@ xtable(x, caption=NULL, label=NULL, align=NULL, vsep=NULL, digits=NULL,
   ANOVA tables while \code{data.frame} objects produce a table of the entire data.frame.  One can optionally provide a
   caption (called a title in HTML) or label (called an anchor in HTML),
   as well as formatting specifications.  Default
-  values for \code{align}, \code{vsep}, \code{digits}, and \code{display} are
+  values for \code{align}, \code{digits}, and \code{display} are
   class dependent.
 
   The available method functions for \code{xtable} are given by \code{methods(xtable)}.
   Users can extend the list of available classes by writing methods for the generic function \code{xtable}.
   These methods functions should have \code{x} as their first argument
   with additional arguments to
-  specify \code{caption}, \code{label}, \code{align}, \code{vsep},
+  specify \code{caption}, \code{label}, \code{align},
   \code{digits}, and
   \code{display}.  Optionally, other arguments
   may be present to specify how the object \code{x} should be manipulated.
@@ -220,6 +216,51 @@ if(require(stats,quietly=TRUE)) {
 #  print(xtable(pr2))
 }
 
+## Demostrate include.rownames, include.colnames, 
+## only.contents and add.to.row arguments
+set.seed(2345)
+res <- matrix(sample(0:9, size=6*9, replace=TRUE), ncol=6, nrow=9)
+xres <- xtable(res)
+digits(xres) <- rep(0, 7)
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- c(0, 2)
+addtorow$pos[[2]] <- 4
+addtorow$command <- c('\\vspace{2mm} \n', '\\vspace{10mm} \n')
+print.xtable(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=TRUE, only.contents=TRUE, hline.after=c(0, 0, 9, 9))
+
+## Demostrate include.rownames, include.colnames, 
+## only.contents and add.to.row arguments in Rweave files
+
+\dontrun{
+ \begin{small}
+ \setlongtables
+ \begin{longtable}{
+ <<results=tex,fig=FALSE>>=
+ cat(paste(c('c', rep('cc', 34/2-1), 'c'), collapse='@{\\hspace{2pt}}'))
+ @ 
+ }
+ \hline
+ \endhead
+ \hline
+ \endfoot
+ <<results=tex,fig=FALSE>>=
+ library(xtable)
+ set.seed(2345)
+ res <- matrix(sample(0:9, size=34*90, replace=TRUE), ncol=34, nrow=90)
+ xres <- xtable(res)
+ digits(xres) <- rep(0, 35)
+ addtorow <- list()
+ addtorow$pos <- list()
+ addtorow$pos[[1]] <- c(seq(4, 40, 5), seq(49, 85, 5))
+ addtorow$pos[[2]] <- 45
+ addtorow$command <- c('\\vspace{2mm} \n', '\\newpage \n')
+ print.xtable(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=F ALSE, only.contents=TRUE, hline.after=NULL)
+ @
+ \end{longtable}
+ \end{small}
+}
+
 \testonly{
   for(i in c("latex","html")) {
     outFileName <- paste("xtable.",ifelse(i=="latex","tex",i),sep="")
@@ -243,7 +284,10 @@ if(require(stats,quietly=TRUE)) {
     print(xtable(anova(lm.D9)),type=i,file=outFileName,append=TRUE)
     print(xtable(glm.D93),type=i,file=outFileName,append=TRUE)
     print(xtable(anova(glm.D93,test="Chisq")),type=i,file=outFileName,append=TRUE)
-    print(xtable(glm.D93,align="r|llrc"),type=i,file=outFileName,append=TRUE)
+    print(xtable(glm.D93,align="r|llrc"),include.rownames=FALSE,include.colnames=TRUE,type=i,file=outFileName,append=TRUE)
+    print(xtable(glm.D93,align="r||llrc"),include.rownames=TRUE,include.colnames=FALSE,type=i,file=outFileName,append=TRUE)
+    print(xtable(glm.D93,align="|r||llrc"),include.rownames=FALSE,include.colnames=FALSE,type=i,file=outFileName,append=TRUE)
+    print(xtable(glm.D93,align="|r||llrc|"),type=i,file=outFileName,append=TRUE)
     print(xtable(anova(glm.D93)),hline.after=c(1),size="small",type=i,file=outFileName,append=TRUE)
     if(require(stats,quietly=TRUE)) {
       print(xtable(pr1),type=i,file=outFileName,append=TRUE)

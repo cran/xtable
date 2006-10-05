@@ -1,4 +1,4 @@
-### xtable 1.3-2  (2006/05/22)
+### xtable 1.4-1  (2006/10/05)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -48,7 +48,7 @@ label.xtable <- function(x,...) {
 
 "align<-" <- function(x,value) UseMethod("align<-")
 "align<-.xtable" <- function(x,value) {
-# Based on contribution from Benno PÃ¼tz <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
+# Based on contribution from Benno <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
   # cat("%",value,"\n")
   if ( (!is.null(value)) && ( is.character(value) ) && ( length(value) == 1 ) && ( nchar(value) > 1 ) ) {
     value <- strsplit(value,"")[[1]]
@@ -71,25 +71,6 @@ label.xtable <- function(x,...) {
 align <- function(x,...) UseMethod("align")
 align.xtable <- function(x,...) {
   return(attr(x,"align"))
-}
-
-"vsep<-" <- function(x,value) UseMethod("vsep<-")
-"vsep<-.xtable" <- function(x, value) {
-  if(is.null(value))
-    vsep <- ""
-    if(length(value) == 1)
-      value <- rep(value, ncol(x) + 2)
-    if (length(value) != ncol(x) + 2)
-                                        # +2 due to table edges
-    stop(paste("\"vsep\" must have length equal to", ncol(x)+2,
-               "( ncol(x) + 2 )"))
-  attr(x, "vsep") <- value
-  return(x)
-}
-
-vsep <- function(x, ...) UseMethod("vsep")
-vsep.xtable <- function(x, ...) {
-  return(attr(x, "vsep"))
 }
 
 "digits<-" <- function(x,value) UseMethod("digits<-")
