@@ -1,4 +1,4 @@
-### xtable 1.4-1  (2006/10/05)
+### xtable 1.4-2  (2006/10/23)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -84,12 +84,6 @@ xtable.summary.aov <- function(x,caption=NULL,label=NULL,align=NULL,
                       align=align, digits=digits,display=display))
 }
 
-xtable.aovlist <- function(x,caption=NULL,label=NULL,align=NULL,
-                           digits=NULL,display=NULL,...) {
-  return(xtable.summary.aovlist(summary(x),caption=caption,label=label,
-                                align=align, digits=digits,display=display))
-}
-
 xtable.summary.aovlist <- function(x,caption=NULL,label=NULL,align=NULL,
                                    digits=NULL,display=NULL,...) {
   for(i in 1:length(x)) {
@@ -101,6 +95,13 @@ xtable.summary.aovlist <- function(x,caption=NULL,label=NULL,align=NULL,
   }
   return(result)
 }
+
+xtable.aovlist <- function(x,caption=NULL,label=NULL,align=NULL,
+                           digits=NULL,display=NULL,...) {
+  return(xtable.summary.aovlist(summary(x),caption=caption,label=label,
+                                align=align, digits=digits,display=display))
+}
+
 
 
 ## lm objects
