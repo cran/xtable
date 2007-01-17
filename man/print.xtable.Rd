@@ -2,7 +2,7 @@
 \alias{print.xtable}
 \title{Print Export Tables}
 \description{Function returning and displaying or writing to disk the LaTeX or HTML code associated with the supplied object of class \code{xtable}.}
-\usage{print.xtable(x, type="latex", file="", append=FALSE, floating=TRUE, floating.environment="table", table.placement = "ht", caption.placement="bottom", latex.environments=c("center"),tabular.environment = "tabular", size=NULL,hline.after=c(-1,0,nrow(x)), NA.string = "", include.rownames=TRUE,include.colnames=TRUE,only.contents=FALSE,add.to.row=NULL, ...)}
+\usage{print.xtable(x, type="latex", file="", append=FALSE, floating=TRUE, floating.environment="table", table.placement = "ht", caption.placement="bottom", latex.environments=c("center"),tabular.environment = "tabular", size=NULL,hline.after=c(-1,0,nrow(x)), NA.string = "", include.rownames=TRUE,include.colnames=TRUE,only.contents=FALSE,add.to.row=NULL, sanitize.text.function=NULL,...)}
 \arguments{
   \item{x}{An object of class \code{"xtable"}.}
   \item{type}{Type of table to produce.  Possible values for \code{type} are \code{"latex"} or \code{"html"}.
@@ -30,6 +30,7 @@
   \item{include.colnames}{logical. If \code{TRUE} the columns names is printed. Default value is \code{TRUE}.}
   \item{only.contents}{logical. If \code{TRUE} only the rows of the table is printed. Default value is \code{FALSE}.}
   \item{add.to.row}{a list of two components. The first component (which should be called 'pos') is a list contains the position of rows on which extra commands should be added at the end, The second component (which should be called 'command') is a character vector of the same length of the first component which contains the command that should be added at the end of the specified rows. Default value is \code{NULL}, i.e. do not add commands.}
+  \item{sanitize.text.function}{If not null, a function which will be called on each non-numeric column. If NULL, a default function will be used.  Default value is \code{NULL}. }
   \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{
@@ -38,6 +39,8 @@
   of the results (which can be helpful for post-processing).
 
   Since version 1.4 the non default behavior of \code{hline.after} is changed. To obtain the same results as the previous versions add to the \code{hline.after} vector the vector \code{c(-1, 0, nrow(x))} where \code{nrow(x)} is the numbers of rows of the object.
+
+  From version 1.4-3, all non-numeric columns are sanitized, and all LaTeX special characters are sanitised for LaTeX output. See the vignette for an example of customising the sanitization.
 }
 \author{David Dahl \email{dahl@stat.tamu.edu} with contributions and suggestions from many others (see source code).}
 \references{

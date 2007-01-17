@@ -33,12 +33,15 @@ xtable(x, caption=NULL, label=NULL, align=NULL, digits=NULL,
                table indicating the alignment of the corresponding columns.  Also, \code{"|"} may be used
                to produce vertical lines between columns in LaTeX tables, but these are effectively ignored
                when considering the required length of the supplied vector.  If a character vector of length one
-               can be supplied, it is split as \code{strsplit(align,"")[[1]]} before processing.
+               is supplied, it is split as \code{strsplit(align,"")[[1]]} before processing.
                Since the row names are printed in the first column, the length of \code{align}
                is one greater than \code{ncol(x)} if \code{x} is a \code{data.frame}.
                Use \code{"l"}, \code{"r"}, and \code{"c"} to denote left, right, and
-               center alignment, respectively.  Default depends on the class of \code{x}.}
-	     \item{digits}{Numeric vector of length equal to the number of columns of the resulting
+               center alignment, respectively.  Use \code{"p\{3cm\}"} etc for a LaTeX column of the specified width.
+               For HTML output the \code{"p"} alignment is interpreted as \code{"l"}, ignoring
+               the width request. Default depends on the class of \code{x}.}
+  \item{digits}{Numeric vector of length equal to one (in which case it will be replicated as necessary)
+                or to the number of columns of the resulting
                 table \bold{or} matrix of the same size as the resulting table 
                 indicating the number of digits to display in the corresponding columns.
                 Since the row names are printed in the first column, the length of the 

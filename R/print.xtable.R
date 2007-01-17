@@ -1,8 +1,8 @@
-### xtable 1.4-2  (2006/10/23)
+### xtable 1.4-3  (2007/01/17)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2006 David B. Dahl <dahl@stat.tamu.edu>
+### Copyright 2000-2007 David B. Dahl <dahl@stat.tamu.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -19,7 +19,7 @@
 ### License along with this program; if not, write to the Free
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
-print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,floating.environment="table",table.placement="ht",caption.placement="bottom",latex.environments=c("center"),tabular.environment="tabular",size=NULL,hline.after=c(-1,0,nrow(x)),NA.string="",include.rownames=TRUE,include.colnames=TRUE,only.contents=FALSE,add.to.row=NULL, ...) {
+print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,floating.environment="table",table.placement="ht",caption.placement="bottom",latex.environments=c("center"),tabular.environment="tabular",size=NULL,hline.after=c(-1,0,nrow(x)),NA.string="",include.rownames=TRUE,include.colnames=TRUE,only.contents=FALSE,add.to.row=NULL,sanitize.text.function=NULL,...) {
 
   # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 hline.after
   # By default it print an \hline before and after the columns names independently they are printed or not and at the end of the table
@@ -174,11 +174,23 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
     BTD2 <- ""
     BTD3 <- ""
     ETD  <- ""
+    # Based on contribution from Jonathan Swinton <jonathan@swintons.net> in e-mail dated Wednesday, January 17, 2007
     sanitize <- function(str) {
       result <- str
+      result <- gsub("\\\\","SANITIZE.BACKSLASH",result)
+      result <- gsub("$","\\$",result,fixed=TRUE)
       result <- gsub(">","$>$",result,fixed=TRUE)
       result <- gsub("<","$<$",result,fixed=TRUE)
       result <- gsub("|","$|$",result,fixed=TRUE)
+      result <- gsub("{","\\{",result,fixed=TRUE)
+      result <- gsub("}","\\}",result,fixed=TRUE)
+      result <- gsub("%","\\%",result,fixed=TRUE)
+      result <- gsub("&","\\&",result,fixed=TRUE)
+      result <- gsub("_","\\_",result,fixed=TRUE)
+      result <- gsub("#","\\#",result,fixed=TRUE)
+      result <- gsub("^","\\verb|^|",result,fixed=TRUE)
+      result <- gsub("~","\\~{}",result,fixed=TRUE)
+      result <- gsub("SANITIZE.BACKSLASH","$\\backslash$",result,fixed=TRUE)
       return(result)
     }
     sanitize.numbers <- function(x) {
@@ -215,6 +227,8 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
     align.tmp <- attr(x,"align")
     align.tmp <- align.tmp[align.tmp!="|"]
     BTD2 <- matrix(align.tmp[(2-pos):(ncol(x)+1)],nrow=nrow(x),ncol=ncol(x)+pos,byrow=TRUE)
+    # Based on contribution from Jonathan Swinton <jonathan@swintons.net> in e-mail dated Wednesday, January 17, 2007
+    BTD2[regexpr("^p",BTD2)>0] <- "left"
     BTD2[BTD2=="r"] <- "right"
     BTD2[BTD2=="l"] <- "left"
     BTD2[BTD2=="c"] <- "center"
@@ -290,7 +304,16 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
           format = ifelse( attr( x, "digits" )[j,i+1] < 0, "E", attr( x, "display" )[i+1] ), digits = abs( attr( x, "digits" )[j,i+1] ) )
     }
     if ( any(ina) ) cols[ina,i+pos] <- NA.string
-    if ( is.numeric.column ) cols[,i+pos] <- sanitize.numbers(cols[,i+pos])
+    # Based on contribution from Jonathan Swinton <jonathan@swintons.net> in e-mail dated Wednesday, January 17, 2007
+    if ( is.numeric.column ) {
+      cols[,i+pos] <- sanitize.numbers(cols[,i+pos])
+    } else {
+      if (is.null(sanitize.text.function)) {
+        cols[,i+pos] <- sanitize(cols[,i+pos])
+      } else {
+        cols[,i+pos] <- sanitize.text.function(cols[,i+pos])
+      }
+    }
   }
 
   multiplier <- 5
