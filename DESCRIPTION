@@ -1,6 +1,6 @@
 Package: xtable
-Version: 1.4-3
-Date: 2007/01/17
+Version: 1.4-5
+Date: 2007/05/14
 Title: Export tables to LaTeX or HTML
 Author: David B. Dahl <dahl@stat.tamu.edu>
 	with contributions from many others
@@ -8,4 +8,4 @@ Maintainer: David B. Dahl <dahl@stat.tamu.edu>
 Description: Coerce data to LaTeX and HTML tables
 Depends:
 License: GPL version 2 or later
-Packaged: Wed Jan 17 17:22:32 2007; dahl
+Packaged: Mon May 14 10:41:52 2007; dahl

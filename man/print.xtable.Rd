@@ -30,7 +30,7 @@
   \item{include.colnames}{logical. If \code{TRUE} the columns names is printed. Default value is \code{TRUE}.}
   \item{only.contents}{logical. If \code{TRUE} only the rows of the table is printed. Default value is \code{FALSE}.}
   \item{add.to.row}{a list of two components. The first component (which should be called 'pos') is a list contains the position of rows on which extra commands should be added at the end, The second component (which should be called 'command') is a character vector of the same length of the first component which contains the command that should be added at the end of the specified rows. Default value is \code{NULL}, i.e. do not add commands.}
-  \item{sanitize.text.function}{If not null, a function which will be called on each non-numeric column. If NULL, a default function will be used.  Default value is \code{NULL}. }
+  \item{sanitize.text.function}{All non-numeric columns, together with column and row names, are sanitised in an attempt to remove characters which have special meaning for the output format. If \code{sanitize.text.function} is not NULL (the default), it should be a function taking a character vector and returning one, and will be used for the sanitization instead of the default internal function.}
   \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{
@@ -40,7 +40,8 @@
 
   Since version 1.4 the non default behavior of \code{hline.after} is changed. To obtain the same results as the previous versions add to the \code{hline.after} vector the vector \code{c(-1, 0, nrow(x))} where \code{nrow(x)} is the numbers of rows of the object.
 
-  From version 1.4-3, all non-numeric columns are sanitized, and all LaTeX special characters are sanitised for LaTeX output. See the vignette for an example of customising the sanitization.
+  From version 1.4-3, all non-numeric columns are sanitized, and all LaTeX special characters are sanitised for LaTeX output.  See Section 3 of the \code{xtableGallery} vignette for an example of customising the sanitization.
+  From version 1.4-4, the sanitization also applies to column names.  To remove any text sanitization, specify \code{sanitize.text.function=function(x){x}}.
 }
 \author{David Dahl \email{dahl@stat.tamu.edu} with contributions and suggestions from many others (see source code).}
 \references{

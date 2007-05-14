@@ -15,6 +15,7 @@
 \alias{xtable.summary.lm}
 \alias{xtable.summary.prcomp}
 \alias{xtable.ts}
+\alias{xtable.table}
 \alias{xtable.zoo}
 \title{Create Export Tables}
 \description{Function converting an R object to an \code{xtable} object, which can then be printed as a LaTeX or HTML table.}
@@ -219,7 +220,7 @@ if(require(stats,quietly=TRUE)) {
 #  print(xtable(pr2))
 }
 
-## Demostrate include.rownames, include.colnames, 
+## Demonstrate include.rownames, include.colnames, 
 ## only.contents and add.to.row arguments
 set.seed(2345)
 res <- matrix(sample(0:9, size=6*9, replace=TRUE), ncol=6, nrow=9)
@@ -263,6 +264,12 @@ print.xtable(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames
  \end{longtable}
  \end{small}
 }
+
+## Demonstrate sanitization
+mat <- round(matrix(c(0.9, 0.89, 200, 0.045, 2.0), c(1, 5)), 4)
+rownames(mat) <- "$y_{t-1}$"
+colnames(mat) <- c("$R^2$", "$\\\bar{R}^2$", "F-stat", "S.E.E", "DW")
+print(xtable(mat), type="latex", sanitize.text.function = function(x){x})
 
 \testonly{
   for(i in c("latex","html")) {

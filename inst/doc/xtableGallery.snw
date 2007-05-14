@@ -270,6 +270,20 @@ wanttex <- xtable(data.frame( label=paste("Value_is $10^{-",1:3,"}$",sep="")))
 print(wanttex,sanitize.text.function=function(str)gsub("_","\\_",str,fixed=TRUE))
 @
 
+\subsection{Markup in tables}
+
+Markup can be kept in tables, including column and row names by using a customized sanitize.text.function:
+
+<<>>=
+mat <- round(matrix(c(0.9, 0.89, 200, 0.045, 2.0), c(1, 5)), 4)
+rownames(mat) <- "$y_{t-1}$"
+colnames(mat) <- c("$R^2$", "$\\bar{R}^2$", "F-stat", "S.E.E", "DW")
+mat <- xtable(mat)
+@
+<<results=tex>>=
+print(mat, sanitize.text.function = function(x){x})
+@
+
 \section{Format examples}
 \subsection{Adding a centering environment }
 <<results=tex>>=

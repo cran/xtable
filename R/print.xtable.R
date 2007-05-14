@@ -1,4 +1,4 @@
-### xtable 1.4-3  (2007/01/17)
+### xtable 1.4-5  (2007/05/14)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -275,7 +275,12 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
   if (include.colnames) {
     result <- result + BROW + BTH
     if (include.rownames) result <- result + STH
-    result <- result + paste(sanitize(names(x)),collapse=STH) + ETH + EROW
+    if (is.null(sanitize.text.function)) {
+        result <- result + paste(sanitize(names(x)),collapse=STH)
+    } else {
+        result <- result + paste(sanitize.text.function(names(x)), collapse=STH)
+    }
+    result <- result + ETH + EROW
   }
 
   cols <- matrix("",nrow=nrow(x),ncol=ncol(x)+pos)

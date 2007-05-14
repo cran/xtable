@@ -1,4 +1,4 @@
-### xtable 1.4-3  (2007/01/17)
+### xtable 1.4-5  (2007/05/14)
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -48,6 +48,17 @@ xtable.matrix <- function(x,caption=NULL,label=NULL,align=NULL,
   return(xtable.data.frame(data.frame(x,check.names=FALSE),
                            caption=caption,label=label,align=align,
                            digits=digits,display=display))
+}
+
+
+## table objects (of 1 or 2 dimensions) by Guido Gay, 9 Feb 2007
+## Fixed to pass R checks by DBD, 9 May 2007
+xtable.table<-function(x,caption=NULL,label=NULL,align=NULL, digits=NULL,display=NULL,...) {
+  if (length(dim(x))==1) {
+    return(xtable.matrix(matrix(x,dimnames=list(rownames(x),names(dimnames(x)))),caption=caption,label=label,align=align,digits=digits,display=display))
+  } else {
+    return(xtable.matrix(matrix(x,ncol=dim(x)[2],nrow=dim(x)[1],dimnames=list(rownames(x),colnames(x))),caption=caption,label=label,align=align,digits=digits,display=display))
+  }
 }
 
 
@@ -200,7 +211,6 @@ xtable.coxph <- function (x,caption=NULL,label=NULL,align=NULL,
 # Date: July 2003
 xtable.ts <- function(x,caption=NULL,label=NULL,align=NULL,
                       digits=NULL,display=NULL,...) {
-
   if (inherits(x, "ts") && !is.null(ncol(x))) {
     # COLNAMES <- paste(colnames(x));
     tp.1 <- trunc(time(x))
@@ -228,7 +238,7 @@ xtable.ts <- function(x,caption=NULL,label=NULL,align=NULL,
     ROWNAMES <- seq(from=start(x)[1], to=end(x)[1])
     tmp <- data.frame(matrix(c(rep(NA, start(x)[2] - 1), x,
                                rep(NA, frequency(x) - end(x)[2])),
-                             ncol=frequency(x)), row.names=ROWNAMES)
+                             ncol=frequency(x), byrow=TRUE), row.names=ROWNAMES)
     names(tmp) <- COLNAMES
   }
   return(xtable(tmp, caption = caption, label = label, align = align,
