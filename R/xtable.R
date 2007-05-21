@@ -1,4 +1,4 @@
-### xtable 1.4-5  (2007/05/14)
+### xtable package
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
@@ -32,14 +32,21 @@ xtable.data.frame <- function(x,caption=NULL,label=NULL,align=NULL,
                               digits=NULL,display=NULL,...) {
   characters <- unlist(lapply(x,is.character))
   factors <- unlist(lapply(x,is.factor))
-
+  ints <- sapply(x, is.integer)
   class(x) <- c("xtable","data.frame")
   caption(x) <- caption
   label(x) <- label
   align(x) <- switch(1+is.null(align), align,
                      c("r",c("r","l")[(characters|factors)+1]))
   digits(x) <- switch(1+is.null(digits),digits,c(0,rep(2,ncol(x))))
-  display(x) <- switch(1+is.null(display),display,c("s",c("f","s")[(characters|factors)+1]))
+  # Patch from Seth Falcon <sfalcon@fhcrc.org>, 18-May-2007
+  if (is.null(display)) {
+      display <- rep("f", ncol(x))
+      display[ints] <- "d"
+      display[characters | factors] <- "s"
+      display <- c("s", display)
+  }
+  display(x) <- display
   return(x)
 }
 

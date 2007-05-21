@@ -8,8 +8,8 @@
 \description{Private functions for conveniently working with strings.}
 \usage{
   string(text,file="",append=FALSE) 
-  print.string(x,...)
-  "+.string"(x,y)
+  \method{print}{string}(x,...)
+  \method{+}{string}(x,y)
   as.string(x,file="",append=FALSE)
   is.string(x)
 }

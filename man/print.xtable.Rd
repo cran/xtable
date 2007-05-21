@@ -2,7 +2,7 @@
 \alias{print.xtable}
 \title{Print Export Tables}
 \description{Function returning and displaying or writing to disk the LaTeX or HTML code associated with the supplied object of class \code{xtable}.}
-\usage{print.xtable(x, type="latex", file="", append=FALSE, floating=TRUE, floating.environment="table", table.placement = "ht", caption.placement="bottom", latex.environments=c("center"),tabular.environment = "tabular", size=NULL,hline.after=c(-1,0,nrow(x)), NA.string = "", include.rownames=TRUE,include.colnames=TRUE,only.contents=FALSE,add.to.row=NULL, sanitize.text.function=NULL,...)}
+\usage{\method{print}{xtable}(x, type="latex", file="", append=FALSE, floating=TRUE, floating.environment="table", table.placement = "ht", caption.placement="bottom", latex.environments=c("center"),tabular.environment = "tabular", size=NULL,hline.after=c(-1,0,nrow(x)), NA.string = "", include.rownames=TRUE,include.colnames=TRUE,only.contents=FALSE,add.to.row=NULL, sanitize.text.function=NULL,...)}
 \arguments{
   \item{x}{An object of class \code{"xtable"}.}
   \item{type}{Type of table to produce.  Possible values for \code{type} are \code{"latex"} or \code{"html"}.
