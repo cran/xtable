@@ -231,7 +231,7 @@ addtorow$pos <- list()
 addtorow$pos[[1]] <- c(0, 2)
 addtorow$pos[[2]] <- 4
 addtorow$command <- c('\\vspace{2mm} \n', '\\vspace{10mm} \n')
-print.xtable(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=TRUE, only.contents=TRUE, hline.after=c(0, 0, 9, 9))
+print(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=TRUE, only.contents=TRUE, hline.after=c(0, 0, 9, 9))
 
 ## Demostrate include.rownames, include.colnames, 
 ## only.contents and add.to.row arguments in Rweave files
@@ -259,7 +259,7 @@ print.xtable(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames
  addtorow$pos[[1]] <- c(seq(4, 40, 5), seq(49, 85, 5))
  addtorow$pos[[2]] <- 45
  addtorow$command <- c('\\vspace{2mm} \n', '\\newpage \n')
- print.xtable(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=F ALSE, only.contents=TRUE, hline.after=NULL)
+ print(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=F ALSE, only.contents=TRUE, hline.after=NULL)
  @
  \end{longtable}
  \end{small}

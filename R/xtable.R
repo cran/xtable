@@ -204,10 +204,10 @@ xtable.coxph <- function (x,caption=NULL,label=NULL,align=NULL,
       c("coef", "exp(coef)", "se(coef)", "z", "p"))
   }
   else {
-    tmp <- cbind( beta, exp(beta), nse, se, beta/se,
+    tmp <- cbind( beta, exp(beta), se, beta/se,
       signif(1 - pchisq((beta/se)^2, 1), digits - 1))
     dimnames(tmp) <- list(names(beta),
-      c("coef", "exp(coef)", "se(coef)", "robust se", "z", "p"))
+      c("coef", "exp(coef)", "robust se", "z", "p"))
   }
   return(xtable(tmp, caption = caption, label = label, align = align,
                 digits = digits, display = display))
