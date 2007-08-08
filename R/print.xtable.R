@@ -52,7 +52,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
           stop("the values in add.to.row$pos must be inside the interval [-1, nrow(x)]")
         }
       } else {
-        stop("the first argument ('pos') of 'add.to.row' must be a list, the second argument ('command') must be a verctor of mode character")
+        stop("the first argument ('pos') of 'add.to.row' must be a list, the second argument ('command') must be a vector of mode character")
       }
     } else {
       stop("'add.to.row' argument must be a list of length 2")
@@ -75,15 +75,15 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
      add.to.row$pos[[npos+1]] <- hline.after
      add.to.row$command <- c(add.to.row$command, PHEADER)
   }
-  if (!is.null(add.to.row)) {
-     for (i in 1:length(add.to.row$command)) {
-       addpos <- add.to.row$pos[[i]]
-       freq <- table(addpos)
-       addpos <- unique(addpos)
-       for (j in 1:length(addpos)) {
-          lastcol[addpos[j]+2] <- paste(lastcol[addpos[j]+2], paste(rep(add.to.row$command[i], freq[j]), sep="", collapse=""), sep=" ")
-       }
-     }
+  if ( length(add.to.row$command) > 0 ) {
+    for (i in 1:length(add.to.row$command)) {
+      addpos <- add.to.row$pos[[i]]
+      freq <- table(addpos)
+      addpos <- unique(addpos)
+      for (j in 1:length(addpos)) {
+        lastcol[addpos[j]+2] <- paste(lastcol[addpos[j]+2], paste(rep(add.to.row$command[i], freq[j]), sep="", collapse=""), sep=" ")
+      }
+    }
   }
   
   if (length(type)>1) stop("\"type\" must have length 1")
