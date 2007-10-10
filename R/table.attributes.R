@@ -30,7 +30,7 @@
 
 caption <- function(x,...) UseMethod("caption")
 caption.xtable <- function(x,...) {
-  return(attr(x,"caption"))
+  return(attr(x,"caption",exact=TRUE))
 }
 
 "label<-" <- function(x,value) UseMethod("label<-")
@@ -43,7 +43,7 @@ caption.xtable <- function(x,...) {
 
 label <- function(x,...) UseMethod("label")
 label.xtable <- function(x,...) {
-  return(attr(x,"label"))
+  return(attr(x,"label",exact=TRUE))
 }
 
 "align<-" <- function(x,value) UseMethod("align<-")
@@ -108,7 +108,7 @@ label.xtable <- function(x,...) {
 
 align <- function(x,...) UseMethod("align")
 align.xtable <- function(x,...) {
-  return(attr(x,"align"))
+  return(attr(x,"align",exact=TRUE))
 }
 
 "digits<-" <- function(x,value) UseMethod("digits<-")
@@ -134,7 +134,7 @@ align.xtable <- function(x,...) {
 
 digits <- function(x,...) UseMethod("digits")
 digits.xtable <- function(x,...) {
-  return(attr(x,"digits"))
+  return(attr(x,"digits",exact=TRUE))
 }
 
 "display<-" <- function(x,value) UseMethod("display<-")
@@ -149,6 +149,6 @@ digits.xtable <- function(x,...) {
 
 display <- function(x,...) UseMethod("display")
 display.xtable <- function(x,...) {
-  return(attr(x,"display"))
+  return(attr(x,"display",exact=TRUE))
 }
 

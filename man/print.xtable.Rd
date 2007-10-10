@@ -2,12 +2,12 @@
 \alias{print.xtable}
 \title{Print Export Tables}
 \description{Function returning and displaying or writing to disk the LaTeX or HTML code associated with the supplied object of class \code{xtable}.}
-\usage{\method{print}{xtable}(x, type="latex", file="", append=FALSE, floating=TRUE, floating.environment="table", table.placement = "ht", caption.placement="bottom", latex.environments=c("center"),tabular.environment = "tabular", size=NULL,hline.after=c(-1,0,nrow(x)), NA.string = "", include.rownames=TRUE,include.colnames=TRUE,only.contents=FALSE,add.to.row=NULL, sanitize.text.function=NULL,...)}
+\usage{\method{print}{xtable}(x, type="latex", file="", append=FALSE, floating=TRUE, floating.environment="table", table.placement = "ht", caption.placement="bottom", latex.environments=c("center"),tabular.environment = "tabular", size=NULL,hline.after=c(-1,0,nrow(x)), NA.string = "", include.rownames=TRUE, include.colnames=TRUE, only.contents=FALSE, add.to.row=NULL, sanitize.text.function=NULL, sanitize.rownames.function=sanitize.text.function, sanitize.colnames.function=sanitize.text.function, ...)}
 \arguments{
   \item{x}{An object of class \code{"xtable"}.}
   \item{type}{Type of table to produce.  Possible values for \code{type} are \code{"latex"} or \code{"html"}.
               Default value is \code{"latex"}.}
-  \item{file}{Name of file where the resulting code should be saved.  If \code{file==""}, output is displayed on screen.  Note that
+  \item{file}{Name of file where the resulting code should be saved.  If \code{file=""}, output is displayed on screen.  Note that
               the function also (invisibly) returns a character vector of the results (which can be helpful for post-processing).
               Default value is \code{""}.}
   \item{append}{If \code{TRUE} and \code{file!=""}, code will be appended to \code{file} instead of overwriting \code{file}.
@@ -30,7 +30,9 @@
   \item{include.colnames}{logical. If \code{TRUE} the columns names is printed. Default value is \code{TRUE}.}
   \item{only.contents}{logical. If \code{TRUE} only the rows of the table is printed. Default value is \code{FALSE}.}
   \item{add.to.row}{a list of two components. The first component (which should be called 'pos') is a list contains the position of rows on which extra commands should be added at the end, The second component (which should be called 'command') is a character vector of the same length of the first component which contains the command that should be added at the end of the specified rows. Default value is \code{NULL}, i.e. do not add commands.}
-  \item{sanitize.text.function}{All non-numeric columns, together with column and row names, are sanitised in an attempt to remove characters which have special meaning for the output format. If \code{sanitize.text.function} is not NULL (the default), it should be a function taking a character vector and returning one, and will be used for the sanitization instead of the default internal function.}
+  \item{sanitize.text.function}{All non-numeric enteries (except row and column names) are sanitised in an attempt to remove characters which have special meaning for the output format. If \code{sanitize.text.function} is not NULL (the default), it should be a function taking a character vector and returning one, and will be used for the sanitization instead of the default internal function.}
+  \item{sanitize.rownames.function}{Like the \code{sanitize.text.function}, but applicable to row names.  The default uses the \code{sanitize.text.function}.}
+  \item{sanitize.colnames.function}{Like the \code{sanitize.text.function}, but applicable to column names.  The default uses the \code{sanitize.text.function}.}
   \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{

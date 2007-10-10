@@ -1,0 +1,1258 @@
+%\VignetteIndexEntry{xtable Gallery}
+%\VignetteDepends{xtable}
+%\VignetteKeywords{LaTeX,HTML,table}
+%\VignettePackage{xtable}
+
+%**************************************************************************
+%
+% # $Id:$
+
+% $Revision:  $
+% $Author: $
+% $Date:  $
+
+
+\documentclass[letterpaper]{article}
+
+\title{
+The xtable gallery
+}
+\author{Jonathan Swinton <jonathan@swintons.net>\\ with small contributions from others}
+
+\usepackage{Sweave}
+
+\usepackage{rotating} 
+\usepackage{longtable} 
+%\usepackage{hyperref}
+\begin{document}
+
+\maketitle
+\section{Summary}
+This document gives a gallery of tables which can be made 
+by using the {\tt xtable} package to create \LaTeX\ output.
+It doubles as a regression check for the package.
+
+\begin{Schunk}
+\begin{Sinput}
+> library(xtable)
+\end{Sinput}
+\end{Schunk}
+
+\section{Gallery}
+\subsection{Data frame}
+Load example dataset
+\begin{Schunk}
+\begin{Sinput}
+> data(tli)
+> tli.table <- xtable(tli[1:10, ])
+> digits(tli.table)[c(2, 6)] <- 0
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(tli.table, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{rrlllr}
+  \hline
+ & grade & sex & disadvg & ethnicty & tlimth \\
+  \hline
+1 & 6 & M & YES & HISPANIC & 43 \\
+  2 & 7 & M & NO & BLACK & 88 \\
+  3 & 5 & F & YES & HISPANIC & 34 \\
+  4 & 3 & M & YES & HISPANIC & 65 \\
+  5 & 8 & M & YES & WHITE & 75 \\
+  6 & 5 & M & NO & BLACK & 74 \\
+  7 & 8 & F & YES & HISPANIC & 72 \\
+  8 & 4 & M & YES & BLACK & 79 \\
+  9 & 6 & M & NO & WHITE & 88 \\
+  10 & 7 & M & YES & HISPANIC & 87 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsection{Matrix}
+\begin{Schunk}
+\begin{Sinput}
+> design.matrix <- model.matrix(~sex * grade, data = tli[1:10, 
++     ])
+> design.table <- xtable(design.matrix)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(design.table, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{rrrrr}
+  \hline
+ & (Intercept) & sexM & grade & sexM:grade \\
+  \hline
+1 & 1.00 & 1.00 & 6.00 & 6.00 \\
+  2 & 1.00 & 1.00 & 7.00 & 7.00 \\
+  3 & 1.00 & 0.00 & 5.00 & 0.00 \\
+  4 & 1.00 & 1.00 & 3.00 & 3.00 \\
+  5 & 1.00 & 1.00 & 8.00 & 8.00 \\
+  6 & 1.00 & 1.00 & 5.00 & 5.00 \\
+  7 & 1.00 & 0.00 & 8.00 & 0.00 \\
+  8 & 1.00 & 1.00 & 4.00 & 4.00 \\
+  9 & 1.00 & 1.00 & 6.00 & 6.00 \\
+  10 & 1.00 & 1.00 & 7.00 & 7.00 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsection{aov}
+\begin{Schunk}
+\begin{Sinput}
+> fm1 <- aov(tlimth ~ sex + ethnicty + grade + disadvg, data = tli)
+> fm1.table <- xtable(fm1)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(fm1.table, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{lrrrrr}
+  \hline
+ & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\
+  \hline
+sex & 1 & 75.37 & 75.37 & 0.38 & 0.5417 \\
+  ethnicty & 3 & 2572.15 & 857.38 & 4.27 & 0.0072 \\
+  grade & 1 & 36.31 & 36.31 & 0.18 & 0.6717 \\
+  disadvg & 1 & 59.30 & 59.30 & 0.30 & 0.5882 \\
+  Residuals & 93 & 18682.87 & 200.89 &  &  \\
+   \hline
+\end{tabular}\end{Schunk}
+\subsection{lm}
+\begin{Schunk}
+\begin{Sinput}
+> fm2 <- lm(tlimth ~ sex * ethnicty, data = tli)
+> fm2.table <- xtable(fm2)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(fm2.table, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\
+  \hline
+(Intercept) & 73.6364 & 4.2502 & 17.33 & 0.0000 \\
+  sexM & $-$1.6364 & 5.8842 & $-$0.28 & 0.7816 \\
+  ethnictyHISPANIC & $-$9.7614 & 6.5501 & $-$1.49 & 0.1395 \\
+  ethnictyOTHER & 15.8636 & 10.8360 & 1.46 & 0.1466 \\
+  ethnictyWHITE & 4.7970 & 4.9687 & 0.97 & 0.3368 \\
+  sexM:ethnictyHISPANIC & 10.6780 & 8.7190 & 1.22 & 0.2238 \\
+  sexM:ethnictyWHITE & 5.1230 & 7.0140 & 0.73 & 0.4670 \\
+   \hline
+\end{tabular}\end{Schunk}
+\subsubsection{anova object}
+
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(anova(fm2)), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{lrrrrr}
+  \hline
+ & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\
+  \hline
+sex & 1 & 75.37 & 75.37 & 0.38 & 0.5395 \\
+  ethnicty & 3 & 2572.15 & 857.38 & 4.31 & 0.0068 \\
+  sex:ethnicty & 2 & 298.43 & 149.22 & 0.75 & 0.4748 \\
+  Residuals & 93 & 18480.04 & 198.71 &  &  \\
+   \hline
+\end{tabular}\end{Schunk}
+\subsubsection{Another anova object}
+\begin{Schunk}
+\begin{Sinput}
+> fm2b <- lm(tlimth ~ ethnicty, data = tli)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(anova(fm2b, fm2)), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{lrrrrrr}
+  \hline
+ & Res.Df & RSS & Df & Sum of Sq & F & Pr($>$F) \\
+  \hline
+1 & 96 & 19053.59 &  &  &  &  \\
+  2 & 93 & 18480.04 & 3 & 573.55 & 0.96 & 0.4141 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+
+\subsection{glm}
+
+\begin{Schunk}
+\begin{Sinput}
+> fm3 <- glm(disadvg ~ ethnicty * grade, data = tli, family = binomial())
+> fm3.table <- xtable(fm3)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(fm3.table, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\
+  \hline
+(Intercept) & 3.1888 & 1.5966 & 2.00 & 0.0458 \\
+  ethnictyHISPANIC & $-$0.2848 & 2.4808 & $-$0.11 & 0.9086 \\
+  ethnictyOTHER & 212.1701 & 22122.7093 & 0.01 & 0.9923 \\
+  ethnictyWHITE & $-$8.8150 & 3.3355 & $-$2.64 & 0.0082 \\
+  grade & $-$0.5308 & 0.2892 & $-$1.84 & 0.0665 \\
+  ethnictyHISPANIC:grade & 0.2448 & 0.4357 & 0.56 & 0.5742 \\
+  ethnictyOTHER:grade & $-$32.6014 & 3393.4687 & $-$0.01 & 0.9923 \\
+  ethnictyWHITE:grade & 1.0171 & 0.5185 & 1.96 & 0.0498 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsubsection{anova object}
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(anova(fm3)), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{lrrrr}
+  \hline
+ & Df & Deviance & Resid. Df & Resid. Dev \\
+  \hline
+NULL &  &  & 99 & 129.49 \\
+  ethnicty & 3 & 47.24 & 96 & 82.25 \\
+  grade & 1 & 1.73 & 95 & 80.52 \\
+  ethnicty:grade & 3 & 7.20 & 92 & 73.32 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+
+\subsection{More aov}
+\begin{Schunk}
+\begin{Sinput}
+> N <- c(0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 
++     1, 0, 1, 1, 0, 0)
+> P <- c(1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 
++     0, 1, 0, 1, 1, 0)
+> K <- c(1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 
++     1, 1, 1, 0, 1, 0)
+> yield <- c(49.5, 62.8, 46.8, 57, 59.8, 58.5, 55.5, 56, 62.8, 
++     55.8, 69.5, 55, 62, 48.8, 45.5, 44.2, 52, 51.5, 49.8, 48.8, 
++     57.2, 59, 53.2, 56)
+> npk <- data.frame(block = gl(6, 4), N = factor(N), P = factor(P), 
++     K = factor(K), yield = yield)
+> npk.aov <- aov(yield ~ block + N * P * K, npk)
+> op <- options(contrasts = c("contr.helmert", "contr.treatment"))
+> npk.aovE <- aov(yield ~ N * P * K + Error(block), npk)
+> options(op)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(npk.aov), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{lrrrrr}
+  \hline
+ & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\
+  \hline
+block & 5 & 343.29 & 68.66 & 4.45 & 0.0159 \\
+  N & 1 & 189.28 & 189.28 & 12.26 & 0.0044 \\
+  P & 1 & 8.40 & 8.40 & 0.54 & 0.4749 \\
+  K & 1 & 95.20 & 95.20 & 6.17 & 0.0288 \\
+  N:P & 1 & 21.28 & 21.28 & 1.38 & 0.2632 \\
+  N:K & 1 & 33.13 & 33.13 & 2.15 & 0.1686 \\
+  P:K & 1 & 0.48 & 0.48 & 0.03 & 0.8628 \\
+  Residuals & 12 & 185.29 & 15.44 &  &  \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsubsection{anova object}
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(anova(npk.aov)), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{lrrrrr}
+  \hline
+ & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\
+  \hline
+block & 5 & 343.29 & 68.66 & 4.45 & 0.0159 \\
+  N & 1 & 189.28 & 189.28 & 12.26 & 0.0044 \\
+  P & 1 & 8.40 & 8.40 & 0.54 & 0.4749 \\
+  K & 1 & 95.20 & 95.20 & 6.17 & 0.0288 \\
+  N:P & 1 & 21.28 & 21.28 & 1.38 & 0.2632 \\
+  N:K & 1 & 33.13 & 33.13 & 2.15 & 0.1686 \\
+  P:K & 1 & 0.48 & 0.48 & 0.03 & 0.8628 \\
+  Residuals & 12 & 185.29 & 15.44 &  &  \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsubsection{Another anova object}
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(summary(npk.aov)), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{lrrrrr}
+  \hline
+ & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\
+  \hline
+block       & 5 & 343.29 & 68.66 & 4.45 & 0.0159 \\
+  N           & 1 & 189.28 & 189.28 & 12.26 & 0.0044 \\
+  P           & 1 & 8.40 & 8.40 & 0.54 & 0.4749 \\
+  K           & 1 & 95.20 & 95.20 & 6.17 & 0.0288 \\
+  N:P         & 1 & 21.28 & 21.28 & 1.38 & 0.2632 \\
+  N:K         & 1 & 33.13 & 33.13 & 2.15 & 0.1686 \\
+  P:K         & 1 & 0.48 & 0.48 & 0.03 & 0.8628 \\
+  Residuals   & 12 & 185.29 & 15.44 &  &  \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(npk.aovE), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{lrrrrr}
+  \hline
+ & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\
+  \hline
+N:P:K     & 1 & 37.00 & 37.00 & 0.48 & 0.5252 \\
+  Residuals & 4 & 306.29 & 76.57 &  &  \\
+  N         & 1 & 189.28 & 189.28 & 12.26 & 0.0044 \\
+  P         & 1 & 8.40 & 8.40 & 0.54 & 0.4749 \\
+  K         & 1 & 95.20 & 95.20 & 6.17 & 0.0288 \\
+  N:P       & 1 & 21.28 & 21.28 & 1.38 & 0.2632 \\
+  N:K       & 1 & 33.14 & 33.14 & 2.15 & 0.1686 \\
+  P:K       & 1 & 0.48 & 0.48 & 0.03 & 0.8628 \\
+  Residuals1 & 12 & 185.29 & 15.44 &  &  \\
+   \hline
+\end{tabular}\end{Schunk}
+
+
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(summary(npk.aovE)), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{lrrrrr}
+  \hline
+ & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\
+  \hline
+N:P:K     & 1 & 37.00 & 37.00 & 0.48 & 0.5252 \\
+  Residuals & 4 & 306.29 & 76.57 &  &  \\
+  N         & 1 & 189.28 & 189.28 & 12.26 & 0.0044 \\
+  P         & 1 & 8.40 & 8.40 & 0.54 & 0.4749 \\
+  K         & 1 & 95.20 & 95.20 & 6.17 & 0.0288 \\
+  N:P       & 1 & 21.28 & 21.28 & 1.38 & 0.2632 \\
+  N:K       & 1 & 33.14 & 33.14 & 2.15 & 0.1686 \\
+  P:K       & 1 & 0.48 & 0.48 & 0.03 & 0.8628 \\
+  Residuals1 & 12 & 185.29 & 15.44 &  &  \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsection{More lm}
+\begin{Schunk}
+\begin{Sinput}
+> ctl <- c(4.17, 5.58, 5.18, 6.11, 4.5, 4.61, 5.17, 4.53, 5.33, 
++     5.14)
+> trt <- c(4.81, 4.17, 4.41, 3.59, 5.87, 3.83, 6.03, 4.89, 4.32, 
++     4.69)
+> group <- gl(2, 10, 20, labels = c("Ctl", "Trt"))
+> weight <- c(ctl, trt)
+> lm.D9 <- lm(weight ~ group)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(lm.D9), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\
+  \hline
+(Intercept) & 5.0320 & 0.2202 & 22.85 & 0.0000 \\
+  groupTrt & $-$0.3710 & 0.3114 & $-$1.19 & 0.2490 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(anova(lm.D9)), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{lrrrrr}
+  \hline
+ & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\
+  \hline
+group & 1 & 0.69 & 0.69 & 1.42 & 0.2490 \\
+  Residuals & 18 & 8.73 & 0.48 &  &  \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsection{More glm}
+\begin{Schunk}
+\begin{Sinput}
+> counts <- c(18, 17, 15, 20, 10, 20, 25, 13, 12)
+> outcome <- gl(3, 1, 9)
+> treatment <- gl(3, 3)
+> d.AD <- data.frame(treatment, outcome, counts)
+> glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(glm.D93, align = "r|llrc"), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{r|llrc}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\
+  \hline
+(Intercept) & 3.0445 & 0.1709 & 17.81 & 0.0000 \\
+  outcome2 & $-$0.4543 & 0.2022 & $-$2.25 & 0.0246 \\
+  outcome3 & $-$0.2930 & 0.1927 & $-$1.52 & 0.1285 \\
+  treatment2 & 0.0000 & 0.2000 & 0.00 & 1.0000 \\
+  treatment3 & 0.0000 & 0.2000 & 0.00 & 1.0000 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsection{prcomp}
+\begin{Schunk}
+\begin{Sinput}
+> if (require(stats, quietly = TRUE)) {
++     data(USArrests)
++     pr1 <- prcomp(USArrests)
++ }
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> if (require(stats, quietly = TRUE)) {
++     print(xtable(pr1), floating = FALSE)
++ }
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{rrrrr}
+  \hline
+ & PC1 & PC2 & PC3 & PC4 \\
+  \hline
+Murder & 0.0417 & $-$0.0448 & 0.0799 & $-$0.9949 \\
+  Assault & 0.9952 & $-$0.0588 & $-$0.0676 & 0.0389 \\
+  UrbanPop & 0.0463 & 0.9769 & $-$0.2005 & $-$0.0582 \\
+  Rape & 0.0752 & 0.2007 & 0.9741 & 0.0723 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(summary(pr1)), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:36 2007
+\begin{tabular}{rrrrr}
+  \hline
+ & PC1 & PC2 & PC3 & PC4 \\
+  \hline
+Standard deviation & 83.7324 & 14.2124 & 6.4894 & 2.4828 \\
+  Proportion of Variance & 0.9655 & 0.0278 & 0.0058 & 0.0008 \\
+  Cumulative Proportion & 0.9655 & 0.9933 & 0.9991 & 1.0000 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+
+
+\subsection{Time series}
+
+\begin{Schunk}
+\begin{Sinput}
+> temp.ts <- ts(cumsum(1 + round(rnorm(100), 0)), start = c(1954, 
++     7), frequency = 12)
+> temp.table <- xtable(temp.ts, digits = 0)
+> caption(temp.table) <- "Time series example"
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(temp.table, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{rrrrrrrrrrrrr}
+  \hline
+ & Jan & Feb & Mar & Apr & May & Jun & Jul & Aug & Sep & Oct & Nov & Dec \\
+  \hline
+1954 &  &  &  &  &  &  & 1 & 2 & 3 & 4 & 6 & 7 \\
+  1955 & 9 & 10 & 11 & 14 & 14 & 15 & 15 & 15 & 16 & 16 & 18 & 20 \\
+  1956 & 21 & 21 & 23 & 23 & 23 & 24 & 26 & 27 & 29 & 31 & 33 & 32 \\
+  1957 & 34 & 33 & 33 & 34 & 35 & 37 & 37 & 36 & 37 & 38 & 38 & 37 \\
+  1958 & 39 & 40 & 41 & 43 & 44 & 45 & 48 & 50 & 51 & 52 & 53 & 57 \\
+  1959 & 58 & 58 & 59 & 61 & 62 & 64 & 64 & 64 & 67 & 68 & 70 & 72 \\
+  1960 & 74 & 75 & 75 & 78 & 79 & 80 & 81 & 83 & 84 & 85 & 87 & 88 \\
+  1961 & 90 & 90 & 90 & 90 & 91 & 91 & 91 & 93 & 93 & 94 & 94 & 94 \\
+  1962 & 95 & 94 & 94 & 96 & 95 & 97 & 99 & 99 & 99 & 101 &  &  \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\section{Sanitization}
+\begin{Schunk}
+\begin{Sinput}
+> insane <- data.frame(Name = c("Ampersand", "Greater than", "Less than", 
++     "Underscore", "Per cent", "Dollar", "Backslash", "Hash", 
++     "Caret", "Tilde", "Left brace", "Right brace"), Character = I(c("&", 
++     ">", "<", "_", "%", "$", "\\", "#", "^", "~", "{", "}")))
+> colnames(insane)[2] <- paste(insane[, 2], collapse = "")
+\end{Sinput}
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(insane))
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rll}
+  \hline
+ & Name & \&$>$$<$\_\%\$$\backslash$\#\verb|^|\~{}\{\} \\
+  \hline
+1 & Ampersand & \& \\
+  2 & Greater than & $>$ \\
+  3 & Less than & $<$ \\
+  4 & Underscore & \_ \\
+  5 & Per cent & \% \\
+  6 & Dollar & \$ \\
+  7 & Backslash & $\backslash$ \\
+  8 & Hash & \# \\
+  9 & Caret & \verb|^| \\
+  10 & Tilde & \~{} \\
+  11 & Left brace & \{ \\
+  12 & Right brace & \} \\
+   \hline
+\end{tabular}
+\end{center}
+\end{table}\end{Schunk}
+Sometimes you might want to have your own sanitization function
+\begin{Schunk}
+\begin{Sinput}
+> wanttex <- xtable(data.frame(label = paste("Value_is $10^{-", 
++     1:3, "}$", sep = "")))
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(wanttex, sanitize.text.function = function(str) gsub("_", 
++     "\\_", str, fixed = TRUE))
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rl}
+  \hline
+ & label \\
+  \hline
+1 & Value\_is $10^{-1}$ \\
+  2 & Value\_is $10^{-2}$ \\
+  3 & Value\_is $10^{-3}$ \\
+   \hline
+\end{tabular}
+\end{center}
+\end{table}\end{Schunk}
+
+\subsection{Markup in tables}
+
+Markup can be kept in tables, including column and row names, by using a custom sanitize.text.function:
+
+\begin{Schunk}
+\begin{Sinput}
+> mat <- round(matrix(c(0.9, 0.89, 200, 0.045, 2), c(1, 5)), 4)
+> rownames(mat) <- "$y_{t-1}$"
+> colnames(mat) <- c("$R^2$", "$\\bar{R}^2$", "F-stat", "S.E.E", 
++     "DW")
+> mat <- xtable(mat)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(mat, sanitize.text.function = function(x) {
++     x
++ })
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rrrrrr}
+  \hline
+ & $R^2$ & $\bar{R}^2$ & F-stat & S.E.E & DW \\
+  \hline
+$y_{t-1}$ & 0.90 & 0.89 & 200.00 & 0.04 & 2.00 \\
+   \hline
+\end{tabular}
+\end{center}
+\end{table}\end{Schunk}
+
+% By David Dahl to demonstrate contribution from David Whitting, 2007-10-09.
+You can also have sanitize functions that are specific to column or row names.  In the table below, the row name is not sanitized but column names and table elements are:
+\begin{Schunk}
+\begin{Sinput}
+> money <- matrix(c("$1,000", "$900", "$100"), ncol = 3, dimnames = list("$\\alpha$", 
++     c("Income (US$)", "Expenses (US$)", "Profit (US$)")))
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(money), sanitize.rownames.function = function(x) {
++     x
++ })
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rlll}
+  \hline
+ & Income (US\$) & Expenses (US\$) & Profit (US\$) \\
+  \hline
+$\alpha$ & \$1,000 & \$900 & \$100 \\
+   \hline
+\end{tabular}
+\end{center}
+\end{table}\end{Schunk}
+
+\section{Format examples}
+\subsection{Adding a centering environment }
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(lm.D9, caption = "\\tt latex.environment=NULL"), 
++     latex.environment = NULL)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{table}[ht]
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\
+  \hline
+(Intercept) & 5.0320 & 0.2202 & 22.85 & 0.0000 \\
+  groupTrt & $-$0.3710 & 0.3114 & $-$1.19 & 0.2490 \\
+   \hline
+\end{tabular}
+\caption{\tt latex.environment=NULL}
+\end{table}\begin{Sinput}
+> print(xtable(lm.D9, caption = "\\tt latex.environment=\"\""), 
++     latex.environment = "")
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{table}[ht]
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\
+  \hline
+(Intercept) & 5.0320 & 0.2202 & 22.85 & 0.0000 \\
+  groupTrt & $-$0.3710 & 0.3114 & $-$1.19 & 0.2490 \\
+   \hline
+\end{tabular}
+\caption{\tt latex.environment=""}
+\end{table}\begin{Sinput}
+> print(xtable(lm.D9, caption = "\\tt latex.environment=\"center\""), 
++     latex.environment = "center")
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\
+  \hline
+(Intercept) & 5.0320 & 0.2202 & 22.85 & 0.0000 \\
+  groupTrt & $-$0.3710 & 0.3114 & $-$1.19 & 0.2490 \\
+   \hline
+\end{tabular}
+\caption{\tt latex.environment="center"}
+\end{center}
+\end{table}\end{Schunk}
+\subsection{Column alignment}
+
+\begin{Schunk}
+\begin{Sinput}
+> tli.table <- xtable(tli[1:10, ])
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> align(tli.table) <- rep("r", 6)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(tli.table, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{rrrrrr}
+  \hline
+ & grade & sex & disadvg & ethnicty & tlimth \\
+  \hline
+1 &   6 & M & YES & HISPANIC &  43 \\
+  2 &   7 & M & NO & BLACK &  88 \\
+  3 &   5 & F & YES & HISPANIC &  34 \\
+  4 &   3 & M & YES & HISPANIC &  65 \\
+  5 &   8 & M & YES & WHITE &  75 \\
+  6 &   5 & M & NO & BLACK &  74 \\
+  7 &   8 & F & YES & HISPANIC &  72 \\
+  8 &   4 & M & YES & BLACK &  79 \\
+  9 &   6 & M & NO & WHITE &  88 \\
+  10 &   7 & M & YES & HISPANIC &  87 \\
+   \hline
+\end{tabular}\end{Schunk}
+\subsubsection{Single string and column lines}
+\begin{Schunk}
+\begin{Sinput}
+> align(tli.table) <- "|rrl|l|lr|"
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(tli.table, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{|rrl|l|lr|}
+  \hline
+ & grade & sex & disadvg & ethnicty & tlimth \\
+  \hline
+1 &   6 & M & YES & HISPANIC &  43 \\
+  2 &   7 & M & NO & BLACK &  88 \\
+  3 &   5 & F & YES & HISPANIC &  34 \\
+  4 &   3 & M & YES & HISPANIC &  65 \\
+  5 &   8 & M & YES & WHITE &  75 \\
+  6 &   5 & M & NO & BLACK &  74 \\
+  7 &   8 & F & YES & HISPANIC &  72 \\
+  8 &   4 & M & YES & BLACK &  79 \\
+  9 &   6 & M & NO & WHITE &  88 \\
+  10 &   7 & M & YES & HISPANIC &  87 \\
+   \hline
+\end{tabular}\end{Schunk}
+\subsubsection{Fixed width columns}
+\begin{Schunk}
+\begin{Sinput}
+> align(tli.table) <- "|rr|lp{3cm}l|r|"
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(tli.table, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{|rr|lp{3cm}l|r|}
+  \hline
+ & grade & sex & disadvg & ethnicty & tlimth \\
+  \hline
+1 &   6 & M & YES & HISPANIC &  43 \\
+  2 &   7 & M & NO & BLACK &  88 \\
+  3 &   5 & F & YES & HISPANIC &  34 \\
+  4 &   3 & M & YES & HISPANIC &  65 \\
+  5 &   8 & M & YES & WHITE &  75 \\
+  6 &   5 & M & NO & BLACK &  74 \\
+  7 &   8 & F & YES & HISPANIC &  72 \\
+  8 &   4 & M & YES & BLACK &  79 \\
+  9 &   6 & M & NO & WHITE &  88 \\
+  10 &   7 & M & YES & HISPANIC &  87 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsection{Significant digits}
+
+
+Specify with a single argument 
+\begin{Schunk}
+\begin{Sinput}
+> digits(tli.table) <- 3
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(tli.table, floating = FALSE, )
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{|rr|lp{3cm}l|r|}
+  \hline
+ & grade & sex & disadvg & ethnicty & tlimth \\
+  \hline
+1 &    6 & M & YES & HISPANIC &   43 \\
+  2 &    7 & M & NO & BLACK &   88 \\
+  3 &    5 & F & YES & HISPANIC &   34 \\
+  4 &    3 & M & YES & HISPANIC &   65 \\
+  5 &    8 & M & YES & WHITE &   75 \\
+  6 &    5 & M & NO & BLACK &   74 \\
+  7 &    8 & F & YES & HISPANIC &   72 \\
+  8 &    4 & M & YES & BLACK &   79 \\
+  9 &    6 & M & NO & WHITE &   88 \\
+  10 &    7 & M & YES & HISPANIC &   87 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+
+or one for each column, counting the row names
+\begin{Schunk}
+\begin{Sinput}
+> digits(tli.table) <- 1:(ncol(tli) + 1)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(tli.table, floating = FALSE, )
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{|rr|lp{3cm}l|r|}
+  \hline
+ & grade & sex & disadvg & ethnicty & tlimth \\
+  \hline
+1 &   6 & M & YES & HISPANIC &      43 \\
+  2 &   7 & M & NO & BLACK &      88 \\
+  3 &   5 & F & YES & HISPANIC &      34 \\
+  4 &   3 & M & YES & HISPANIC &      65 \\
+  5 &   8 & M & YES & WHITE &      75 \\
+  6 &   5 & M & NO & BLACK &      74 \\
+  7 &   8 & F & YES & HISPANIC &      72 \\
+  8 &   4 & M & YES & BLACK &      79 \\
+  9 &   6 & M & NO & WHITE &      88 \\
+  10 &   7 & M & YES & HISPANIC &      87 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+
+or as a full matrix
+\begin{Schunk}
+\begin{Sinput}
+> digits(tli.table) <- matrix(0:4, nrow = 10, ncol = ncol(tli) + 
++     1)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(tli.table, floating = FALSE, )
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{|rr|lp{3cm}l|r|}
+  \hline
+ & grade & sex & disadvg & ethnicty & tlimth \\
+  \hline
+1 & 6 & M & YES & HISPANIC & 43 \\
+  2 &  7 & M & NO & BLACK & 88 \\
+  3 &   5 & F & YES & HISPANIC &  34 \\
+  4 &    3 & M & YES & HISPANIC &   65 \\
+  5 &     8 & M & YES & WHITE &    75 \\
+  6 & 5 & M & NO & BLACK & 74 \\
+  7 &  8 & F & YES & HISPANIC & 72 \\
+  8 &   4 & M & YES & BLACK &  79 \\
+  9 &    6 & M & NO & WHITE &   88 \\
+  10 &     7 & M & YES & HISPANIC &    87 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsection{Suppress row names}
+\begin{Schunk}
+\begin{Sinput}
+> print((tli.table), include.rownames = FALSE, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{r|lp{3cm}l|r|}
+  \hline
+grade & sex & disadvg & ethnicty & tlimth \\
+  \hline
+6 & M & YES & HISPANIC & 43 \\
+   7 & M & NO & BLACK & 88 \\
+    5 & F & YES & HISPANIC &  34 \\
+     3 & M & YES & HISPANIC &   65 \\
+      8 & M & YES & WHITE &    75 \\
+  5 & M & NO & BLACK & 74 \\
+   8 & F & YES & HISPANIC & 72 \\
+    4 & M & YES & BLACK &  79 \\
+     6 & M & NO & WHITE &   88 \\
+      7 & M & YES & HISPANIC &    87 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+If you want a vertical line on the left, you need to change the align attribute.
+\begin{Schunk}
+\begin{Sinput}
+> align(tli.table) <- "|r|r|lp{3cm}l|r|"
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print((tli.table), include.rownames = FALSE, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{|r|lp{3cm}l|r|}
+  \hline
+grade & sex & disadvg & ethnicty & tlimth \\
+  \hline
+6 & M & YES & HISPANIC & 43 \\
+   7 & M & NO & BLACK & 88 \\
+    5 & F & YES & HISPANIC &  34 \\
+     3 & M & YES & HISPANIC &   65 \\
+      8 & M & YES & WHITE &    75 \\
+  5 & M & NO & BLACK & 74 \\
+   8 & F & YES & HISPANIC & 72 \\
+    4 & M & YES & BLACK &  79 \\
+     6 & M & NO & WHITE &   88 \\
+      7 & M & YES & HISPANIC &    87 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+Revert the alignment to what is was before.
+\begin{Schunk}
+\begin{Sinput}
+> align(tli.table) <- "|rr|lp{3cm}l|r|"
+\end{Sinput}
+\end{Schunk}
+
+\subsection{Suppress column names}
+\begin{Schunk}
+\begin{Sinput}
+> print((tli.table), include.colnames = FALSE, floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{|rr|lp{3cm}l|r|}
+  \hline
+  \hline
+1 & 6 & M & YES & HISPANIC & 43 \\
+  2 &  7 & M & NO & BLACK & 88 \\
+  3 &   5 & F & YES & HISPANIC &  34 \\
+  4 &    3 & M & YES & HISPANIC &   65 \\
+  5 &     8 & M & YES & WHITE &    75 \\
+  6 & 5 & M & NO & BLACK & 74 \\
+  7 &  8 & F & YES & HISPANIC & 72 \\
+  8 &   4 & M & YES & BLACK &  79 \\
+  9 &    6 & M & NO & WHITE &   88 \\
+  10 &     7 & M & YES & HISPANIC &    87 \\
+   \hline
+\end{tabular}\end{Schunk}
+\\
+Note the doubled header lines which can be suppressed with, eg,
+\begin{Schunk}
+\begin{Sinput}
+> print(tli.table, include.colnames = FALSE, floating = FALSE, 
++     hline.after = c(0, nrow(tli.table)))
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{|rr|lp{3cm}l|r|}
+   \hline
+1 & 6 & M & YES & HISPANIC & 43 \\
+  2 &  7 & M & NO & BLACK & 88 \\
+  3 &   5 & F & YES & HISPANIC &  34 \\
+  4 &    3 & M & YES & HISPANIC &   65 \\
+  5 &     8 & M & YES & WHITE &    75 \\
+  6 & 5 & M & NO & BLACK & 74 \\
+  7 &  8 & F & YES & HISPANIC & 72 \\
+  8 &   4 & M & YES & BLACK &  79 \\
+  9 &    6 & M & NO & WHITE &   88 \\
+  10 &     7 & M & YES & HISPANIC &    87 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsection{Suppress row and column names}
+\begin{Schunk}
+\begin{Sinput}
+> print((tli.table), include.colnames = FALSE, include.rownames = FALSE, 
++     floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{r|lp{3cm}l|r|}
+  \hline
+  \hline
+6 & M & YES & HISPANIC & 43 \\
+   7 & M & NO & BLACK & 88 \\
+    5 & F & YES & HISPANIC &  34 \\
+     3 & M & YES & HISPANIC &   65 \\
+      8 & M & YES & WHITE &    75 \\
+  5 & M & NO & BLACK & 74 \\
+   8 & F & YES & HISPANIC & 72 \\
+    4 & M & YES & BLACK &  79 \\
+     6 & M & NO & WHITE &   88 \\
+      7 & M & YES & HISPANIC &    87 \\
+   \hline
+\end{tabular}\end{Schunk}
+
+\subsection{Horizontal lines}
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(anova(glm.D93)), hline.after = c(1), floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{tabular}{lrrrr}
+  & Df & Deviance & Resid. Df & Resid. Dev \\
+ NULL &  &  & 8 & 10.58 \\
+   \hline
+outcome & 2 & 5.45 & 6 & 5.13 \\
+  treatment & 2 & 0.00 & 4 & 5.13 \\
+  \end{tabular}\end{Schunk}
+
+\subsection{Table-level \LaTeX}
+\begin{Schunk}
+\begin{Sinput}
+> print(xtable(anova(glm.D93)), size = "small", floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+{\small
+\begin{tabular}{lrrrr}
+  \hline
+ & Df & Deviance & Resid. Df & Resid. Dev \\
+  \hline
+NULL &  &  & 8 & 10.58 \\
+  outcome & 2 & 5.45 & 6 & 5.13 \\
+  treatment & 2 & 0.00 & 4 & 5.13 \\
+   \hline
+\end{tabular}
+}\end{Schunk}
+
+
+\subsection{Long tables}
+Remember to insert \verb|\usepackage{longtable}| in your LaTeX preamble.
+See Table \ref{tabbig}.
+
+\begin{Schunk}
+\begin{Sinput}
+> x <- matrix(rnorm(1000), ncol = 10)
+> x.big <- xtable(x, label = "tabbig", caption = "Example of longtable spanning several pages")
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> print(x.big, tabular.environment = "longtable", floating = FALSE)
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{longtable}{rrrrrrrrrrr}
+  \hline
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+  \hline
+1 & $-$0.57 & $-$0.00 & $-$1.70 & 0.47 & 0.12 & 0.52 & 0.16 & 0.11 & 1.30 & 0.40 \\
+  2 & $-$1.24 & $-$1.02 & $-$0.77 & $-$0.14 & 0.60 & 1.04 & 0.44 & $-$0.22 & 1.02 & 1.36 \\
+  3 & 0.46 & 0.05 & 3.17 & 0.12 & 0.77 & 1.99 & $-$2.37 & $-$0.59 & 0.90 & 0.44 \\
+  4 & $-$2.47 & 0.43 & $-$1.46 & $-$0.72 & $-$1.93 & $-$0.52 & 0.00 & 0.68 & $-$0.89 & $-$1.49 \\
+  5 & $-$0.65 & 0.99 & 0.44 & 1.26 & 0.11 & 0.55 & 0.28 & 0.63 & $-$1.83 & 1.12 \\
+  6 & $-$0.41 & $-$0.93 & 0.55 & $-$0.93 & $-$1.65 & $-$0.43 & 0.74 & $-$2.55 & $-$1.22 & $-$0.39 \\
+  7 & $-$0.10 & $-$0.27 & $-$0.28 & 1.00 & $-$0.20 & 0.49 & 1.22 & 0.42 & $-$0.16 & $-$1.16 \\
+  8 & $-$2.17 & 0.24 & 0.39 & $-$0.73 & $-$0.11 & $-$0.50 & 1.17 & $-$0.54 & $-$1.02 & 1.06 \\
+  9 & $-$0.13 & $-$0.64 & $-$1.05 & $-$0.77 & 1.08 & 0.91 & $-$0.01 & 1.16 & $-$0.56 & $-$0.52 \\
+  10 & 0.84 & $-$0.38 & 1.89 & $-$0.76 & $-$1.82 & 0.14 & 0.08 & 0.41 & 0.13 & $-$0.20 \\
+  11 & 1.25 & 0.47 & 0.93 & 2.30 & 0.20 & $-$0.85 & 0.55 & 0.44 & $-$0.13 & $-$0.76 \\
+  12 & $-$0.21 & $-$2.56 & $-$2.21 & $-$0.28 & 0.86 & $-$1.60 & $-$1.31 & 0.06 & 1.57 & $-$1.36 \\
+  13 & $-$0.28 & $-$1.17 & $-$0.73 & $-$1.77 & 0.16 & $-$0.24 & 0.40 & $-$0.42 & 1.16 & $-$0.58 \\
+  14 & 0.38 & 0.32 & 0.64 & 0.02 & $-$0.57 & $-$0.46 & 0.85 & 1.18 & 0.75 & 0.38 \\
+  15 & $-$0.98 & $-$1.84 & $-$1.37 & 1.19 & $-$1.21 & 0.77 & $-$1.16 & 0.13 & 0.42 & 0.52 \\
+  16 & 1.65 & $-$0.24 & 0.81 & $-$0.05 & 2.18 & 0.57 & $-$1.54 & $-$0.66 & $-$0.11 & $-$0.75 \\
+  17 & 0.60 & $-$0.80 & $-$1.16 & $-$0.24 & 0.41 & 0.54 & 0.49 & 0.43 & $-$0.50 & 1.41 \\
+  18 & $-$1.12 & 0.60 & 1.58 & $-$0.36 & $-$0.02 & 0.05 & $-$1.58 & 0.72 & $-$1.27 & 1.62 \\
+  19 & 0.94 & 0.17 & 2.19 & $-$0.78 & $-$0.06 & 0.71 & $-$0.27 & $-$0.07 & $-$0.49 & 0.40 \\
+  20 & $-$1.03 & 1.33 & 1.49 & 0.33 & 0.37 & $-$0.12 & 0.24 & 0.99 & 0.27 & $-$0.93 \\
+  21 & 0.08 & 0.01 & $-$0.57 & $-$0.74 & $-$0.68 & 0.82 & $-$1.61 & $-$0.01 & $-$1.50 & $-$0.02 \\
+  22 & 2.07 & 0.92 & $-$0.55 & $-$0.15 & $-$0.69 & 0.40 & 0.41 & 1.25 & $-$0.73 & 1.19 \\
+  23 & $-$2.01 & $-$0.64 & $-$0.26 & $-$0.99 & $-$0.56 & $-$0.38 & $-$1.12 & 0.34 & 1.06 & $-$1.99 \\
+  24 & 0.26 & 2.45 & $-$2.10 & $-$0.65 & 1.67 & $-$0.09 & $-$1.35 & 0.41 & 1.02 & $-$0.17 \\
+  25 & 0.11 & $-$1.69 & $-$0.89 & $-$2.14 & $-$0.77 & 0.40 & $-$0.42 & $-$1.67 & $-$1.07 & 0.01 \\
+  26 & $-$2.11 & $-$0.68 & 0.85 & $-$1.29 & $-$2.63 & $-$0.40 & $-$0.31 & $-$0.25 & $-$0.24 & $-$0.44 \\
+  27 & $-$2.63 & $-$1.61 & 0.35 & $-$0.53 & 0.73 & $-$0.91 & $-$0.18 & 0.22 & 0.77 & 1.34 \\
+  28 & 1.00 & 0.35 & $-$1.12 & $-$0.19 & 1.24 & $-$0.10 & 0.44 & 0.68 & 0.72 & 0.09 \\
+  29 & 1.21 & $-$0.00 & $-$0.44 & $-$0.15 & $-$1.28 & $-$0.25 & 1.34 & $-$0.21 & 0.83 & 0.84 \\
+  30 & $-$0.74 & 0.46 & 1.39 & $-$2.06 & 1.57 & 0.97 & $-$2.67 & 0.55 & $-$0.55 & $-$0.10 \\
+  31 & $-$0.21 & $-$0.51 & $-$1.14 & 0.30 & $-$3.11 & 0.87 & $-$1.40 & 1.91 & $-$0.25 & $-$1.65 \\
+  32 & $-$1.73 & 0.20 & $-$0.22 & 0.07 & 0.91 & 0.58 & $-$0.01 & $-$0.46 & 0.78 & $-$0.61 \\
+  33 & $-$1.92 & 0.45 & 0.32 & 0.35 & $-$1.17 & $-$1.11 & $-$0.93 & $-$0.40 & 0.61 & 0.11 \\
+  34 & 0.54 & $-$0.63 & 1.15 & 0.18 & 1.93 & 0.97 & $-$0.75 & 1.11 & 0.24 & $-$0.98 \\
+  35 & $-$1.12 & 0.24 & 0.10 & 1.85 & $-$1.36 & 1.29 & 0.31 & $-$0.03 & $-$0.45 & 0.39 \\
+  36 & 0.40 & 1.00 & 0.10 & $-$0.74 & 0.56 & 1.19 & $-$0.93 & 0.36 & 1.02 & 1.29 \\
+  37 & $-$0.32 & $-$0.44 & 0.04 & $-$1.06 & $-$0.52 & $-$1.03 & 0.78 & $-$0.33 & 0.05 & $-$0.56 \\
+  38 & 0.73 & $-$1.27 & 1.75 & 0.85 & $-$1.79 & $-$1.98 & 0.33 & 0.92 & $-$0.80 & $-$0.21 \\
+  39 & 0.55 & 0.48 & 1.67 & 0.24 & 0.57 & 0.78 & $-$0.64 & $-$1.37 & 1.15 & $-$0.68 \\
+  40 & 0.89 & 0.57 & 1.65 & $-$0.29 & $-$1.37 & 1.19 & 1.21 & 1.07 & $-$0.79 & 1.50 \\
+  41 & $-$0.97 & $-$0.80 & 0.07 & 1.49 & $-$0.53 & 0.81 & $-$2.50 & $-$0.89 & 0.78 & $-$0.82 \\
+  42 & $-$0.57 & 0.56 & 1.42 & 0.39 & $-$1.05 & 1.75 & $-$0.32 & 0.32 & 0.46 & $-$1.47 \\
+  43 & 1.35 & $-$1.83 & $-$0.44 & $-$1.32 & 0.30 & $-$0.63 & $-$1.25 & 1.20 & $-$1.20 & $-$1.00 \\
+  44 & $-$1.15 & $-$2.06 & $-$0.81 & $-$1.07 & $-$0.86 & $-$1.06 & $-$0.29 & 0.81 & $-$1.19 & $-$0.05 \\
+  45 & 0.90 & 1.19 & 1.16 & 0.90 & $-$1.01 & 0.42 & $-$0.40 & 0.44 & $-$0.73 & $-$1.37 \\
+  46 & 0.99 & $-$0.62 & $-$0.93 & $-$0.41 & 0.11 & 0.63 & $-$1.65 & 0.39 & 1.16 & $-$1.74 \\
+  47 & 0.08 & 0.32 & 1.83 & $-$0.26 & 0.05 & $-$0.47 & 0.49 & 0.73 & $-$0.31 & $-$0.30 \\
+  48 & 0.01 & $-$1.71 & $-$0.23 & 1.39 & $-$1.12 & 0.10 & 1.95 & 1.72 & 0.92 & $-$1.09 \\
+  49 & 1.89 & 1.26 & $-$2.32 & $-$0.77 & $-$0.74 & 0.48 & $-$0.32 & $-$0.62 & $-$0.14 & 1.47 \\
+  50 & $-$0.65 & 1.58 & $-$0.31 & 1.49 & $-$1.49 & $-$0.08 & $-$0.04 & 0.20 & $-$1.54 & 0.18 \\
+  51 & $-$0.83 & 0.04 & $-$0.02 & $-$1.78 & 0.17 & $-$1.21 & $-$1.00 & $-$0.71 & 0.15 & 0.27 \\
+  52 & $-$0.95 & $-$1.35 & 0.68 & $-$1.16 & 1.37 & 0.50 & $-$1.20 & 0.16 & $-$0.58 & 0.74 \\
+  53 & $-$0.70 & 0.28 & $-$0.52 & $-$0.62 & $-$0.64 & 0.34 & $-$0.47 & 0.24 & $-$1.19 & $-$1.63 \\
+  54 & $-$0.29 & $-$0.04 & 1.32 & 0.48 & 0.94 & 1.60 & 0.75 & $-$0.13 & $-$0.10 & 1.66 \\
+  55 & $-$0.06 & 1.10 & 1.43 & $-$0.84 & $-$0.23 & 1.50 & $-$1.20 & $-$0.82 & $-$1.54 & $-$1.85 \\
+  56 & 0.80 & $-$0.08 & 0.43 & $-$0.87 & $-$1.47 & 0.23 & 0.43 & 0.87 & 0.92 & 0.64 \\
+  57 & $-$1.25 & 2.90 & 1.65 & 0.19 & $-$0.43 & 0.36 & 0.23 & 1.91 & $-$1.33 & $-$1.06 \\
+  58 & 0.37 & 0.02 & 1.12 & $-$0.80 & $-$0.42 & 0.41 & $-$1.43 & 0.25 & 0.39 & $-$1.91 \\
+  59 & 0.32 & $-$1.88 & 0.76 & 0.10 & $-$2.75 & 0.59 & $-$1.55 & $-$1.48 & 0.05 & $-$0.51 \\
+  60 & $-$0.03 & $-$2.81 & $-$1.11 & $-$1.35 & $-$0.71 & 0.24 & $-$0.95 & $-$0.81 & $-$0.82 & $-$0.49 \\
+  61 & $-$1.65 & 0.24 & $-$0.20 & $-$0.21 & 1.66 & 0.37 & $-$0.15 & $-$1.52 & 0.31 & 0.64 \\
+  62 & $-$1.25 & $-$0.39 & $-$0.47 & $-$0.62 & 1.49 & 0.08 & $-$0.47 & 0.32 & 0.86 & 0.59 \\
+  63 & 0.60 & $-$0.64 & 0.69 & $-$0.44 & $-$0.22 & 0.22 & $-$0.37 & 0.29 & $-$2.16 & 0.23 \\
+  64 & 0.26 & 0.11 & $-$0.22 & $-$0.70 & 1.02 & 1.24 & $-$1.06 & 1.60 & 1.53 & 0.80 \\
+  65 & $-$1.64 & 1.70 & 0.94 & 1.28 & $-$0.21 & 0.33 & $-$0.60 & 0.42 & $-$0.43 & $-$0.64 \\
+  66 & $-$0.92 & $-$0.40 & $-$0.27 & 0.55 & $-$1.85 & $-$0.58 & $-$0.68 & 0.21 & 0.22 & $-$0.57 \\
+  67 & 0.54 & $-$0.60 & $-$1.06 & $-$0.28 & $-$1.21 & 0.35 & $-$0.32 & 1.04 & 0.97 & 1.07 \\
+  68 & 0.17 & 0.52 & $-$0.79 & 0.05 & 1.26 & 0.74 & $-$0.06 & $-$0.69 & 0.53 & 0.68 \\
+  69 & 0.62 & $-$0.27 & $-$0.58 & $-$0.33 & 0.21 & $-$1.98 & $-$1.59 & 0.33 & $-$0.93 & 0.86 \\
+  70 & 1.01 & $-$0.24 & 1.48 & 0.93 & 1.59 & 2.06 & $-$1.11 & $-$0.43 & 1.94 & $-$0.18 \\
+  71 & 1.09 & 0.77 & $-$0.54 & $-$0.15 & 0.56 & $-$0.25 & 0.65 & 0.81 & 1.15 & 0.29 \\
+  72 & $-$1.52 & $-$1.22 & 0.24 & 0.26 & 0.87 & $-$1.37 & 1.28 & 1.36 & 0.91 & 1.47 \\
+  73 & 0.05 & $-$1.39 & $-$0.66 & 1.25 & $-$0.41 & 1.22 & $-$1.47 & $-$1.02 & 0.60 & 0.58 \\
+  74 & 0.21 & $-$1.43 & 0.60 & $-$2.15 & 2.03 & 0.84 & $-$0.29 & 0.01 & 0.53 & $-$1.05 \\
+  75 & $-$0.11 & 0.52 & $-$1.49 & 0.11 & $-$0.68 & 1.34 & 0.72 & 0.03 & 0.97 & 0.37 \\
+  76 & $-$0.56 & $-$0.64 & $-$0.34 & $-$2.33 & 0.45 & $-$0.56 & $-$0.56 & $-$0.83 & $-$0.96 & 0.72 \\
+  77 & $-$0.82 & $-$1.38 & $-$0.55 & $-$1.48 & 0.40 & 1.23 & $-$0.33 & 1.23 & $-$0.14 & 1.20 \\
+  78 & $-$0.29 & $-$1.42 & $-$0.13 & 0.59 & 0.97 & $-$0.27 & 0.03 & $-$0.27 & 1.36 & 0.96 \\
+  79 & $-$0.32 & $-$0.20 & $-$0.34 & $-$0.16 & 1.54 & 0.11 & $-$0.08 & 0.71 & $-$1.00 & 2.24 \\
+  80 & 1.22 & 0.01 & 0.99 & $-$0.46 & $-$0.13 & 1.20 & 0.38 & $-$0.18 & 0.88 & 0.31 \\
+  81 & 0.98 & 0.16 & 0.20 & $-$0.56 & 1.03 & $-$0.93 & 0.00 & 0.76 & 2.67 & 0.53 \\
+  82 & 0.15 & $-$0.60 & 1.45 & $-$0.21 & $-$0.51 & 0.66 & $-$0.44 & 1.37 & $-$0.48 & $-$1.52 \\
+  83 & 0.91 & 0.53 & $-$0.62 & 0.21 & 0.95 & $-$1.05 & $-$0.09 & 0.67 & 0.67 & 1.71 \\
+  84 & $-$0.59 & $-$1.66 & $-$0.94 & 0.20 & $-$0.45 & $-$1.35 & 0.38 & 1.11 & $-$0.92 & $-$0.01 \\
+  85 & $-$0.31 & 0.76 & $-$0.80 & $-$1.96 & $-$0.90 & $-$0.30 & $-$0.80 & 1.52 & $-$0.06 & 1.07 \\
+  86 & $-$1.20 & $-$0.95 & 1.80 & 0.02 & $-$2.10 & 0.13 & 1.34 & $-$0.60 & 1.71 & 0.59 \\
+  87 & $-$1.38 & 1.30 & $-$1.52 & $-$0.70 & 0.16 & $-$1.00 & 0.31 & 0.95 & $-$1.18 & $-$0.12 \\
+  88 & $-$0.89 & $-$0.20 & 0.77 & 0.75 & $-$0.18 & 0.99 & $-$0.18 & $-$0.06 & 0.13 & 0.66 \\
+  89 & 0.46 & 0.11 & 1.27 & $-$0.24 & $-$2.67 & 1.14 & 0.21 & 0.69 & $-$0.55 & $-$0.20 \\
+  90 & 0.26 & 0.94 & $-$2.17 & 1.19 & 0.08 & $-$0.54 & $-$0.71 & $-$1.41 & 0.12 & $-$0.46 \\
+  91 & 0.35 & $-$1.67 & $-$0.66 & $-$0.24 & 0.35 & 0.21 & $-$0.74 & $-$1.21 & 1.36 & $-$1.94 \\
+  92 & 1.15 & 0.64 & 0.34 & $-$0.81 & $-$1.42 & 1.27 & 0.66 & 1.06 & $-$0.74 & 2.22 \\
+  93 & 0.22 & 0.31 & $-$1.59 & $-$0.23 & 0.25 & $-$0.77 & $-$0.19 & 0.76 & $-$1.28 & $-$1.51 \\
+  94 & 0.78 & $-$1.12 & $-$0.72 & $-$0.47 & $-$0.22 & $-$1.20 & $-$1.72 & $-$0.43 & $-$0.71 & $-$1.16 \\
+  95 & $-$0.93 & 0.68 & $-$0.03 & 0.61 & $-$0.64 & 1.78 & 1.54 & $-$0.30 & 0.75 & 1.23 \\
+  96 & 0.96 & $-$0.16 & $-$1.14 & $-$0.14 & 0.17 & $-$0.00 & 0.83 & $-$1.42 & $-$0.92 & $-$0.68 \\
+  97 & 0.39 & 0.40 & 0.15 & $-$1.80 & 0.46 & $-$1.79 & $-$0.03 & $-$0.84 & 0.09 & $-$0.13 \\
+  98 & 0.25 & 0.32 & 1.50 & 0.16 & 1.05 & $-$0.17 & 2.71 & $-$0.92 & 2.80 & 0.16 \\
+  99 & $-$0.36 & 1.89 & 0.38 & 1.06 & 1.20 & $-$0.21 & 0.96 & 0.07 & $-$1.67 & 0.38 \\
+  100 & $-$0.39 & 0.75 & 0.23 & $-$0.88 & $-$0.96 & $-$1.64 & 0.13 & $-$0.70 & $-$1.24 & 1.63 \\
+   \hline
+\hline
+\caption{Example of longtable spanning several pages}
+\label{tabbig}
+\end{longtable}\end{Schunk}
+
+
+\subsection{Sideways tables} 
+Remember to insert \verb|\usepackage{rotating}| in your LaTeX preamble.
+Sideways tables can't be forced in place with the `H' specifier, but you can 
+use the \verb|\clearpage| command to get them fairly nearby.
+See Table \ref{tabsmall}.
+
+\begin{Schunk}
+\begin{Sinput}
+> x <- x[1:30, ]
+> x.small <- xtable(x, label = "tabsmall", caption = "A sideways table")
+\end{Sinput}
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+> print(x.small, floating.environment = "sidewaystable")
+\end{Sinput}
+% latex table generated in R 2.6.0 by xtable 1.5-2 package
+% Wed Oct 10 14:26:37 2007
+\begin{sidewaystable}[ht]
+\begin{center}
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+  \hline
+1 & $-$0.57 & $-$0.00 & $-$1.70 & 0.47 & 0.12 & 0.52 & 0.16 & 0.11 & 1.30 & 0.40 \\
+  2 & $-$1.24 & $-$1.02 & $-$0.77 & $-$0.14 & 0.60 & 1.04 & 0.44 & $-$0.22 & 1.02 & 1.36 \\
+  3 & 0.46 & 0.05 & 3.17 & 0.12 & 0.77 & 1.99 & $-$2.37 & $-$0.59 & 0.90 & 0.44 \\
+  4 & $-$2.47 & 0.43 & $-$1.46 & $-$0.72 & $-$1.93 & $-$0.52 & 0.00 & 0.68 & $-$0.89 & $-$1.49 \\
+  5 & $-$0.65 & 0.99 & 0.44 & 1.26 & 0.11 & 0.55 & 0.28 & 0.63 & $-$1.83 & 1.12 \\
+  6 & $-$0.41 & $-$0.93 & 0.55 & $-$0.93 & $-$1.65 & $-$0.43 & 0.74 & $-$2.55 & $-$1.22 & $-$0.39 \\
+  7 & $-$0.10 & $-$0.27 & $-$0.28 & 1.00 & $-$0.20 & 0.49 & 1.22 & 0.42 & $-$0.16 & $-$1.16 \\
+  8 & $-$2.17 & 0.24 & 0.39 & $-$0.73 & $-$0.11 & $-$0.50 & 1.17 & $-$0.54 & $-$1.02 & 1.06 \\
+  9 & $-$0.13 & $-$0.64 & $-$1.05 & $-$0.77 & 1.08 & 0.91 & $-$0.01 & 1.16 & $-$0.56 & $-$0.52 \\
+  10 & 0.84 & $-$0.38 & 1.89 & $-$0.76 & $-$1.82 & 0.14 & 0.08 & 0.41 & 0.13 & $-$0.20 \\
+  11 & 1.25 & 0.47 & 0.93 & 2.30 & 0.20 & $-$0.85 & 0.55 & 0.44 & $-$0.13 & $-$0.76 \\
+  12 & $-$0.21 & $-$2.56 & $-$2.21 & $-$0.28 & 0.86 & $-$1.60 & $-$1.31 & 0.06 & 1.57 & $-$1.36 \\
+  13 & $-$0.28 & $-$1.17 & $-$0.73 & $-$1.77 & 0.16 & $-$0.24 & 0.40 & $-$0.42 & 1.16 & $-$0.58 \\
+  14 & 0.38 & 0.32 & 0.64 & 0.02 & $-$0.57 & $-$0.46 & 0.85 & 1.18 & 0.75 & 0.38 \\
+  15 & $-$0.98 & $-$1.84 & $-$1.37 & 1.19 & $-$1.21 & 0.77 & $-$1.16 & 0.13 & 0.42 & 0.52 \\
+  16 & 1.65 & $-$0.24 & 0.81 & $-$0.05 & 2.18 & 0.57 & $-$1.54 & $-$0.66 & $-$0.11 & $-$0.75 \\
+  17 & 0.60 & $-$0.80 & $-$1.16 & $-$0.24 & 0.41 & 0.54 & 0.49 & 0.43 & $-$0.50 & 1.41 \\
+  18 & $-$1.12 & 0.60 & 1.58 & $-$0.36 & $-$0.02 & 0.05 & $-$1.58 & 0.72 & $-$1.27 & 1.62 \\
+  19 & 0.94 & 0.17 & 2.19 & $-$0.78 & $-$0.06 & 0.71 & $-$0.27 & $-$0.07 & $-$0.49 & 0.40 \\
+  20 & $-$1.03 & 1.33 & 1.49 & 0.33 & 0.37 & $-$0.12 & 0.24 & 0.99 & 0.27 & $-$0.93 \\
+  21 & 0.08 & 0.01 & $-$0.57 & $-$0.74 & $-$0.68 & 0.82 & $-$1.61 & $-$0.01 & $-$1.50 & $-$0.02 \\
+  22 & 2.07 & 0.92 & $-$0.55 & $-$0.15 & $-$0.69 & 0.40 & 0.41 & 1.25 & $-$0.73 & 1.19 \\
+  23 & $-$2.01 & $-$0.64 & $-$0.26 & $-$0.99 & $-$0.56 & $-$0.38 & $-$1.12 & 0.34 & 1.06 & $-$1.99 \\
+  24 & 0.26 & 2.45 & $-$2.10 & $-$0.65 & 1.67 & $-$0.09 & $-$1.35 & 0.41 & 1.02 & $-$0.17 \\
+  25 & 0.11 & $-$1.69 & $-$0.89 & $-$2.14 & $-$0.77 & 0.40 & $-$0.42 & $-$1.67 & $-$1.07 & 0.01 \\
+  26 & $-$2.11 & $-$0.68 & 0.85 & $-$1.29 & $-$2.63 & $-$0.40 & $-$0.31 & $-$0.25 & $-$0.24 & $-$0.44 \\
+  27 & $-$2.63 & $-$1.61 & 0.35 & $-$0.53 & 0.73 & $-$0.91 & $-$0.18 & 0.22 & 0.77 & 1.34 \\
+  28 & 1.00 & 0.35 & $-$1.12 & $-$0.19 & 1.24 & $-$0.10 & 0.44 & 0.68 & 0.72 & 0.09 \\
+  29 & 1.21 & $-$0.00 & $-$0.44 & $-$0.15 & $-$1.28 & $-$0.25 & 1.34 & $-$0.21 & 0.83 & 0.84 \\
+  30 & $-$0.74 & 0.46 & 1.39 & $-$2.06 & 1.57 & 0.97 & $-$2.67 & 0.55 & $-$0.55 & $-$0.10 \\
+   \hline
+\end{tabular}
+\caption{A sideways table}
+\label{tabsmall}
+\end{center}
+\end{sidewaystable}\end{Schunk}
+\clearpage
+
+\section{Acknowledgements}
+Most of the examples in this gallery are taken from the {\tt xtable} documentation.
+\section{R Session information}
+\begin{Schunk}
+\begin{Sinput}
+> toLatex(sessionInfo())
+\end{Sinput}
+\begin{itemize}
+  \item R version 2.6.0 (2007-10-03), \verb|x86_64-unknown-linux-gnu|
+  \item Locale: \verb|LC_CTYPE=en_US.UTF-8;LC_NUMERIC=C;LC_TIME=en_US.UTF-8;LC_COLLATE=en_US.UTF-8;LC_MONETARY=en_US.UTF-8;LC_MESSAGES=en_US.UTF-8;LC_PAPER=en_US.UTF-8;LC_NAME=C;LC_ADDRESS=C;LC_TELEPHONE=C;LC_MEASUREMENT=en_US.UTF-8;LC_IDENTIFICATION=C|
+  \item Base packages: base, datasets, graphics, grDevices, methods,
+    stats, tools, utils
+  \item Other packages: xtable~1.5-2
+\end{itemize}\end{Schunk}
+\end{document}

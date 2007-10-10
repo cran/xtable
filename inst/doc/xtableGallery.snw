@@ -20,12 +20,12 @@ makeme <- function() {
 makeme()
 @
 
-\documentclass[a4paper]{article}
+\documentclass[letterpaper]{article}
 
 \title{
 The xtable gallery
 }
-\author{Jonathan Swinton\\jonathan@swintons.net}
+\author{Jonathan Swinton <jonathan@swintons.net>\\ with small contributions from others}
 
 \usepackage{Sweave}
 \SweaveOpts{prefix.string=figdir/fig,debug=TRUE,eps=FALSE,echo=TRUE}
@@ -272,7 +272,7 @@ print(wanttex,sanitize.text.function=function(str)gsub("_","\\_",str,fixed=TRUE)
 
 \subsection{Markup in tables}
 
-Markup can be kept in tables, including column and row names by using a customized sanitize.text.function:
+Markup can be kept in tables, including column and row names, by using a custom sanitize.text.function:
 
 <<>>=
 mat <- round(matrix(c(0.9, 0.89, 200, 0.045, 2.0), c(1, 5)), 4)
@@ -282,6 +282,15 @@ mat <- xtable(mat)
 @
 <<results=tex>>=
 print(mat, sanitize.text.function = function(x){x})
+@
+
+% By David Dahl to demonstrate contribution from David Whitting, 2007-10-09.
+You can also have sanitize functions that are specific to column or row names.  In the table below, the row name is not sanitized but column names and table elements are:
+<<>>=
+money <- matrix(c("$1,000","$900","$100"),ncol=3,dimnames=list("$\\alpha$",c("Income (US$)","Expenses (US$)","Profit (US$)")))
+@
+<<results=tex>>=
+print(xtable(money),sanitize.rownames.function=function(x) {x})
 @
 
 \section{Format examples}
@@ -349,6 +358,19 @@ print(tli.table,floating=FALSE,)
 \subsection{Suppress row names}
 <<results=tex>>=
 print((tli.table),include.rownames=FALSE,floating=FALSE)
+@
+
+If you want a vertical line on the left, you need to change the align attribute.
+<<>>=
+align(tli.table) <- "|r|r|lp{3cm}l|r|"
+@
+<<results=tex>>=
+print((tli.table),include.rownames=FALSE,floating=FALSE)
+@
+
+Revert the alignment to what is was before.
+<<>>=
+align(tli.table) <- "|rr|lp{3cm}l|r|"
 @
 
 \subsection{Suppress column names}

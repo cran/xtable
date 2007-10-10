@@ -1,0 +1,403 @@
+The xtable gallery
+Jonathan Swinton <jonathan@swintons.net> with contributions from others October 10, 2007
+
+1
+
+Summary
+
+This document gives a gallery of tables which can be made by using the xtable A package to create L TEX output. It doubles as a regression check for the package. > library(xtable)
+
+2
+2.1
+
+Gallery
+Data frame
+
+Load example dataset > data(tli) > tli.table <- xtable(tli[1:10, ]) > digits(tli.table)[c(2, 6)] <- 0 > print(tli.table, floating = FALSE) grade 6 7 5 3 8 5 8 4 6 7 sex M M F M M M F M M M disadvg YES NO YES YES YES NO YES YES NO YES ethnicty HISPANIC BLACK HISPANIC HISPANIC WHITE BLACK HISPANIC BLACK WHITE HISPANIC tlimth 43 88 34 65 75 74 72 79 88 87
+
+1 2 3 4 5 6 7 8 9 10
+
+1
+
+2.2
+
+Matrix
+
+> design.matrix <- model.matrix(~sex * grade, data = tli[1:10, + ]) > design.table <- xtable(design.matrix) > print(design.table, floating = FALSE) 1 2 3 4 5 6 7 8 9 10 (Intercept) 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 sexM 1.00 1.00 0.00 1.00 1.00 1.00 0.00 1.00 1.00 1.00 grade 6.00 7.00 5.00 3.00 8.00 5.00 8.00 4.00 6.00 7.00 sexM:grade 6.00 7.00 0.00 3.00 8.00 5.00 0.00 4.00 6.00 7.00
+
+2.3
+
+aov
+
+> fm1 <- aov(tlimth ~ sex + ethnicty + grade + disadvg, data = tli) > fm1.table <- xtable(fm1) > print(fm1.table, floating = FALSE) sex ethnicty grade disadvg Residuals Df 1 3 1 1 93 Sum Sq 75.37 2572.15 36.31 59.30 18682.87 Mean Sq 75.37 857.38 36.31 59.30 200.89 F value 0.38 4.27 0.18 0.30 Pr(>F) 0.5417 0.0072 0.6717 0.5882
+
+2.4
+
+lm
+
+> fm2 <- lm(tlimth ~ sex * ethnicty, data = tli) > fm2.table <- xtable(fm2) > print(fm2.table, floating = FALSE) (Intercept) sexM ethnictyHISPANIC ethnictyOTHER ethnictyWHITE sexM:ethnictyHISPANIC sexM:ethnictyWHITE Estimate 73.6364 −1.6364 −9.7614 15.8636 4.7970 10.6780 5.1230 2 Std. Error 4.2502 5.8842 6.5501 10.8360 4.9687 8.7190 7.0140 t value 17.33 −0.28 −1.49 1.46 0.97 1.22 0.73 Pr(>|t|) 0.0000 0.7816 0.1395 0.1466 0.3368 0.2238 0.4670
+
+2.4.1
+
+anova object
+
+> print(xtable(anova(fm2)), floating = FALSE) Df 1 3 2 93 Sum Sq 75.37 2572.15 298.43 18480.04 Mean Sq 75.37 857.38 149.22 198.71 F value 0.38 4.31 0.75 Pr(>F) 0.5395 0.0068 0.4748
+
+sex ethnicty sex:ethnicty Residuals 2.4.2
+
+Another anova object
+
+> fm2b <- lm(tlimth ~ ethnicty, data = tli) > print(xtable(anova(fm2b, fm2)), floating = FALSE) Res.Df 96 93 RSS 19053.59 18480.04 Df 3 Sum of Sq 573.55 F 0.96 Pr(>F) 0.4141
+
+1 2
+
+2.5
+
+glm
+
+> fm3 <- glm(disadvg ~ ethnicty * grade, data = tli, family = binomial()) > fm3.table <- xtable(fm3) > print(fm3.table, floating = FALSE) Estimate 3.1888 −0.2848 212.1701 −8.8150 −0.5308 0.2448 −32.6014 1.0171 Std. Error 1.5966 2.4808 22122.7093 3.3355 0.2892 0.4357 3393.4687 0.5185 z value 2.00 −0.11 0.01 −2.64 −1.84 0.56 −0.01 1.96 Pr(>|z|) 0.0458 0.9086 0.9923 0.0082 0.0665 0.5742 0.9923 0.0498
+
+(Intercept) ethnictyHISPANIC ethnictyOTHER ethnictyWHITE grade ethnictyHISPANIC:grade ethnictyOTHER:grade ethnictyWHITE:grade 2.5.1 anova object
+
+> print(xtable(anova(fm3)), floating = FALSE) Df NULL ethnicty grade ethnicty:grade 3 1 3 Deviance 47.24 1.73 7.20 Resid. Df 99 96 95 92 Resid. Dev 129.49 82.25 80.52 73.32
+
+3
+
+2.6
+> + > + > + > + + > + > > > >
+
+More aov
+
+N <- c(0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0) P <- c(1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0) K <- c(1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0) yield <- c(49.5, 62.8, 46.8, 57, 59.8, 58.5, 55.5, 56, 62.8, 55.8, 69.5, 55, 62, 48.8, 45.5, 44.2, 52, 51.5, 49.8, 48.8, 57.2, 59, 53.2, 56) npk <- data.frame(block = gl(6, 4), N = factor(N), P = factor(P), K = factor(K), yield = yield) npk.aov <- aov(yield ~ block + N * P * K, npk) op <- options(contrasts = c("contr.helmert", "contr.treatment")) npk.aovE <- aov(yield ~ N * P * K + Error(block), npk) options(op)
+
+> print(xtable(npk.aov), floating = FALSE) Df 5 1 1 1 1 1 1 12 Sum Sq 343.29 189.28 8.40 95.20 21.28 33.13 0.48 185.29 Mean Sq 68.66 189.28 8.40 95.20 21.28 33.13 0.48 15.44 F value 4.45 12.26 0.54 6.17 1.38 2.15 0.03 Pr(>F) 0.0159 0.0044 0.4749 0.0288 0.2632 0.1686 0.8628
+
+block N P K N:P N:K P:K Residuals 2.6.1
+
+anova object
+
+> print(xtable(anova(npk.aov)), floating = FALSE) Df 5 1 1 1 1 1 1 12 Sum Sq 343.29 189.28 8.40 95.20 21.28 33.13 0.48 185.29 Mean Sq 68.66 189.28 8.40 95.20 21.28 33.13 0.48 15.44 F value 4.45 12.26 0.54 6.17 1.38 2.15 0.03 Pr(>F) 0.0159 0.0044 0.4749 0.0288 0.2632 0.1686 0.8628
+
+block N P K N:P N:K P:K Residuals 2.6.2
+
+Another anova object
+
+> print(xtable(summary(npk.aov)), floating = FALSE)
+
+4
+
+block N P K N:P N:K P:K Residuals
+
+Df 5 1 1 1 1 1 1 12
+
+Sum Sq 343.29 189.28 8.40 95.20 21.28 33.13 0.48 185.29
+
+Mean Sq 68.66 189.28 8.40 95.20 21.28 33.13 0.48 15.44
+
+F value 4.45 12.26 0.54 6.17 1.38 2.15 0.03
+
+Pr(>F) 0.0159 0.0044 0.4749 0.0288 0.2632 0.1686 0.8628
+
+> print(xtable(npk.aovE), floating = FALSE) Df 1 4 1 1 1 1 1 1 12 Sum Sq 37.00 306.29 189.28 8.40 95.20 21.28 33.14 0.48 185.29 Mean Sq 37.00 76.57 189.28 8.40 95.20 21.28 33.14 0.48 15.44 F value 0.48 12.26 0.54 6.17 1.38 2.15 0.03 Pr(>F) 0.5252 0.0044 0.4749 0.0288 0.2632 0.1686 0.8628
+
+N:P:K Residuals N P K N:P N:K P:K Residuals1
+
+> print(xtable(summary(npk.aovE)), floating = FALSE) Df 1 4 1 1 1 1 1 1 12 Sum Sq 37.00 306.29 189.28 8.40 95.20 21.28 33.14 0.48 185.29 Mean Sq 37.00 76.57 189.28 8.40 95.20 21.28 33.14 0.48 15.44 F value 0.48 12.26 0.54 6.17 1.38 2.15 0.03 Pr(>F) 0.5252 0.0044 0.4749 0.0288 0.2632 0.1686 0.8628
+
+N:P:K Residuals N P K N:P N:K P:K Residuals1
+
+2.7
+> + > + > > >
+
+More lm
+
+ctl <- c(4.17, 5.58, 5.18, 6.11, 4.5, 4.61, 5.17, 4.53, 5.33, 5.14) trt <- c(4.81, 4.17, 4.41, 3.59, 5.87, 3.83, 6.03, 4.89, 4.32, 4.69) group <- gl(2, 10, 20, labels = c("Ctl", "Trt")) weight <- c(ctl, trt) lm.D9 <- lm(weight ~ group)
+
+> print(xtable(lm.D9), floating = FALSE) 5
+
+(Intercept) groupTrt
+
+Estimate 5.0320 −0.3710
+
+Std. Error 0.2202 0.3114
+
+t value 22.85 −1.19
+
+Pr(>|t|) 0.0000 0.2490
+
+> print(xtable(anova(lm.D9)), floating = FALSE) group Residuals Df 1 18 Sum Sq 0.69 8.73 Mean Sq 0.69 0.48 F value 1.42 Pr(>F) 0.2490
+
+2.8
+> > > > >
+
+More glm
+
+counts <- c(18, 17, 15, 20, 10, 20, 25, 13, 12) outcome <- gl(3, 1, 9) treatment <- gl(3, 3) d.AD <- data.frame(treatment, outcome, counts) glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
+
+> print(xtable(glm.D93, align = "r|llrc"), floating = FALSE) (Intercept) outcome2 outcome3 treatment2 treatment3 Estimate 3.0445 −0.4543 −0.2930 0.0000 0.0000 Std. Error 0.1709 0.2022 0.1927 0.2000 0.2000 z value 17.81 −2.25 −1.52 0.00 0.00 Pr(>|z|) 0.0000 0.0246 0.1285 1.0000 1.0000
+
+2.9
+
+prcomp
+
+> if (require(stats, quietly = TRUE)) { + data(USArrests) + pr1 <- prcomp(USArrests) +} > if (require(stats, quietly = TRUE)) { + print(xtable(pr1), floating = FALSE) +} Murder Assault UrbanPop Rape PC1 0.0417 0.9952 0.0463 0.0752 PC2 −0.0448 −0.0588 0.9769 0.2007 PC3 0.0799 −0.0676 −0.2005 0.9741 PC4 −0.9949 0.0389 −0.0582 0.0723
+
+> print(xtable(summary(pr1)), floating = FALSE) Standard deviation Proportion of Variance Cumulative Proportion PC1 83.7324 0.9655 0.9655 PC2 14.2124 0.0278 0.9933 6 PC3 6.4894 0.0058 0.9991 PC4 2.4828 0.0008 1.0000
+
+2.10
+
+Time series
+
+> temp.ts <- ts(cumsum(1 + round(rnorm(100), 0)), start = c(1954, + 7), frequency = 12) > temp.table <- xtable(temp.ts, digits = 0) > caption(temp.table) <- "Time series example" > print(temp.table, floating = FALSE) Jan 1954 1955 1956 1957 1958 1959 1960 1961 1962 13 19 34 49 59 69 75 87 Feb 14 21 37 51 62 69 77 88 Mar 17 22 37 52 63 69 77 88 Apr 17 22 38 53 63 70 79 90 May 16 23 41 53 64 69 80 91 Jun 16 25 41 54 66 72 80 91 Jul 0 17 27 41 57 66 74 81 92 Aug 3 17 28 42 55 67 75 80 93 Sep 6 16 29 42 55 67 76 81 95 Oct 8 17 29 45 56 66 77 82 97 Nov 9 18 30 47 56 67 76 83 Dec 11 18 32 48 58 68 76 86
+
+3
+
+Sanitization
+
+> insane <- data.frame(Name = c("Ampersand", "Greater than", "Less than", + "Underscore", "Per cent", "Dollar", "Backslash", "Hash", + "Caret", "Tilde", "Left brace", "Right brace"), Character = I(c("&", + ">", "<", "_", "%", "$", "\\", "#", "^", "~", "{", "}"))) > colnames(insane)[2] <- paste(insane[, 2], collapse = "") > print(xtable(insane)) Name Ampersand Greater than Less than Underscore Per cent Dollar Backslash Hash Caret Tilde Left brace Right brace &>< %$\#^˜{} & > < % $ \ # ^ ˜ { }
+
+1 2 3 4 5 6 7 8 9 10 11 12
+
+Sometimes you might want to have your own sanitization function 7
+
+> wanttex <- xtable(data.frame(label = paste("Value_is $10^{-", + 1:3, "}$", sep = ""))) > print(wanttex, sanitize.text.function = function(str) gsub("_", + "\\_", str, fixed = TRUE)) label Value is 10−1 Value is 10−2 Value is 10−3
+
+1 2 3
+
+3.1
+
+Markup in tables
+
+Markup can be kept in tables, including column and row names, by using a custom sanitize.text.function: > > > + > mat <- round(matrix(c(0.9, 0.89, 200, 0.045, 2), c(1, 5)), 4) rownames(mat) <- "$y_{t-1}$" colnames(mat) <- c("$R^2$", "$\\bar{R}^2$", "F-stat", "S.E.E", "DW") mat <- xtable(mat)
+
+> print(mat, sanitize.text.function = function(x) { + x + }) R2 0.90 ¯ R2 0.89 F-stat 200.00 S.E.E 0.04 DW 2.00
+
+yt−1
+
+You can also have sanitize functions that are speciﬁc to column or row names. In the table below, the row name is not sanitized but column names and table elements are: > money <- matrix(c("$1,000", "$900", "$100"), ncol = 3, dimnames = list("$\\alpha$", + c("Income (US$)", "Expenses (US$)", "Profit (US$)"))) > print(xtable(money), sanitize.rownames.function = function(x) { + x + })
+
+8
+
+α
+
+Income (US$) $1,000
+
+Expenses (US$) $900
+
+Proﬁt (US$) $100
+
+4
+4.1
+
+Format examples
+Adding a centering environment
+
+> print(xtable(lm.D9, caption = "\\tt latex.environment=NULL"), + latex.environment = NULL) Estimate 5.0320 −0.3710 Std. Error 0.2202 0.3114 t value 22.85 −1.19 Pr(>|t|) 0.0000 0.2490
+
+(Intercept) groupTrt
+
+Table 1: latex.environment=NULL > print(xtable(lm.D9, caption = "\\tt latex.environment=\"\""), + latex.environment = "") Estimate 5.0320 −0.3710 Std. Error 0.2202 0.3114 t value 22.85 −1.19 Pr(>|t|) 0.0000 0.2490
+
+(Intercept) groupTrt
+
+Table 2: latex.environment="" > print(xtable(lm.D9, caption = "\\tt latex.environment=\"center\""), + latex.environment = "center")
+
+4.2
+
+Column alignment
+
+> tli.table <- xtable(tli[1:10, ]) > align(tli.table) <- rep("r", 6) > print(tli.table, floating = FALSE)
+
+9
+
+(Intercept) groupTrt
+
+Estimate 5.0320 −0.3710
+
+Std. Error 0.2202 0.3114
+
+t value 22.85 −1.19
+
+Pr(>|t|) 0.0000 0.2490
+
+Table 3: latex.environment="center"
+
+1 2 3 4 5 6 7 8 9 10 4.2.1
+
+grade 6 7 5 3 8 5 8 4 6 7
+
+sex M M F M M M F M M M
+
+disadvg YES NO YES YES YES NO YES YES NO YES
+
+ethnicty HISPANIC BLACK HISPANIC HISPANIC WHITE BLACK HISPANIC BLACK WHITE HISPANIC
+
+tlimth 43 88 34 65 75 74 72 79 88 87
+
+Single string and column lines
+
+> align(tli.table) <- "|rrl|l|lr|" > print(tli.table, floating = FALSE) grade 6 7 5 3 8 5 8 4 6 7 sex M M F M M M F M M M disadvg YES NO YES YES YES NO YES YES NO YES ethnicty HISPANIC BLACK HISPANIC HISPANIC WHITE BLACK HISPANIC BLACK WHITE HISPANIC tlimth 43 88 34 65 75 74 72 79 88 87
+
+1 2 3 4 5 6 7 8 9 10 4.2.2
+
+Fixed width columns
+
+> align(tli.table) <- "|rr|lp{3cm}l|r|" > print(tli.table, floating = FALSE)
+
+10
+
+1 2 3 4 5 6 7 8 9 10
+
+grade 6 7 5 3 8 5 8 4 6 7
+
+sex M M F M M M F M M M
+
+disadvg YES NO YES YES YES NO YES YES NO YES
+
+ethnicty HISPANIC BLACK HISPANIC HISPANIC WHITE BLACK HISPANIC BLACK WHITE HISPANIC
+
+tlimth 43 88 34 65 75 74 72 79 88 87
+
+4.3
+
+Signiﬁcant digits
+
+Specify with a single argument > digits(tli.table) <- 3 > print(tli.table, floating = FALSE, ) grade 1 6 2 7 3 5 4 3 5 8 6 5 7 8 8 4 9 6 10 7 or one for sex M M F M M M F M M M each disadvg ethnicty YES HISPANIC NO BLACK YES HISPANIC YES HISPANIC YES WHITE NO BLACK YES HISPANIC YES BLACK NO WHITE YES HISPANIC column, counting the row names tlimth 43 88 34 65 75 74 72 79 88 87
+
+> digits(tli.table) <- 1:(ncol(tli) + 1) > print(tli.table, floating = FALSE, ) grade sex disadvg 1 6M YES 2 7M NO 3 5F YES 4 3M YES 5 8M YES 6 5M NO 7 8F YES 8 4M YES 9 6M NO 10 7M YES or as a full matrix 11 ethnicty HISPANIC BLACK HISPANIC HISPANIC WHITE BLACK HISPANIC BLACK WHITE HISPANIC tlimth 43 88 34 65 75 74 72 79 88 87
+
+> digits(tli.table) <- matrix(0:4, nrow = 10, ncol = ncol(tli) + + 1) > print(tli.table, floating = FALSE, ) 1 2 3 4 5 6 7 8 9 10 grade 6 7 5 3 8 5 8 4 6 7 sex M M F M M M F M M M disadvg YES NO YES YES YES NO YES YES NO YES ethnicty HISPANIC BLACK HISPANIC HISPANIC WHITE BLACK HISPANIC BLACK WHITE HISPANIC tlimth 43 88 34 65 75 74 72 79 88 87
+
+4.4
+grade 6 7 5 3 8 5 8 4 6 7
+
+Suppress row names
+sex M M F M M M F M M M disadvg YES NO YES YES YES NO YES YES NO YES ethnicty HISPANIC BLACK HISPANIC HISPANIC WHITE BLACK HISPANIC BLACK WHITE HISPANIC tlimth 43 88 34 65 75 74 72 79 88 87
+
+> print((tli.table), include.rownames = FALSE, floating = FALSE)
+
+4.5
+1 2 3 4 5 6 7 8 9 10 Note
+
+Suppress column names
+6 7 5 3 8 5 8 4 6 7 the M YES M NO F YES M YES M YES M NO F YES M YES M NO M YES doubled header lines which HISPANIC 43 BLACK 88 HISPANIC 34 HISPANIC 65 WHITE 75 BLACK 74 HISPANIC 72 BLACK 79 WHITE 88 HISPANIC 87 can be suppressed with, eg, 12
+
+> print((tli.table), include.colnames = FALSE, floating = FALSE)
+
+> print(tli.table, include.colnames = FALSE, floating = FALSE, + hline.after = c(0, nrow(tli.table))) 1 2 3 4 5 6 7 8 9 10 6 7 5 3 8 5 8 4 6 7 M M F M M M F M M M YES NO YES YES YES NO YES YES NO YES HISPANIC BLACK HISPANIC HISPANIC WHITE BLACK HISPANIC BLACK WHITE HISPANIC 43 88 34 65 75 74 72 79 88 87
+
+4.6
+
+Suppress row and column names
+
+> print((tli.table), include.colnames = FALSE, include.rownames = FALSE, + floating = FALSE) 6 7 5 3 8 5 8 4 6 7 M M F M M M F M M M YES NO YES YES YES NO YES YES NO YES HISPANIC BLACK HISPANIC HISPANIC WHITE BLACK HISPANIC BLACK WHITE HISPANIC 43 88 34 65 75 74 72 79 88 87
+
+4.7
+
+Horizontal lines
+
+> print(xtable(anova(glm.D93)), hline.after = c(1), floating = FALSE) Df NULL outcome treatment 2 2 Deviance 5.45 0.00 Resid. Df 8 6 4 Resid. Dev 10.58 5.13 5.13
+
+4.8
+
+A Table-level L TEX
+
+> print(xtable(anova(glm.D93)), size = "small", floating = FALSE)
+Df NULL outcome treatment 2 2 Deviance 5.45 0.00 Resid. Df 8 6 4 Resid. Dev 10.58 5.13 5.13
+
+13
+
+4.9
+
+Long tables
+
+Remember to insert \usepackage{longtable} in your LaTeX preamble. See Table 4.
+
+> x <- matrix(rnorm(1000), ncol = 10) > x.big <- xtable(x, label = "tabbig", caption = "Example of longtable spanning several page > print(x.big, tabular.environment = "longtable", floating = FALSE) 1 0.45 0.49 0.81 0.07 0.38 −0.03 −0.18 0.01 −3.08 −0.92 0.20 −0.16 0.18 −0.85 0.57 −0.63 −0.89 0.89 0.66 −0.82 1.05 1.28 1.06 0.43 0.82 −0.69 −0.46 −0.69 −0.43 0.85 1.06 0.76 −0.35 0.95 −0.24 2 −0.38 0.23 −1.12 −0.30 1.82 0.76 0.80 −1.22 −0.51 0.63 −1.62 0.19 −1.23 0.13 0.95 −0.47 −0.89 −0.75 1.14 1.09 −0.21 −0.13 1.71 0.41 0.22 −0.89 −0.07 0.99 −0.18 −1.02 −1.18 0.15 1.02 0.31 −0.43 3 −1.27 1.30 −0.28 0.61 −2.32 0.12 0.52 0.31 −1.26 1.78 −0.24 0.78 −0.53 0.43 −0.32 0.52 0.64 0.25 −1.13 −0.27 0.25 −0.75 −1.67 0.28 1.39 0.66 −0.62 0.61 −0.22 −0.60 −0.28 0.27 2.05 −0.81 −1.21 4 0.46 0.26 −0.00 0.35 0.14 −0.62 0.38 0.47 0.74 0.79 0.93 1.47 −1.00 −1.90 −0.57 1.06 1.60 0.26 1.01 0.64 −1.33 0.69 1.49 −1.00 −0.51 −1.42 0.87 −0.80 −0.43 1.51 −0.24 0.39 2.28 −0.97 1.02 14 5 −0.30 0.52 0.89 −0.57 0.04 0.86 1.49 −0.19 −0.87 0.14 −0.34 −1.51 −2.06 −0.15 −0.98 −0.33 1.12 −0.61 −1.52 0.91 −0.38 −0.16 −0.14 1.44 −0.21 −0.17 0.45 0.27 0.71 1.15 −1.23 −1.03 0.96 −0.49 1.21 6 0.04 0.19 −0.28 0.46 0.08 0.58 1.41 −2.70 1.15 1.14 −1.16 0.77 −0.97 0.64 0.35 1.63 −1.06 −1.48 1.22 0.73 0.31 −1.23 −1.23 −0.54 0.25 −0.24 1.93 0.02 −1.30 −0.88 2.07 −0.74 1.64 0.90 0.48 7 0.00 −0.96 0.21 0.86 0.92 0.56 0.22 0.44 1.05 0.32 −2.37 0.97 −0.74 0.65 0.30 −0.51 0.24 0.00 0.23 −0.23 −0.82 −0.79 −0.06 −1.14 0.02 0.72 1.81 0.59 −0.93 −1.72 0.35 −2.02 0.47 −0.52 −0.20 8 0.84 0.11 0.71 −2.14 −1.72 0.67 0.00 2.18 −0.96 −1.32 −0.55 −0.68 0.94 0.98 0.64 −0.68 −2.55 −0.64 −0.89 1.49 −0.34 −0.42 −0.21 2.45 −1.70 −1.07 −1.08 0.63 0.66 1.00 −1.17 −0.78 0.68 −1.97 0.49 9 0.29 −0.94 −2.14 −1.26 −0.73 0.44 0.98 0.76 0.29 −0.03 0.04 1.25 −0.51 0.82 0.87 0.20 −2.23 1.18 −0.90 −0.94 −1.01 −0.58 0.86 1.51 0.04 0.61 −0.90 −0.08 −1.57 −0.67 −0.38 0.54 −0.31 −1.07 0.91 10 2.90 −0.26 −1.95 −0.75 0.50 1.29 −1.29 0.68 −0.23 −0.40 0.47 −0.72 1.88 0.03 0.23 −0.37 0.18 0.63 1.15 0.41 −0.98 0.95 1.47 1.20 0.82 1.14 −0.66 −0.73 −0.94 −0.45 1.14 0.64 −0.66 −0.93 −0.50
+
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35
+
+36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81
+
+−0.57 −1.04 0.11 1.80 −0.78 0.51 2.33 0.14 −0.16 0.35 0.06 0.75 −0.98 −1.12 −0.24 −0.90 0.86 0.09 0.35 0.63 −2.35 −1.60 −1.20 2.61 1.67 −0.28 −0.20 −0.72 0.54 −0.70 0.51 −0.89 0.38 −0.04 −0.46 −0.17 0.42 0.77 0.90 0.27 −0.93 −0.96 −0.57 −2.32 −0.94 0.32
+
+−0.43 1.39 −2.96 −0.10 1.04 −0.85 −0.23 0.77 −0.64 0.81 1.63 −0.27 2.21 −0.02 −0.70 −0.29 1.46 −1.10 −0.41 0.04 −1.49 0.18 0.10 −0.84 0.55 0.38 0.08 0.68 −1.42 −0.50 −1.39 −2.08 −0.18 0.29 −1.29 0.24 −0.76 −1.34 0.18 0.27 −0.53 0.96 −0.32 0.68 0.34 0.12
+
+−0.03 1.06 0.26 −1.49 0.33 −0.76 −1.78 −1.31 1.15 −0.16 −0.41 0.48 0.88 1.15 1.06 −0.15 −1.71 1.18 −0.24 −0.06 1.93 −0.78 −0.35 −1.78 2.19 −0.73 1.89 −1.38 0.53 0.67 0.26 −0.23 −1.48 1.20 0.55 0.43 0.87 0.81 −0.76 0.73 −1.08 0.64 0.75 1.39 0.98 0.79
+
+−0.97 1.77 −0.68 −2.18 −0.70 0.48 1.05 0.23 −1.22 −2.18 0.92 0.14 −0.19 −0.65 −1.74 1.25 0.51 0.70 1.29 −0.56 −0.42 0.27 1.13 1.27 0.30 −0.64 1.48 1.30 −0.78 −0.77 0.29 −0.67 −0.06 1.57 −0.30 −0.82 0.86 0.06 −0.49 −0.87 −0.82 0.84 1.24 −1.53 0.93 −0.71 15
+
+1.18 0.12 0.77 −0.81 −2.83 1.98 0.96 0.78 −0.86 0.04 −0.24 1.58 −0.61 −1.31 1.01 0.47 −0.36 −0.41 −0.67 0.99 0.10 −1.72 −1.02 −0.71 −0.58 −1.09 −0.77 1.73 −0.49 0.29 −0.45 0.53 0.78 0.70 0.70 0.10 1.07 0.22 0.78 −0.57 −0.31 0.76 0.41 0.55 0.18 −1.26
+
+−0.62 −1.53 −0.78 −0.03 1.35 2.00 1.25 −0.55 −2.53 1.69 1.00 1.44 0.17 −1.26 0.98 −1.31 1.88 0.67 −0.28 0.10 0.40 −0.02 −0.55 0.08 −0.91 0.67 −2.15 −1.88 0.00 −0.06 −1.19 0.50 0.92 −1.59 1.25 −0.09 1.11 −0.46 −0.70 −1.09 −1.04 1.41 −1.15 −1.43 0.13 1.54
+
+0.48 −0.02 0.21 −2.37 −0.04 −0.47 1.26 −0.30 0.68 0.21 0.57 0.75 1.69 0.65 0.49 −1.11 1.63 −0.78 0.26 0.27 0.31 −0.22 0.37 −0.30 0.21 0.32 2.12 0.13 −0.31 1.60 0.83 −1.05 −0.43 −2.07 0.27 0.46 2.80 0.52 0.02 −0.33 −1.00 0.67 −2.38 −2.69 −0.79 −0.73
+
+1.07 −0.03 0.11 0.77 −0.53 −0.74 −2.10 0.14 −0.01 1.54 0.01 1.09 0.88 2.12 −0.35 1.06 0.41 0.50 0.68 0.49 −0.10 −0.78 −1.35 2.01 −1.22 1.32 −0.72 −0.63 0.43 1.47 −0.28 −0.74 1.59 −1.42 −0.48 −0.62 −1.26 0.31 −1.94 0.68 −1.18 −0.22 −1.72 0.34 0.10 −0.01
+
+0.82 −1.58 0.51 0.23 0.57 −2.08 −0.66 −0.96 0.59 0.09 0.24 0.88 −1.41 1.97 1.21 1.53 1.57 −0.03 −1.42 −0.22 −1.57 −0.92 1.26 0.07 1.15 −0.89 2.08 −0.70 0.75 0.80 −0.63 −0.28 1.09 −0.55 0.68 −1.01 0.98 0.80 0.05 0.73 0.36 −1.67 −0.30 0.29 −0.52 0.38
+
+−0.34 0.65 −0.58 0.58 0.18 −1.51 1.86 −2.11 0.54 1.46 −0.84 0.12 0.97 1.14 −0.25 −0.96 −1.45 0.55 0.26 0.28 1.68 0.74 1.87 1.37 0.06 −0.12 2.62 0.40 −1.04 1.04 −0.55 0.80 −0.90 −0.21 1.35 1.63 −0.88 0.92 −0.78 −0.75 2.56 −1.03 0.37 −1.23 0.99 −0.25
+
+82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
+
+−0.78 −1.17 0.93 −0.96 −0.64 1.24 0.10 −0.39 −0.86 0.91 0.50 0.39 −1.91 0.36 0.67 −0.81 0.94 0.10 1.08
+
+0.25 −0.15 −1.23 0.60 −0.09 0.56 0.17 −0.85 0.92 −0.00 −0.00 0.27 1.74 −0.46 0.78 −0.87 1.12 −1.28 0.85 0.67 −0.25 0.78 −2.15 0.23 0.79 0.90 0.65 −1.40 −0.33 0.49 −0.24 −0.79 −0.51 −1.52 −0.88 0.56 −0.44 0.15 −0.60 1.69 0.37 −0.06 1.99 1.33 0.76 −0.27 −0.05 0.28 −0.89 0.60 −1.43 −0.78 0.86 −0.36 −1.70 1.45 −0.90 0.27 1.50 −1.98 0.62 0.80 −0.05 0.87 0.13 −1.72 1.08 −0.63 −0.73 0.36 1.19 1.73 0.15 0.98 1.08 −0.67 Table 4: Example of longtable
+
+−0.27 −1.27 −1.03 0.08 −1.61 1.36 0.84 1.84 −0.73 0.39 0.20 1.80 −1.43 −0.38 1.11 −0.45 −1.29 −1.18 −1.09 0.31 −0.30 0.07 0.41 0.10 1.30 −0.24 −0.06 −1.23 −0.91 0.89 0.33 0.85 −0.57 −2.05 0.79 −2.46 0.12 −0.75 spanning several
+
+0.39 1.09 0.68 0.78 −0.11 0.03 0.34 0.56 −1.65 1.29 −0.09 1.32 0.68 1.45 1.63 −2.40 1.15 0.44 1.27 pages
+
+0.20 1.30 −0.53 −1.52 −0.89 1.12 −0.87 0.26 0.34 0.01 0.51 0.17 0.91 −0.92 0.23 −0.93 −0.06 0.12 −0.07
+
+0.91 0.78 −0.05 0.50 −0.34 −0.44 2.36 0.57 1.49 −0.20 0.86 −1.77 0.29 −0.06 1.86 −0.66 −0.20 0.65 0.04
+
+4.10
+
+Sideways tables
+
+Remember to insert \usepackage{rotating} in your LaTeX preamble. Sideways tables can’t be forced in place with the ‘H’ speciﬁer, but you can use the \clearpage command to get them fairly nearby. See Table 5. > x <- x[1:30, ] > x.small <- xtable(x, label = "tabsmall", caption = "A sideways table") > print(x.small, floating.environment = "sidewaystable")
+
+16
+
+17 Table 5: A sideways table
+
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30
+
+1 0.45 0.49 0.81 0.07 0.38 −0.03 −0.18 0.01 −3.08 −0.92 0.20 −0.16 0.18 −0.85 0.57 −0.63 −0.89 0.89 0.66 −0.82 1.05 1.28 1.06 0.43 0.82 −0.69 −0.46 −0.69 −0.43 0.85
+
+2 −0.38 0.23 −1.12 −0.30 1.82 0.76 0.80 −1.22 −0.51 0.63 −1.62 0.19 −1.23 0.13 0.95 −0.47 −0.89 −0.75 1.14 1.09 −0.21 −0.13 1.71 0.41 0.22 −0.89 −0.07 0.99 −0.18 −1.02
+
+3 −1.27 1.30 −0.28 0.61 −2.32 0.12 0.52 0.31 −1.26 1.78 −0.24 0.78 −0.53 0.43 −0.32 0.52 0.64 0.25 −1.13 −0.27 0.25 −0.75 −1.67 0.28 1.39 0.66 −0.62 0.61 −0.22 −0.60
+
+4 0.46 0.26 −0.00 0.35 0.14 −0.62 0.38 0.47 0.74 0.79 0.93 1.47 −1.00 −1.90 −0.57 1.06 1.60 0.26 1.01 0.64 −1.33 0.69 1.49 −1.00 −0.51 −1.42 0.87 −0.80 −0.43 1.51
+
+5 −0.30 0.52 0.89 −0.57 0.04 0.86 1.49 −0.19 −0.87 0.14 −0.34 −1.51 −2.06 −0.15 −0.98 −0.33 1.12 −0.61 −1.52 0.91 −0.38 −0.16 −0.14 1.44 −0.21 −0.17 0.45 0.27 0.71 1.15
+
+6 0.04 0.19 −0.28 0.46 0.08 0.58 1.41 −2.70 1.15 1.14 −1.16 0.77 −0.97 0.64 0.35 1.63 −1.06 −1.48 1.22 0.73 0.31 −1.23 −1.23 −0.54 0.25 −0.24 1.93 0.02 −1.30 −0.88
+
+7 0.00 −0.96 0.21 0.86 0.92 0.56 0.22 0.44 1.05 0.32 −2.37 0.97 −0.74 0.65 0.30 −0.51 0.24 0.00 0.23 −0.23 −0.82 −0.79 −0.06 −1.14 0.02 0.72 1.81 0.59 −0.93 −1.72
+
+8 0.84 0.11 0.71 −2.14 −1.72 0.67 0.00 2.18 −0.96 −1.32 −0.55 −0.68 0.94 0.98 0.64 −0.68 −2.55 −0.64 −0.89 1.49 −0.34 −0.42 −0.21 2.45 −1.70 −1.07 −1.08 0.63 0.66 1.00
+
+9 0.29 −0.94 −2.14 −1.26 −0.73 0.44 0.98 0.76 0.29 −0.03 0.04 1.25 −0.51 0.82 0.87 0.20 −2.23 1.18 −0.90 −0.94 −1.01 −0.58 0.86 1.51 0.04 0.61 −0.90 −0.08 −1.57 −0.67
+
+10 2.90 −0.26 −1.95 −0.75 0.50 1.29 −1.29 0.68 −0.23 −0.40 0.47 −0.72 1.88 0.03 0.23 −0.37 0.18 0.63 1.15 0.41 −0.98 0.95 1.47 1.20 0.82 1.14 −0.66 −0.73 −0.94 −0.45
+
+5
+
+Acknowledgements
+
+Most of the examples in this gallery are taken from the xtable documentation.
+
+6
+
+R Session information
+ R version 2.6.0 (2007-10-03), x86_64-unknown-linux-gnu  Locale: LC_CTYPE=en_US.UTF-8;LC_NUMERIC=C;LC_TIME=en_US.UTF-8;LC_COLLATE=en_US.UTF8;LC_MONETARY=en_US.UTF-8;LC_MESSAGES=en_US.UTF-8;LC_PAPER=en_US.UTF8;LC_NAME=C;LC_ADDRESS=C;LC_TELEPHONE=C;LC_MEASUREMENT=en_US.UTF8;LC_IDENTIFICATION=C  Base packages: base, datasets, graphics, grDevices, methods, stats, tools, utils  Other packages: xtable 1.5-2
+
+> toLatex(sessionInfo())
+
+18
+
+

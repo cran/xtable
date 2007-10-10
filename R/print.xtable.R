@@ -19,8 +19,28 @@
 ### License along with this program; if not, write to the Free
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
-print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,floating.environment="table",table.placement="ht",caption.placement="bottom",latex.environments=c("center"),tabular.environment="tabular",size=NULL,hline.after=c(-1,0,nrow(x)),NA.string="",include.rownames=TRUE,include.colnames=TRUE,only.contents=FALSE,add.to.row=NULL,sanitize.text.function=NULL,...) {
-
+print.xtable <- function(
+  x,
+  type="latex",
+  file="",
+  append=FALSE,
+  floating=TRUE,
+  floating.environment="table",
+  table.placement="ht",
+  caption.placement="bottom",
+  latex.environments=c("center"),
+  tabular.environment="tabular",
+  size=NULL,
+  hline.after=c(-1,0,nrow(x)),
+  NA.string="",
+  include.rownames=TRUE,
+  include.colnames=TRUE,
+  only.contents=FALSE,
+  add.to.row=NULL,
+  sanitize.text.function=NULL,
+  sanitize.rownames.function=sanitize.text.function,
+  sanitize.colnames.function=sanitize.text.function,
+  ...) {
   # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 hline.after
   # By default it print an \hline before and after the columns names independently they are printed or not and at the end of the table
   # Old code that set hline.after should include c(-1, 0, nrow(x)) in the hline.after vector
@@ -136,12 +156,13 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
       EENVIRONMENT <- ""
     }
 
-    tmp.index.start <- 2-pos
-    if ( tmp.index.start > 1 ) {
-      while ( attr(x,"align")[tmp.index.start] == '|' ) tmp.index.start <- tmp.index.start + 1
+    tmp.index.start <- 1
+    if ( ! include.rownames ) {
+      while ( attr(x,"align",exact=TRUE)[tmp.index.start] == '|' ) tmp.index.start <- tmp.index.start + 1
+      tmp.index.start <- tmp.index.start + 1
     }
     BTABULAR <- paste("\\begin{",tabular.environment,"}{",
-                      paste(c(attr(x, "align")[tmp.index.start:length(attr(x,"align"))], "}\n"),
+                      paste(c(attr(x, "align",exact=TRUE)[tmp.index.start:length(attr(x,"align",exact=TRUE))], "}\n"),
                             sep="", collapse=""),
                       sep="")
     
@@ -224,7 +245,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
     ETH <- " </TH> "
     STH <- " </TH> <TH> "
     BTD1 <- " <TD align=\""
-    align.tmp <- attr(x,"align")
+    align.tmp <- attr(x,"align",exact=TRUE)
     align.tmp <- align.tmp[align.tmp!="|"]
     BTD2 <- matrix(align.tmp[(2-pos):(ncol(x)+1)],nrow=nrow(x),ncol=ncol(x)+pos,byrow=TRUE)
     # Based on contribution from Jonathan Swinton <jonathan@swintons.net> in e-mail dated Wednesday, January 17, 2007
@@ -265,8 +286,8 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
     result <- result + BTABLE
     result <- result + BENVIRONMENT
     if ( floating == TRUE ) {
-      if ((!is.null(attr(x,"caption"))) && (type=="html" || caption.placement=="top")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
-      if (!is.null(attr(x,"label")) && (type=="latex" && caption.placement=="top")) result <- result + BLABEL + attr(x,"label") + ELABEL  
+      if ((!is.null(attr(x,"caption",exact=TRUE))) && (type=="html" || caption.placement=="top")) result <- result + BCAPTION + attr(x,"caption",exact=TRUE) + ECAPTION
+      if (!is.null(attr(x,"label",exact=TRUE)) && (type=="latex" && caption.placement=="top")) result <- result + BLABEL + attr(x,"label",exact=TRUE) + ELABEL  
     }
     result <- result + BSIZE
     result <- result + BTABULAR
@@ -275,16 +296,22 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
   if (include.colnames) {
     result <- result + BROW + BTH
     if (include.rownames) result <- result + STH
-    if (is.null(sanitize.text.function)) {
-        result <- result + paste(sanitize(names(x)),collapse=STH)
+    if (is.null(sanitize.colnames.function)) {                                     # David G. Whiting in e-mail 2007-10-09
+      result <- result + paste(sanitize(names(x)),collapse=STH)
     } else {
-        result <- result + paste(sanitize.text.function(names(x)), collapse=STH)
+      result <- result + paste(sanitize.colnames.function(names(x)), collapse=STH) # David G. Whiting in e-mail 2007-10-09
     }
     result <- result + ETH + EROW
   }
 
   cols <- matrix("",nrow=nrow(x),ncol=ncol(x)+pos)
-  if (include.rownames) cols[,1] <- row.names(x)
+  if (include.rownames) {
+    if (is.null(sanitize.rownames.function)) {                                     # David G. Whiting in e-mail 2007-10-09
+      cols[,1] <- sanitize(row.names(x))
+    } else {
+      cols[,1] <- sanitize.rownames.function(row.names(x))                         # David G. Whiting in e-mail 2007-10-09
+    }
+  }
 
   disp <- function(y) {
     if (is.factor(y)) {
@@ -296,9 +323,9 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
     return(y)
   }
   # Code for letting "digits" be a matrix was provided by Arne Henningsen <ahenningsen@agric-econ.uni-kiel.de> in e-mail dated 2005-06-04.
-  if( !is.matrix( attr( x, "digits" ) ) ) {
+  if( !is.matrix( attr( x, "digits",exact=TRUE ) ) ) {
     # modified Claudio Agostinelli <claudio@unive.it> dated 2006-07-28
-    attr(x,"digits") <- matrix( attr( x, "digits" ), nrow = nrow(x), ncol = ncol(x)+1, byrow = TRUE )
+    attr(x,"digits") <- matrix( attr( x, "digits",exact=TRUE ), nrow = nrow(x), ncol = ncol(x)+1, byrow = TRUE )
   }
   for(i in 1:ncol(x)) {
     ina <- is.na(x[,i])
@@ -306,7 +333,7 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
     for( j in 1:nrow( cols ) ) {
       cols[j,i+pos] <-
         formatC( disp( x[j,i] ),
-          format = ifelse( attr( x, "digits" )[j,i+1] < 0, "E", attr( x, "display" )[i+1] ), digits = abs( attr( x, "digits" )[j,i+1] ) )
+          format = ifelse( attr( x, "digits",exact=TRUE )[j,i+1] < 0, "E", attr( x, "display",exact=TRUE )[i+1] ), digits = abs( attr( x, "digits",exact=TRUE )[j,i+1] ) )
     }
     if ( any(ina) ) cols[ina,i+pos] <- NA.string
     # Based on contribution from Jonathan Swinton <jonathan@swintons.net> in e-mail dated Wednesday, January 17, 2007
@@ -336,15 +363,15 @@ print.xtable <- function(x,type="latex",file="",append=FALSE,floating=TRUE,float
   if (!only.contents) {
     if (tabular.environment == "longtable") {
       result <- result + PHEADER
-      if ((!is.null(attr(x,"caption"))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
-      if (!is.null(attr(x,"label"))) result <- result + BLABEL + attr(x,"label") + ELABEL
+      if ((!is.null(attr(x,"caption",exact=TRUE))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption",exact=TRUE) + ECAPTION
+      if (!is.null(attr(x,"label",exact=TRUE))) result <- result + BLABEL + attr(x,"label",exact=TRUE) + ELABEL
       ETABULAR <- "\\end{longtable}\n"
     }
     result <- result + ETABULAR
     result <- result + ESIZE
     if ( floating == TRUE ) {
-      if ((!is.null(attr(x,"caption"))) && (type=="latex" && caption.placement=="bottom")) result <- result + BCAPTION + attr(x,"caption") + ECAPTION
-      if (!is.null(attr(x,"label")) && caption.placement=="bottom") result <- result + BLABEL + attr(x,"label") + ELABEL  
+      if ((!is.null(attr(x,"caption",exact=TRUE))) && (type=="latex" && caption.placement=="bottom")) result <- result + BCAPTION + attr(x,"caption",exact=TRUE) + ECAPTION
+      if (!is.null(attr(x,"label",exact=TRUE)) && caption.placement=="bottom") result <- result + BLABEL + attr(x,"label",exact=TRUE) + ELABEL  
     }
     result <- result + EENVIRONMENT
     result <- result + ETABLE
@@ -372,7 +399,7 @@ string <- function(text,file="",append=FALSE) {
 }
 
 as.string <- function(x,file="",append=FALSE) {
-  if (is.null(attr(x,"class")))
+  if (is.null(attr(x,"class",exact=TRUE)))
   switch(data.class(x),
       character=return(string(x,file,append)),
       numeric=return(string(as.character(x),file,append)),
