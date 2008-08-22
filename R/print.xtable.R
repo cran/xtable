@@ -216,9 +216,11 @@ print.xtable <- function(
     }
     sanitize.numbers <- function(x) {
       result <- x
-      for(i in 1:length(x)) {
-        result[i] <- gsub("-","$-$",result[i],fixed=TRUE)
-      }
+# Jake Bowers <jwbowers@illinois.edu> in e-mail from 2008-08-20 suggested
+# disabling this feature to avoid problems with LaTeX's dcolumn package.
+#      for(i in 1:length(x)) {
+#        result[i] <- gsub("-","$-$",result[i],fixed=TRUE)
+#      }
       return(result)
     }
     sanitize.final <- function(result) {
