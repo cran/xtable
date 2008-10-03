@@ -2,7 +2,7 @@
 \alias{print.xtable}
 \title{Print Export Tables}
 \description{Function returning and displaying or writing to disk the LaTeX or HTML code associated with the supplied object of class \code{xtable}.}
-\usage{\method{print}{xtable}(x, type="latex", file="", append=FALSE, floating=TRUE, floating.environment="table", table.placement = "ht", caption.placement="bottom", latex.environments=c("center"),tabular.environment = "tabular", size=NULL,hline.after=c(-1,0,nrow(x)), NA.string = "", include.rownames=TRUE, include.colnames=TRUE, only.contents=FALSE, add.to.row=NULL, sanitize.text.function=NULL, sanitize.rownames.function=sanitize.text.function, sanitize.colnames.function=sanitize.text.function, ...)}
+\usage{\method{print}{xtable}(x, type="latex", file="", append=FALSE, floating=TRUE, floating.environment="table", table.placement = "ht", caption.placement="bottom", latex.environments=c("center"),tabular.environment = "tabular", size=NULL,hline.after=c(-1,0,nrow(x)), NA.string = "", include.rownames=TRUE, include.colnames=TRUE, only.contents=FALSE, add.to.row=NULL, sanitize.text.function=NULL, sanitize.rownames.function=sanitize.text.function, sanitize.colnames.function=sanitize.text.function, math.style.negative=FALSE, ...)}
 \arguments{
   \item{x}{An object of class \code{"xtable"}.}
   \item{type}{Type of table to produce.  Possible values for \code{type} are \code{"latex"} or \code{"html"}.
@@ -33,6 +33,7 @@
   \item{sanitize.text.function}{All non-numeric enteries (except row and column names) are sanitised in an attempt to remove characters which have special meaning for the output format. If \code{sanitize.text.function} is not NULL (the default), it should be a function taking a character vector and returning one, and will be used for the sanitization instead of the default internal function.}
   \item{sanitize.rownames.function}{Like the \code{sanitize.text.function}, but applicable to row names.  The default uses the \code{sanitize.text.function}.}
   \item{sanitize.colnames.function}{Like the \code{sanitize.text.function}, but applicable to column names.  The default uses the \code{sanitize.text.function}.}
+  \item{math.style.negative}{In a LaTeX table, if \code{TRUE}, then use $-$ for the negative sign (as was the behavior prior to version 1.5-3).  Default value is \code{FALSE}.}
   \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{

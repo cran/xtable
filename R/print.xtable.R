@@ -40,6 +40,7 @@ print.xtable <- function(
   sanitize.text.function=NULL,
   sanitize.rownames.function=sanitize.text.function,
   sanitize.colnames.function=sanitize.text.function,
+  math.style.negative=FALSE,
   ...) {
   # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 hline.after
   # By default it print an \hline before and after the columns names independently they are printed or not and at the end of the table
@@ -216,11 +217,15 @@ print.xtable <- function(
     }
     sanitize.numbers <- function(x) {
       result <- x
-# Jake Bowers <jwbowers@illinois.edu> in e-mail from 2008-08-20 suggested
-# disabling this feature to avoid problems with LaTeX's dcolumn package.
-#      for(i in 1:length(x)) {
-#        result[i] <- gsub("-","$-$",result[i],fixed=TRUE)
-#      }
+      if ( math.style.negative ) {
+        # Jake Bowers <jwbowers@illinois.edu> in e-mail from 2008-08-20 suggested
+        # disabling this feature to avoid problems with LaTeX's dcolumn package.
+        # by Florian Wickelmaier <florian.wickelmaier@uni-tuebingen.de> in e-mail
+        # from 2008-10-03 requested the ability to use the old behavior.
+        for(i in 1:length(x)) {
+          result[i] <- gsub("-","$-$",result[i],fixed=TRUE)
+        }
+      }
       return(result)
     }
     sanitize.final <- function(result) {
