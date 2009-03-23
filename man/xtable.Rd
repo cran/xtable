@@ -238,7 +238,7 @@ print(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=TRUE, 
 
 \dontrun{
  \begin{small}
- \setlongtables
+ \setlongtables % For longtable version 3.x or less
  \begin{longtable}{
  <<results=tex,fig=FALSE>>=
  cat(paste(c('c', rep('cc', 34/2-1), 'c'), collapse='@{\\hspace{2pt}}'))

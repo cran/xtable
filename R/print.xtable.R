@@ -41,6 +41,7 @@ print.xtable <- function(
   sanitize.rownames.function=sanitize.text.function,
   sanitize.colnames.function=sanitize.text.function,
   math.style.negative=FALSE,
+  html.table.attributes="border=1",
   ...) {
   # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 hline.after
   # By default it print an \hline before and after the columns names independently they are printed or not and at the end of the table
@@ -188,7 +189,7 @@ print.xtable <- function(
     BCAPTION <- "\\caption{"
     ECAPTION <- "}\n"
     BROW <- ""
-    EROW <- " \\\\\n"
+    EROW <- " \\\\ \n"
     BTH <- ""
     ETH <- ""
     STH <- " & "
@@ -234,7 +235,7 @@ print.xtable <- function(
   } else {
     BCOMMENT <- "<!-- "
     ECOMMENT <- " -->\n"
-    BTABLE <- "<TABLE border=1>\n"
+    BTABLE <- paste("<TABLE ",html.table.attributes,">\n",sep="")
     ETABLE <- "</TABLE>\n"
     BENVIRONMENT <- ""
     EENVIRONMENT <- ""
