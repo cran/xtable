@@ -1,0 +1,10 @@
+1.5-6 (2009-10-30)
+  * Support caption at the top in the LaTeX longtable.
+  * Use options()$OutDec for decimal mark.
+
+1.5-5 (2009-03-24)
+  * Added html.table.attributes to set the attributed of the <TABLE> tag for HTML tables.
+  * Accommodated logicals by converting to characters.
+  * Add an extra space at end of each line for LaTeX tables.
+  * Fixed typographical error in documentation.
+

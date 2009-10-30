@@ -126,10 +126,6 @@ print.xtable <- function(
       warning("Attempt to use \"longtable\" with floating=TRUE. Changing to FALSE.")
       floating <- FALSE
     }
-    if ( tabular.environment == "longtable" & caption.placement == "top" ) {
-      warning("Attempt to use \"longtable\" with caption.placement=\"top\". Changing to \"bottom\".")
-      caption.placement <- "bottom"
-    }
     if ( floating == TRUE ) {
       # See e-mail from "Pfaff, Bernhard <Bernhard.Pfaff@drkw.com>" dated 7-09-2003 regarding "suggestion for an amendment of the source"
       # See e-mail from "Mitchell, David" <David.Mitchell@dotars.gov.au>" dated 2003-07-09 regarding "Additions to R xtable package"
@@ -168,6 +164,13 @@ print.xtable <- function(
                             sep="", collapse=""),
                       sep="")
     
+    ## fix 10-26-09 (robert.castelo@upf.edu) the following 'if' condition is added here to support
+    ## a caption on the top of a longtable
+    if (tabular.environment == "longtable" && caption.placement=="top") {
+        BCAPTION <- "\\caption{"
+        ECAPTION <- "} \\\\ \n"
+        if ((!is.null(attr(x,"caption",exact=TRUE))) && (type=="latex")) BTABULAR <- paste(BTABULAR,  BCAPTION, attr(x,"caption",exact=TRUE), ECAPTION, sep="")
+    }
     # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 add.to.row position -1
     BTABULAR <- paste(BTABULAR,lastcol[1], sep="")
     # the \hline at the end, if present, is set in full matrix    
@@ -339,9 +342,11 @@ print.xtable <- function(
     ina <- is.na(x[,i])
     is.numeric.column <- is.numeric(x[,i])
     for( j in 1:nrow( cols ) ) {
+      ### modified Claudio Agostinelli <claudio@unive.it> dated 2009-09-14
+      ### add decimal.mark=options()$OutDec
       cols[j,i+pos] <-
         formatC( disp( x[j,i] ),
-          format = ifelse( attr( x, "digits",exact=TRUE )[j,i+1] < 0, "E", attr( x, "display",exact=TRUE )[i+1] ), digits = abs( attr( x, "digits",exact=TRUE )[j,i+1] ) )
+          format = ifelse( attr( x, "digits",exact=TRUE )[j,i+1] < 0, "E", attr( x, "display",exact=TRUE )[i+1] ), digits = abs( attr( x, "digits",exact=TRUE )[j,i+1] ), decimal.mark=options()$OutDec)
     }
     if ( any(ina) ) cols[ina,i+pos] <- NA.string
     # Based on contribution from Jonathan Swinton <jonathan@swintons.net> in e-mail dated Wednesday, January 17, 2007
@@ -371,7 +376,11 @@ print.xtable <- function(
   if (!only.contents) {
     if (tabular.environment == "longtable") {
       result <- result + PHEADER
-      if ((!is.null(attr(x,"caption",exact=TRUE))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption",exact=TRUE) + ECAPTION
+      ## fix 10-27-09 Liviu Andronic (landronimirc@gmail.com) the following 'if' condition is inserted in order to avoid
+      ## that bottom caption interferes with a top caption of a longtable
+      if(caption.placement=="bottom"){
+        if ((!is.null(attr(x,"caption",exact=TRUE))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption",exact=TRUE) + ECAPTION
+      }
       if (!is.null(attr(x,"label",exact=TRUE))) result <- result + BLABEL + attr(x,"label",exact=TRUE) + ELABEL
       ETABULAR <- "\\end{longtable}\n"
     }
