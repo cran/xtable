@@ -31,7 +31,7 @@ xtable <- function(x,caption=NULL,label=NULL,align=NULL,
 xtable.data.frame <- function(x,caption=NULL,label=NULL,align=NULL,
                               digits=NULL,display=NULL,...) {
   logicals <- unlist(lapply(x,is.logical))
-  x[,logicals] <- as.character(x[,logicals])
+  x[,logicals] <- lapply(x[,logicals], as.character)
   characters <- unlist(lapply(x,is.character))
   factors <- unlist(lapply(x,is.factor))
   ints <- sapply(x, is.integer)
@@ -65,8 +65,10 @@ xtable.matrix <- function(x,caption=NULL,label=NULL,align=NULL,
 xtable.table<-function(x,caption=NULL,label=NULL,align=NULL, digits=NULL,display=NULL,...) {
   if (length(dim(x))==1) {
     return(xtable.matrix(matrix(x,dimnames=list(rownames(x),names(dimnames(x)))),caption=caption,label=label,align=align,digits=digits,display=display))
-  } else {
+  } else if (length(dim(x))==2) {
     return(xtable.matrix(matrix(x,ncol=dim(x)[2],nrow=dim(x)[1],dimnames=list(rownames(x),colnames(x))),caption=caption,label=label,align=align,digits=digits,display=display))
+  } else {
+    stop("xtable.table is not implemented for tables of > 2 dimensions")
   }
 }
 

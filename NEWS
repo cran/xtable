@@ -1,3 +1,13 @@
+1.6-0 (2011-10-07)
+  * Allow "table*" as a value for "floating.environment" in print.xtable().
+  * Fix bug under which multiple logical columns were formatted incorrectly.
+  * Stop with an error if "xtable.table" is used on a table with more than
+    two dimensions.
+  * Add some newlines to "Rd" file to prevent lines from extending off the
+    page in the PDF version of the help files.
+  * Changed the maintainer to "Charles Roosen".
+  * Created an "xtable" project on R-Forge.
+
 1.5-6 (2009-10-30)
   * Support caption at the top in the LaTeX longtable.
   * Use options()$OutDec for decimal mark.

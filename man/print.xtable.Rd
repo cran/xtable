@@ -2,7 +2,15 @@
 \alias{print.xtable}
 \title{Print Export Tables}
 \description{Function returning and displaying or writing to disk the LaTeX or HTML code associated with the supplied object of class \code{xtable}.}
-\usage{\method{print}{xtable}(x, type="latex", file="", append=FALSE, floating=TRUE, floating.environment="table", table.placement = "ht", caption.placement="bottom", latex.environments=c("center"),tabular.environment = "tabular", size=NULL,hline.after=c(-1,0,nrow(x)), NA.string = "", include.rownames=TRUE, include.colnames=TRUE, only.contents=FALSE, add.to.row=NULL, sanitize.text.function=NULL, sanitize.rownames.function=sanitize.text.function, sanitize.colnames.function=sanitize.text.function, math.style.negative=FALSE, html.table.attributes="border=1", ...)}
+\usage{
+	\method{print}{xtable}(x, type="latex", file="", append=FALSE, floating=TRUE, 
+		floating.environment="table", table.placement = "ht", caption.placement="bottom", 
+		latex.environments=c("center"),tabular.environment = "tabular", size=NULL,
+		hline.after=c(-1,0,nrow(x)), NA.string = "", include.rownames=TRUE, 
+		include.colnames=TRUE, only.contents=FALSE, add.to.row=NULL, 
+		sanitize.text.function=NULL, sanitize.rownames.function=sanitize.text.function,
+		sanitize.colnames.function=sanitize.text.function, math.style.negative=FALSE, 
+		html.table.attributes="border=1", ...)}
 \arguments{
   \item{x}{An object of class \code{"xtable"}.}
   \item{type}{Type of table to produce.  Possible values for \code{type} are \code{"latex"} or \code{"html"}.
@@ -14,7 +22,7 @@
                 Default value is \code{FALSE}.}
   \item{floating}{If \code{TRUE} and \code{type="latex"}, the resulting table will be a floating table (using, for example, \code{\\begin\{table\}} and \code{\\end\{table\}}).  See \code{floating.environment} below. Default value is \code{TRUE}.}
   \item{floating.environment}{If \code{floating=TRUE} and \code{type="latex"}, the resulting table uses the specified floating environment.
-  Possible values are \code{"table"} or \code{"sidewaystable"} (defined in the LaTeX package 'rotating').
+  Possible values are \code{"table"}, \code{"table*"}, or \code{"sidewaystable"} (defined in the LaTeX package 'rotating').
                 Default value is \code{"table"}.}
   \item{table.placement}{If \code{floating=TRUE} and \code{type="latex"}, the floating table will have placement given by \code{table.placement} where \code{table.placement} must be \code{NULL} or contain only elements of \{"h","t","b","p","!","H"\}.
                 Default value is \code{"ht"}.}

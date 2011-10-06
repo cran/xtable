@@ -231,7 +231,8 @@ addtorow$pos <- list()
 addtorow$pos[[1]] <- c(0, 2)
 addtorow$pos[[2]] <- 4
 addtorow$command <- c('\\vspace{2mm} \n', '\\vspace{10mm} \n')
-print(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=TRUE, only.contents=TRUE, hline.after=c(0, 0, 9, 9))
+print(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=TRUE, 
+  only.contents=TRUE, hline.after=c(0, 0, 9, 9))
 
 ## Demostrate include.rownames, include.colnames, 
 ## only.contents and add.to.row arguments in Rweave files
@@ -259,7 +260,8 @@ print(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=TRUE, 
  addtorow$pos[[1]] <- c(seq(4, 40, 5), seq(49, 85, 5))
  addtorow$pos[[2]] <- 45
  addtorow$command <- c('\\vspace{2mm} \n', '\\newpage \n')
- print(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=F ALSE, only.contents=TRUE, hline.after=NULL)
+ print(xres, add.to.row=addtorow, include.rownames=FALSE, include.colnames=FALSE, 
+   only.contents=TRUE, hline.after=NULL)
  @
  \end{longtable}
  \end{small}
@@ -295,11 +297,14 @@ print(xtable(mat), type="latex", sanitize.text.function = function(x){x})
     print(xtable(anova(lm.D9)),type=i,file=outFileName,append=TRUE)
     print(xtable(glm.D93),type=i,file=outFileName,append=TRUE)
     print(xtable(anova(glm.D93,test="Chisq")),type=i,file=outFileName,append=TRUE)
-    print(xtable(glm.D93,align="r|llrc"),include.rownames=FALSE,include.colnames=TRUE,type=i,file=outFileName,append=TRUE)
-    print(xtable(glm.D93,align="r||llrc"),include.rownames=TRUE,include.colnames=FALSE,type=i,file=outFileName,append=TRUE)
-    print(xtable(glm.D93,align="|r||llrc"),include.rownames=FALSE,include.colnames=FALSE,type=i,file=outFileName,append=TRUE)
+    print(xtable(glm.D93,align="r|llrc"),include.rownames=FALSE,include.colnames=TRUE,
+      type=i,file=outFileName,append=TRUE)
+    print(xtable(glm.D93,align="r||llrc"),include.rownames=TRUE,include.colnames=FALSE,
+      type=i,file=outFileName,append=TRUE)
+    print(xtable(glm.D93,align="|r||llrc"),include.rownames=FALSE,include.colnames=FALSE,
+      type=i,file=outFileName,append=TRUE)
     print(xtable(glm.D93,align="|r||llrc|"),type=i,file=outFileName,append=TRUE)
-    print(xtable(anova(glm.D93)),hline.after=c(1),size="small",type=i,file=outFileName,append=TRUE)
+    print(xtable(anova(glm.D93)),hline.after=c(1),size="small",type=i,file=outFileName, append=TRUE)
     if(require(stats,quietly=TRUE)) {
       print(xtable(pr1),type=i,file=outFileName,append=TRUE)
       print(xtable(summary(pr1)),type=i,file=outFileName,append=TRUE)
@@ -307,8 +312,10 @@ print(xtable(mat), type="latex", sanitize.text.function = function(x){x})
     }
     temp.table <- xtable(ts(cumsum(1+round(rnorm(100), 2)), start = c(1954, 7), frequency=12))
     caption(temp.table) <- "Time series example"
-    print(temp.table,type=i,file=outFileName,append=TRUE,caption.placement="top",table.placement="h")
-    print(temp.table,type=i,file=outFileName,append=TRUE,caption.placement="bottom",table.placement="htb")
+    print(temp.table,type=i,file=outFileName,append=TRUE,caption.placement="top",
+      table.placement="h")
+    print(temp.table,type=i,file=outFileName,append=TRUE,caption.placement="bottom",
+      table.placement="htb")
   }
 } 
 

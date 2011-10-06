@@ -111,7 +111,7 @@ print.xtable <- function(
   if (length(type)>1) stop("\"type\" must have length 1")
   type <- tolower(type)
   if (!all(!is.na(match(type,c("latex","html"))))) stop("\"type\" must be in {\"latex\", \"html\"}")
-  if (!all(!is.na(match(floating.environment,c("table","sidewaystable"))))) stop("\"type\" must be in {\"table\", \"sidewaystable\"}")
+  if (!all(!is.na(match(floating.environment,c("table","table*","sidewaystable"))))) stop("\"type\" must be in {\"table\", \"table*\", \"sidewaystable\"}")
   if (!all(!is.na(match(unlist(strsplit(table.placement, split="")),c("H","h","t","b","p","!"))))) {
     stop("\"table.placement\" must contain only elements of {\"h\",\"t\",\"b\",\"p\",\"!\"}")
   }
