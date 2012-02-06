@@ -2,7 +2,9 @@
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2007 David B. Dahl <dahl@stat.tamu.edu>
+### Copyright 2000-2012 David B. Dahl <dahl@stat.tamu.edu>
+###
+### Maintained by Charles Roosen <croosen@mango-solutions.com>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -21,28 +23,45 @@
 ### MA 02111-1307, USA
 print.xtable <- function(
   x,
-  type="latex",
-  file="",
-  append=FALSE,
-  floating=TRUE,
-  floating.environment="table",
-  table.placement="ht",
-  caption.placement="bottom",
-  latex.environments=c("center"),
-  tabular.environment="tabular",
-  size=NULL,
-  hline.after=c(-1,0,nrow(x)),
-  NA.string="",
-  include.rownames=TRUE,
-  include.colnames=TRUE,
-  only.contents=FALSE,
-  add.to.row=NULL,
-  sanitize.text.function=NULL,
-  sanitize.rownames.function=sanitize.text.function,
-  sanitize.colnames.function=sanitize.text.function,
-  math.style.negative=FALSE,
-  html.table.attributes="border=1",
+  type=getOption("xtable.type", "latex"),
+  file=getOption("xtable.file", ""),
+  append=getOption("xtable.append", FALSE),
+  floating=getOption("xtable.floating", TRUE),
+  floating.environment=getOption("xtable.floating.environment", "table"),
+  table.placement=getOption("xtable.table.placement", "ht"),
+  caption.placement=getOption("xtable.caption.placement", "bottom"),
+  latex.environments=getOption("xtable.latex.environments", c("center")),
+  tabular.environment=getOption("xtable.tabular.environment", "tabular"),
+  size=getOption("xtable.size", NULL),
+  hline.after=getOption("xtable.hline.after", c(-1,0,nrow(x))),
+  NA.string=getOption("xtable.NA.string", ""),
+  include.rownames=getOption("xtable.include.rownames", TRUE),
+  include.colnames=getOption("xtable.include.colnames", TRUE),
+  only.contents=getOption("xtable.only.contents", FALSE),
+  add.to.row=getOption("xtable.add.to.row", NULL),
+  sanitize.text.function=getOption("xtable.sanitize.text.function", NULL),
+  sanitize.rownames.function=getOption("xtable.sanitize.rownames.function", 
+    sanitize.text.function),
+  sanitize.colnames.function=getOption("xtable.sanitize.colnames.function", 
+    sanitize.text.function),
+  math.style.negative=getOption("xtable.math.style.negative", FALSE),
+  html.table.attributes=getOption("xtable.html.table.attributes", "border=1"),
+  print.results=getOption("xtable.print.results", TRUE),
+  format.args=getOption("xtable.format.args", NULL),
+  rotate.rownames=getOption("xtable.rotate.rownames", FALSE),
+  rotate.colnames=getOption("xtable.rotate.colnames", FALSE),
+  booktabs = getOption("xtable.booktabs", FALSE),
+  scalebox = getOption("xtable.scalebox", NULL),
+  width = getOption("xtable.width", NULL),
   ...) {
+  # If caption is length 2, treat the second value as the "short caption"
+  caption <- attr(x,"caption",exact=TRUE)
+  short.caption <- NULL
+  if (!is.null(caption) && length(caption) > 1){
+    short.caption <- caption[2]
+	caption <- caption[1]
+  }
+  
   # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 hline.after
   # By default it print an \hline before and after the columns names independently they are printed or not and at the end of the table
   # Old code that set hline.after should include c(-1, 0, nrow(x)) in the hline.after vector
@@ -87,16 +106,42 @@ print.xtable <- function(
   # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 add.to.row
   # Add further commands at the end of rows
   if (type=="latex") {
-     PHEADER <- "\\hline\n"
+    ## Original code before changes in version 1.6-1
+    # PHEADER <- "\\hline\n"
+
+	# booktabs code from Matthieu Stigler <matthieu.stigler@gmail.com>, 1 Feb 2012
+    if(!booktabs){
+      PHEADER <- "\\hline\n"
+	} else {
+      PHEADER <- ifelse(-1%in%hline.after, "\\toprule\n", "") 
+      if(0%in%hline.after) {
+        PHEADER <- c(PHEADER, "\\midrule\n")
+	  }
+      if(nrow(x)%in%hline.after) {
+        PHEADER <- c(PHEADER, "\\bottomrule\n")
+	  }
+    }
   } else {
      PHEADER <- ""
   }
    
   lastcol <- rep(" ", nrow(x)+2)
   if (!is.null(hline.after)) {
-     add.to.row$pos[[npos+1]] <- hline.after
-     add.to.row$command <- c(add.to.row$command, PHEADER)
+    # booktabs change - Matthieu Stigler: fill the hline arguments separately, 1 Feb 2012
+	#
+    # Code before booktabs change was:
+	#    add.to.row$pos[[npos+1]] <- hline.after
+
+    if (!booktabs){
+       add.to.row$pos[[npos+1]] <- hline.after
+	} else {
+       for(i in 1:length(hline.after)) {	    
+	      add.to.row$pos[[npos+i]] <- hline.after[i] 
+	   }
+    }	   
+    add.to.row$command <- c(add.to.row$command, PHEADER)
   }
+
   if ( length(add.to.row$command) > 0 ) {
     for (i in 1:length(add.to.row$command)) {
       addpos <- add.to.row$pos[[i]]
@@ -112,7 +157,7 @@ print.xtable <- function(
   type <- tolower(type)
   if (!all(!is.na(match(type,c("latex","html"))))) stop("\"type\" must be in {\"latex\", \"html\"}")
   if (!all(!is.na(match(floating.environment,c("table","table*","sidewaystable"))))) stop("\"type\" must be in {\"table\", \"table*\", \"sidewaystable\"}")
-  if (!all(!is.na(match(unlist(strsplit(table.placement, split="")),c("H","h","t","b","p","!"))))) {
+  if (!is.null(table.placement) && !all(!is.na(match(unlist(strsplit(table.placement, split="")),c("H","h","t","b","p","!"))))) {
     stop("\"table.placement\" must contain only elements of {\"h\",\"t\",\"b\",\"p\",\"!\"}")
   }
   if (!all(!is.na(match(caption.placement,c("bottom","top"))))) stop("\"caption.placement\" must be either {\"bottom\",\"top\"}")
@@ -159,22 +204,42 @@ print.xtable <- function(
       while ( attr(x,"align",exact=TRUE)[tmp.index.start] == '|' ) tmp.index.start <- tmp.index.start + 1
       tmp.index.start <- tmp.index.start + 1
     }
-    BTABULAR <- paste("\\begin{",tabular.environment,"}{",
-                      paste(c(attr(x, "align",exact=TRUE)[tmp.index.start:length(attr(x,"align",exact=TRUE))], "}\n"),
-                            sep="", collapse=""),
-                      sep="")
-    
+	# Added "width" argument for use with "tabular*" or "tabularx" environments - CR, 7/2/12
+	if (is.null(width)){
+	  WIDTH <-""
+	} else if (is.element(tabular.environment, c("tabular", "longtable"))){
+	  warning("Ignoring 'width' argument.  The 'tabular' and 'longtable' environments do not support a width specification.  Use another environment such as 'tabular*' or 'tabularx' to specify the width.")
+	  WIDTH <- ""
+	} else {
+	  WIDTH <- paste("{", width, "}", sep="")
+	}
+	
+    BTABULAR <- paste("\\begin{",tabular.environment,"}", WIDTH, "{",
+        paste(c(attr(x, "align",exact=TRUE)[tmp.index.start:length(attr(x,"align",
+		    exact=TRUE))], "}\n"), sep="", collapse=""),
+        sep="")
+
     ## fix 10-26-09 (robert.castelo@upf.edu) the following 'if' condition is added here to support
     ## a caption on the top of a longtable
     if (tabular.environment == "longtable" && caption.placement=="top") {
-        BCAPTION <- "\\caption{"
+		if (is.null(short.caption)){
+			BCAPTION <- "\\caption{"
+		} else {
+			BCAPTION <- paste("\\caption[", short.caption, "]{", sep="")
+		}	
         ECAPTION <- "} \\\\ \n"
-        if ((!is.null(attr(x,"caption",exact=TRUE))) && (type=="latex")) BTABULAR <- paste(BTABULAR,  BCAPTION, attr(x,"caption",exact=TRUE), ECAPTION, sep="")
+        if ((!is.null(caption)) && (type=="latex")) BTABULAR <- paste(BTABULAR,  BCAPTION, caption, ECAPTION, sep="")
     }
     # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 add.to.row position -1
     BTABULAR <- paste(BTABULAR,lastcol[1], sep="")
     # the \hline at the end, if present, is set in full matrix    
     ETABULAR <- paste("\\end{",tabular.environment,"}\n",sep="")
+
+	## Add scalebox - CR, 7/2/12
+	if (!is.null(scalebox)){
+	  BTABULAR <- paste("\\scalebox{", scalebox, "}{\n", BTABULAR, sep="")
+	  ETABULAR <- paste(ETABULAR, "}\n", sep="")
+	}
     
     # BSIZE contributed by Benno <puetz@mpipsykl.mpg.de> in e-mail dated Wednesday, December 01, 2004
     if (is.null(size) || !is.character(size)) {
@@ -189,7 +254,11 @@ print.xtable <- function(
     }
     BLABEL <- "\\label{"
     ELABEL <- "}\n"
-    BCAPTION <- "\\caption{"
+	if (is.null(short.caption)){
+		BCAPTION <- "\\caption{"
+	} else {
+		BCAPTION <- paste("\\caption[", short.caption, "]{", sep="")
+	}	
     ECAPTION <- "}\n"
     BROW <- ""
     EROW <- " \\\\ \n"
@@ -297,7 +366,7 @@ print.xtable <- function(
     result <- result + BTABLE
     result <- result + BENVIRONMENT
     if ( floating == TRUE ) {
-      if ((!is.null(attr(x,"caption",exact=TRUE))) && (type=="html" || caption.placement=="top")) result <- result + BCAPTION + attr(x,"caption",exact=TRUE) + ECAPTION
+      if ((!is.null(caption)) && (type=="html" || caption.placement=="top")) result <- result + BCAPTION + caption + ECAPTION
       if (!is.null(attr(x,"label",exact=TRUE)) && (type=="latex" && caption.placement=="top")) result <- result + BLABEL + attr(x,"label",exact=TRUE) + ELABEL  
     }
     result <- result + BSIZE
@@ -306,48 +375,97 @@ print.xtable <- function(
   # Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 include.colnames, include.rownames 
   if (include.colnames) {
     result <- result + BROW + BTH
-    if (include.rownames) result <- result + STH
-    if (is.null(sanitize.colnames.function)) {                                     # David G. Whiting in e-mail 2007-10-09
-      result <- result + paste(sanitize(names(x)),collapse=STH)
-    } else {
-      result <- result + paste(sanitize.colnames.function(names(x)), collapse=STH) # David G. Whiting in e-mail 2007-10-09
-    }
+    if (include.rownames) {
+	  result <- result + STH
+	}  
+    # David G. Whiting in e-mail 2007-10-09
+    if (is.null(sanitize.colnames.function)) {                                     
+	  CNAMES <- sanitize(names(x))
+	} else {
+      CNAMES <- sanitize.colnames.function(names(x))
+	}
+    if (rotate.colnames) {
+  	  #added by Markus Loecher, 2009-11-16
+      CNAMES <- paste("\\begin{sideways}", CNAMES, "\\end{sideways}")
+	}	
+    result <- result + paste(CNAMES, collapse=STH)
+
     result <- result + ETH + EROW
   }
 
   cols <- matrix("",nrow=nrow(x),ncol=ncol(x)+pos)
   if (include.rownames) {
-    if (is.null(sanitize.rownames.function)) {                                     # David G. Whiting in e-mail 2007-10-09
-      cols[,1] <- sanitize(row.names(x))
+    # David G. Whiting in e-mail 2007-10-09
+    if (is.null(sanitize.rownames.function)) {                                     
+      RNAMES <- sanitize(row.names(x))
     } else {
-      cols[,1] <- sanitize.rownames.function(row.names(x))                         # David G. Whiting in e-mail 2007-10-09
+      RNAMES <- sanitize.rownames.function(row.names(x))                         
     }
+    if (rotate.rownames) {
+  	  #added by Markus Loecher, 2009-11-16
+      RNAMES <- paste("\\begin{sideways}", RNAMES, "\\end{sideways}")
+	}	
+	cols[,1] <- RNAMES
   }
 
-  disp <- function(y) {
-    if (is.factor(y)) {
-      y <- levels(y)[y]
-    }
-    if (is.list(y)) {
-      y <- unlist(y)
-    }
-    return(y)
-  }
+## Begin vectorizing the formatting code by Ian Fellows [ian@fellstat.com]
+## 06 Dec 2011
+##
+#  disp <- function(y) {
+#    if (is.factor(y)) {
+#      y <- levels(y)[y]
+#    }
+#    if (is.list(y)) {
+#      y <- unlist(y)
+#    }
+#    return(y)
+#  }
+  varying.digits <- is.matrix( attr( x, "digits",exact=TRUE ) )
   # Code for letting "digits" be a matrix was provided by Arne Henningsen <ahenningsen@agric-econ.uni-kiel.de> in e-mail dated 2005-06-04.
-  if( !is.matrix( attr( x, "digits",exact=TRUE ) ) ) {
+  #if( !varying.digits ) {
     # modified Claudio Agostinelli <claudio@unive.it> dated 2006-07-28
-    attr(x,"digits") <- matrix( attr( x, "digits",exact=TRUE ), nrow = nrow(x), ncol = ncol(x)+1, byrow = TRUE )
-  }
+  #  attr(x,"digits") <- matrix( attr( x, "digits",exact=TRUE ), nrow = nrow(x), ncol = ncol(x)+1, byrow = TRUE )
+  #}
   for(i in 1:ncol(x)) {
-    ina <- is.na(x[,i])
-    is.numeric.column <- is.numeric(x[,i])
-    for( j in 1:nrow( cols ) ) {
-      ### modified Claudio Agostinelli <claudio@unive.it> dated 2009-09-14
-      ### add decimal.mark=options()$OutDec
-      cols[j,i+pos] <-
-        formatC( disp( x[j,i] ),
-          format = ifelse( attr( x, "digits",exact=TRUE )[j,i+1] < 0, "E", attr( x, "display",exact=TRUE )[i+1] ), digits = abs( attr( x, "digits",exact=TRUE )[j,i+1] ), decimal.mark=options()$OutDec)
-    }
+ 	xcol <- x[,i]
+	if(is.factor(xcol))
+		xcol <- as.character(xcol)
+	if(is.list(xcol))
+		xcol <- sapply(xcol,unlist)
+    ina <- is.na(xcol)
+    is.numeric.column <- is.numeric(xcol)
+
+	if(is.character(xcol)) {
+		cols[,i+pos] <- xcol
+	} else {
+	  if (is.null(format.args)){
+	    format.args <- list()
+	  }
+	  if (is.null(format.args$decimal.mark)){
+	    format.args$decimal.mark <- options()$OutDec
+	  }
+	  if(!varying.digits){
+		curFormatArgs <- c(list( 
+		    x = xcol,
+			format = ifelse( attr( x, "digits",exact=TRUE )[i+1] < 0, "E", 
+			  attr( x, "display",exact=TRUE )[i+1] ), 
+			digits = abs( attr( x, "digits",exact=TRUE )[i+1] )),
+			format.args)
+	    cols[,i+pos] <- do.call("formatC", curFormatArgs)
+      }else{
+		for( j in 1:nrow( cols ) ) {
+		  curFormatArgs <- c(list( 
+            x = xcol[j],
+			format = ifelse( attr( x, "digits",exact=TRUE )[j,i+1] < 0, "E", 
+              attr( x, "display",exact=TRUE )[i+1] ), 
+            digits = abs( attr( x, "digits",exact=TRUE )[j,i+1] )),
+			format.args)
+		  cols[j,i+pos] <- do.call("formatC", curFormatArgs)			
+		}
+      }	
+	}
+	## End Ian Fellows changes
+	
     if ( any(ina) ) cols[ina,i+pos] <- NA.string
     # Based on contribution from Jonathan Swinton <jonathan@swintons.net> in e-mail dated Wednesday, January 17, 2007
     if ( is.numeric.column ) {
@@ -371,15 +489,20 @@ print.xtable <- function(
   full[,multiplier*(0:(ncol(x)+pos-1))+6] <- ETD
 
   full[,multiplier*(ncol(x)+pos)+2] <- paste(EROW, lastcol[-(1:2)], sep=" ")
+ 
   if (type=="latex") full[,2] <- ""
   result <- result + lastcol[2] + paste(t(full),collapse="")
   if (!only.contents) {
     if (tabular.environment == "longtable") {
-      result <- result + PHEADER
+	  # booktabs change added the if() - 1 Feb 2012
+	  if(!booktabs) {
+	    result <- result + PHEADER
+      }
+	  
       ## fix 10-27-09 Liviu Andronic (landronimirc@gmail.com) the following 'if' condition is inserted in order to avoid
       ## that bottom caption interferes with a top caption of a longtable
       if(caption.placement=="bottom"){
-        if ((!is.null(attr(x,"caption",exact=TRUE))) && (type=="latex")) result <- result + BCAPTION + attr(x,"caption",exact=TRUE) + ECAPTION
+        if ((!is.null(caption)) && (type=="latex")) result <- result + BCAPTION + caption + ECAPTION
       }
       if (!is.null(attr(x,"label",exact=TRUE))) result <- result + BLABEL + attr(x,"label",exact=TRUE) + ELABEL
       ETABULAR <- "\\end{longtable}\n"
@@ -387,15 +510,18 @@ print.xtable <- function(
     result <- result + ETABULAR
     result <- result + ESIZE
     if ( floating == TRUE ) {
-      if ((!is.null(attr(x,"caption",exact=TRUE))) && (type=="latex" && caption.placement=="bottom")) result <- result + BCAPTION + attr(x,"caption",exact=TRUE) + ECAPTION
+      if ((!is.null(caption)) && (type=="latex" && caption.placement=="bottom")) result <- result + BCAPTION + caption + ECAPTION
       if (!is.null(attr(x,"label",exact=TRUE)) && caption.placement=="bottom") result <- result + BLABEL + attr(x,"label",exact=TRUE) + ELABEL  
     }
     result <- result + EENVIRONMENT
     result <- result + ETABLE
   }   
   result <- sanitize.final(result)
-  print(result)
-
+  
+  if (print.results){
+	print(result)
+  }
+  
   return(invisible(result$text))
 }
 

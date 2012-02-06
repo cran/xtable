@@ -31,6 +31,8 @@ The xtable gallery
 \SweaveOpts{prefix.string=figdir/fig,debug=TRUE,eps=FALSE,echo=TRUE}
 \usepackage{rotating} 
 \usepackage{longtable} 
+\usepackage{booktabs}
+\usepackage{tabularx}
 %\usepackage{hyperref}
 \begin{document}
 
@@ -388,9 +390,37 @@ print(tli.table,include.colnames=FALSE,floating=FALSE,hline.after=c(0,nrow(tli.t
 print((tli.table),include.colnames=FALSE,include.rownames=FALSE,floating=FALSE)
 @
 
+\subsection{Rotate row and column names}
+The {\tt rotate.rownames } and {\tt rotate.colnames} arguments can be
+used to rotate the row and/or column names.
+
+<<results=tex>>=
+print((tli.table),rotate.rownames=TRUE,rotate.colnames=TRUE)
+@
+
 \subsection{Horizontal lines}
+
+\subsubsection{Line locations}
+
+Use the {\tt hline.after} argument to specify the position of the horizontal lines.
+
 <<results=tex>>=
 print(xtable(anova(glm.D93)),hline.after=c(1),floating=FALSE)
+@
+
+\subsubsection{Line styles}
+
+The \LaTeX package {\tt booktabs} can be used to specify different 
+line style tags for top, middle, and bottom lines.  Specifying
+{\tt booktabs = TRUE} will lead to separate tags being generated
+for the three line types.
+
+Insert \verb|\usepackage{booktabs}| in your \LaTeX preamble and
+define the {\tt toprule}, {\tt midrule}, and {\tt bottomrule}
+tags to specify the line styles.
+
+<<results=tex>>=
+print(tli.table , booktabs=TRUE)
 @
 
 \subsection{Table-level \LaTeX}
@@ -400,8 +430,7 @@ print(xtable(anova(glm.D93)),size="small",floating=FALSE)
 
 
 \subsection{Long tables}
-Remember to insert \verb|\usepackage{longtable}| in your LaTeX preamble.
-See Table \ref{tabbig}.
+Remember to insert \verb|\usepackage{longtable}| in your \LaTeX preamble.
 
 <<longtable>>=
 
@@ -414,12 +443,40 @@ x.big <- xtable(x,label='tabbig',
 print(x.big,tabular.environment='longtable',floating=FALSE)
 @
 
+%%
+%% The column name alignment is off in the following example.
+%% It needs some revision before exposing it. - CR, 7/2/2012
+%%
+%
+%\subsubsection{Long tables with the header on each page}
+%
+%The {\tt add.to.row} argument can be used to display the header 
+%for a long table on each page, and to add a "continued" footer
+%on all pages except the last page. 
+%
+%<<results=tex>>=
+%library(xtable)
+%x<-matrix(rnorm(1000), ncol = 10)
+%addtorow<-list()
+%addtorow$pos<-list()
+%addtorow$pos[[1]]<-c(0)
+%addtorow$command<-c(paste(
+%    "\\hline \n",
+%    "  \\endhead \n",
+%    "  \\hline \n",
+%    "  {\\footnotesize Continued on next page} \n",
+%    "  \\endfoot \n",
+%    "  \\endlastfoot \n",sep=""))
+%x.big2 <- xtable(x, label = "tabbig2", 
+%    caption = "Example of longtable with the header on each page")
+%print(x.big2, tabular.environment = "longtable", floating = FALSE,
+%include.rownames=FALSE, add.to.row=addtorow, hline.after=c(-1) )
+%@
 
 \subsection{Sideways tables} 
 Remember to insert \verb|\usepackage{rotating}| in your LaTeX preamble.
 Sideways tables can't be forced in place with the `H' specifier, but you can 
 use the \verb|\clearpage| command to get them fairly nearby.
-See Table \ref{tabsmall}.
 
 <<>>=
 x <- x[1:30,]
@@ -430,6 +487,61 @@ x.small <- xtable(x,label='tabsmall',caption='A sideways table')
 print(x.small,floating.environment='sidewaystable')
 @
 \clearpage
+
+\subsection{Rescaled tables} 
+Specify a {\tt scalebox} value to rescale the table.
+
+<<>>=
+x <- x[1:20,]
+x.rescale <- xtable(x,label='tabrescaled',caption='A rescaled table')
+@
+
+<<results=tex>>=
+print(x.rescale, scalebox=0.7)
+@
+
+\subsection{Table Width} 
+The {\tt tabularx} tabular environment provides more alignment options,
+and has a {\tt width} argument to specify the table width.
+ 
+Remember to insert \verb|\usepackage{tabularx}| in your \LaTeX preamble.
+
+<<>>=
+df.width <- data.frame(
+  "label 1 with much more text than is needed" = c("item 1", "A"), 
+  "label 2 is also very long" = c("item 2","B"),
+  "label 3" = c("item 3","C"), 
+  "label 4" = c("item 4 but again with too much text","D"),
+  check.names = FALSE)
+
+x.width <- xtable(df.width, 
+  caption="Using the 'tabularx' environment")
+align(x.width) <- "|l|X|X|l|X|"  
+@
+
+<<results=tex>>=
+print(x.width, tabular.environment="tabularx", 
+  width="\\textwidth")
+@
+
+\section{Suppressing Printing}
+By default the {\tt print} method will print the LaTeX or HTML to standard
+output and also return the character strings invisibly.  The printing to
+standard output can be suppressed by specifying {\tt print.results = FALSE}.
+
+<<>>=
+x.out <- print(tli.table, print.results = FALSE)
+@
+
+Formatted output can also be captured without printing with the
+{\tt toLatex} method.  This function returns an object of class
+{\tt "Latex"}.
+
+<<>>=
+x.ltx <- toLatex(tli.table)
+class(x.ltx)
+x.ltx
+@
 
 \section{Acknowledgements}
 Most of the examples in this gallery are taken from the {\tt xtable} documentation.

@@ -22,8 +22,8 @@
 
 "caption<-" <- function(x,value) UseMethod("caption<-")
 "caption<-.xtable" <- function(x,value) {
-  if (length(value)>1)
-    stop("\"caption\" must have length 1")
+  if (length(value)>2)
+    stop("\"caption\" must have length 1 or 2")
   attr(x,"caption") <- value
   return(x)
 }
@@ -72,7 +72,7 @@ label.xtable <- function(x,...) {
     aString.Width <- c(aString.Width,thisWidth)
   }
 
-  alignAllowed <- c("l","r","p","c","|") 
+  alignAllowed <- c("l","r","p","c","|","X") 
   
   if (any( !(aString.Align %in% alignAllowed))) {
     warning("Nonstandard alignments in align string")

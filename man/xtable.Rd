@@ -26,7 +26,8 @@ xtable(x, caption=NULL, label=NULL, align=NULL, digits=NULL,
 \arguments{
   \item{x}{An R object of class found among \code{methods(xtable)}.  See below on how to write additional method functions
            for \code{xtable}.}
-  \item{caption}{Character vector of length 1 containing the table's caption or title.
+  \item{caption}{Character vector of length 1 or 2 containing the table's caption or title.  If length 2, the second item 
+               is the "short caption" used when LaTeX generates a "List of Tables".
                  Set to \code{NULL} to suppress the caption.  Default value is \code{NULL}.}
   \item{label}{Character vector of length 1 containing the LaTeX label or HTML anchor.
                Set to \code{NULL} to suppress the label.  Default value is \code{NULL}.}
@@ -193,6 +194,16 @@ glm.D93 <- glm(counts ~ outcome + treatment, family=poisson())
 print(xtable(glm.D93,align="r|llrc"))
 print(xtable(anova(glm.D93)),hline.after=c(1),size="small")
 
+## Demonstration of additional formatC() arguments.
+print(fm1.table, format.args=list(big.mark = "'", decimal.mark = ","))
+
+## Demonstration of "short caption" support.
+fm1sc <- aov(tlimth ~ sex + ethnicty + grade, data=tli)
+fm1sc.table <- xtable(fm1sc, 
+  caption=c("ANOVA Model with Predictors Sex, Ethnicity, and Grade",
+    "ANOVA: Sex, Ethnicity, Grade"))
+print(fm1sc.table)
+
 ## Demonstration of longtable support.
 ## Remember to insert \usepackage{longtable} on your LaTeX preamble
 x <- matrix(rnorm(1000), ncol = 10)
@@ -272,6 +283,20 @@ mat <- round(matrix(c(0.9, 0.89, 200, 0.045, 2.0), c(1, 5)), 4)
 rownames(mat) <- "$y_{t-1}$"
 colnames(mat) <- c("$R^2$", "$\\\bar{R}^2$", "F-stat", "S.E.E", "DW")
 print(xtable(mat), type="latex", sanitize.text.function = function(x){x})
+
+## Demonstrate booktabs
+print(tli.table)
+print(tli.table , hline.after=c(-1,0))
+print(tli.table , hline.after=NULL)
+print(tli.table ,  add.to.row=list(pos=list(2), command=c("\\vspace{2mm} \n")))
+
+print(tli.table , booktabs=TRUE)
+print(tli.table , booktabs=TRUE, hline.after=c(-1,0))
+print(tli.table , booktabs=TRUE, hline.after=NULL)
+print(tli.table , booktabs=TRUE, 
+  add.to.row=list(pos=list(2), command=c("\\vspace{2mm} \n")))
+print(tli.table , booktabs=TRUE, add.to.row=list(pos=list(2), 
+  command=c("youhou\n")),tabular.environment = "longtable")
 
 \testonly{
   for(i in c("latex","html")) {
