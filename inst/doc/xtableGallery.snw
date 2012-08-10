@@ -244,9 +244,9 @@ temp.ts <- ts(cumsum(1+round(rnorm(100), 0)), start = c(1954, 7), frequency=12)
 if (FALSE) {
   for(i in c("latex","html")) {
     outFileName <- paste("xtable.",ifelse(i=="latex","tex",i),sep="")
-    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environment=NULL)
-    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environment="")
-    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environment="center")
+    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environments=NULL)
+    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environments="")
+    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environments="center")
     print(xtable(anova(glm.D93,test="Chisq")),type=i,file=outFileName,append=TRUE)
     print(xtable(anova(glm.D93)),hline.after=c(1),size="small",type=i,file=outFileName,append=TRUE)
       # print(xtable(pr2),type=i,file=outFileName,append=TRUE)
@@ -298,9 +298,9 @@ print(xtable(money),sanitize.rownames.function=function(x) {x})
 \section{Format examples}
 \subsection{Adding a centering environment }
 <<results=tex>>=
-   print(xtable(lm.D9,caption="\\tt latex.environment=NULL"),latex.environment=NULL)
-    print(xtable(lm.D9,caption="\\tt latex.environment=\"\""),latex.environment="")
-    print(xtable(lm.D9,caption="\\tt latex.environment=\"center\""),latex.environment="center")
+   print(xtable(lm.D9,caption="\\tt latex.environments=NULL"),latex.environments=NULL)
+    print(xtable(lm.D9,caption="\\tt latex.environments=\"\""),latex.environments="")
+    print(xtable(lm.D9,caption="\\tt latex.environments=\"center\""),latex.environments="center")
 @
 \subsection{Column alignment}
 

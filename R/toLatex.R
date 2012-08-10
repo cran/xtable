@@ -2,7 +2,7 @@
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2012 David B. Dahl <dahl@stat.tamu.edu>
+### Copyright 2000-2013 David B. Dahl <dahl@stat.tamu.edu>
 ###
 ### Maintained by Charles Roosen <croosen@mango-solutions.com>
 ###

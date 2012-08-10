@@ -1,6 +1,6 @@
 Package: xtable
-Version: 1.7-0
-Date: 2012/02/06
+Version: 1.7-1
+Date: 2012/08/10
 Title: Export tables to LaTeX or HTML
 Author: David B. Dahl <dahl@stat.tamu.edu>
 Maintainer: Charles Roosen <statsci@gmail.com>
@@ -9,7 +9,6 @@ URL: http://xtable.r-forge.r-project.org/
 Depends: R (>= 2.10.0)
 License: GPL (>= 2)
 Repository: CRAN
-Repository/R-Forge/Project: xtable
-Repository/R-Forge/Revision: 32
-Packaged: 2012-02-08 16:30:23 UTC; rforge
-Date/Publication: 2012-02-10 09:24:11
+Packaged: 2013-02-24 17:28:50 UTC; PA037886
+NeedsCompilation: no
+Date/Publication: 2013-02-25 07:36:28

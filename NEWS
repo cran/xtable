@@ -1,4 +1,23 @@
-1.7-0 (NOT YET RELEASED)
+1.7-1 (2013-02-24)
+  * Fixed logicals bug (Req #1911)
+  * Changed implementation of centering of tables. Instead of
+    inserting a centered environment, now a \centering command is
+    inserted. (Req #2104)
+  * Allow for margin tables as possible with document class 
+    tufte-handout. An example of usage is found in the vignette 
+	produced by margintable.Rnw which is in inst/doc. (Req #2168)
+  * Added "timestamp" argument to print.xtable().  Set it to NULL
+    if no timestamp is desired. (Req #2246)
+  * Added "comment" argument to print.xtable().  Set it to FALSE
+    to exclude the version and timestamp comment. (Req #2246)
+  * Added "caption.width" argument.  If not NULL then the caption
+    is placed in a "parbox" of the specified width. (Req #2247)
+  * Remove the check on whether the "floating.environment" is
+    in a list of known floating environments. Users want to use
+	floating environments from multiple options LaTeX 
+	packages (Req #2488, #2578)
+	
+1.7-0 (2012-02-10)
   * Added some vectorization code to improve performance.
   * Let "caption" be length 2, in which case the second value is 
     the short caption used when creating a list of tables.
