@@ -145,7 +145,9 @@
     the character vector that is returned invisibly.}
   \item{format.args}{List of arguments for the \code{formatC} function.
     For example, standard German number separators can be specified as
-    \code{format.args=list(big.mark = "'", decimal.mark = ","))}. }
+    \code{format.args=list(big.mark = "'", decimal.mark =
+      ","))}. \code{digits} and \code{format} arguments should not be
+    included in this list. See details. }
   \item{rotate.rownames}{If \code{TRUE}, the row names are displayed
     vertically in LaTeX. }
   \item{rotate.colnames}{If \code{TRUE}, the column names are displayed
@@ -191,7 +193,15 @@
   From version 1.6-1 the default values for the arguments other than
   \code{x} are obtainined using \code{getOption()}.  Hence the user can
   set the values once with \code{options()} rather than setting them in
-  every call to \code{print.xtable()}. 
+  every call to \code{print.xtable()}.
+
+  The argument \code{format.args} is used to supply arguments to the
+  \code{formatC} function, but will throw an error if values for
+  \code{digits} or \code{format} are included in the list of
+  arguments. The recommended approach is to specify \code{digits} supply
+  the argument \code{digits} to \code{xtable}, and to specify
+  \code{format} supply the argument \code{display} to \code{xtable}. See
+  the examples.  
 }
 \author{
   David Dahl \email{dahl@stat.tamu.edu} with contributions and
@@ -206,6 +216,27 @@
   \code{\link{xtable}}, \code{\link{caption}}, \code{\link{label}}, 
   \code{\link{align}}, \code{\link{digits}}, \code{\link{display}},
   \code{\link{formatC}} 
+}
+
+\examples{
+df <- data.frame(A = c(1.00123, 33.1, 6),
+                 B = c(111111, 3333333, 3123.233))
+## The following code gives the error
+## formal argument "digits" matched by multiple actual arguments
+## print(xtable(df, display = c("s","e","e")),
+##       format.args = list(digits = 3, big.mark = " ", decimal.mark = ","))
+## specify digits as argument to xtable instead
+print(xtable(df, display = c("s","f","f"), digits = 4),
+      format.args = list(big.mark = " ", decimal.mark = ","))
+## The following code gives the error
+## formal argument "format" matched by multiple actual arguments
+## print(xtable(df, digits = 4),
+##       format.args = list(format = c("s","e","e"),
+##                          big.mark = " ", decimal.mark = ","))
+## specify format using display argument in xtable
+print(xtable(df, display = c("s","e","e"), digits = 4),
+      format.args = list(big.mark = " ", decimal.mark = ","))
+
 }
 
 \keyword{print}

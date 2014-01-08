@@ -123,30 +123,43 @@ print.xtable <- function(x,
         ## Original code before changes in version 1.6-1
         ## PHEADER <- "\\hline\n"
 
-	    ## booktabs code from Matthieu Stigler <matthieu.stigler@gmail.com>,
+        ## booktabs code from Matthieu Stigler <matthieu.stigler@gmail.com>,
         ## 1 Feb 2012
         if(!booktabs){
             PHEADER <- "\\hline\n"
-	    } else {
-            PHEADER <- ifelse(-1%in%hline.after, "\\toprule\n", "")
-            if(0%in%hline.after) {
-                PHEADER <- c(PHEADER, "\\midrule\n")
-            }
-            if(nrow(x)%in%hline.after) {
-                PHEADER <- c(PHEADER, "\\bottomrule\n")
+        } else {
+            ## This code replaced to fix bug #2309, David Scott, 8 Jan 2014
+            ## PHEADER <- ifelse(-1%in%hline.after, "\\toprule\n", "")
+            ## if(0%in%hline.after) {
+            ##     PHEADER <- c(PHEADER, "\\midrule\n")
+            ## }
+            ## if(nrow(x)%in%hline.after) {
+            ##     PHEADER <- c(PHEADER, "\\bottomrule\n")
+            ## }
+            if (is.null(hline.after)){
+                PHEADER <- ""
+            } else {
+                hline.after <- sort(hline.after)
+                PHEADER <- rep("\\midrule\n", length(hline.after))
+                if (hline.after[1] == -1) {
+                    PHEADER[1] <- "\\toprule\n"
+                }
+                if (hline.after[length(hline.after)] == nrow(x)) {
+                    PHEADER[length(hline.after)] <- "\\bottomrule\n"
+                }
             }
         }
     } else {
         PHEADER <- ""
     }
 
-    lastcol <- rep(" ", nrow(x)+2)
+        lastcol <- rep(" ", nrow(x)+2)
     if (!is.null(hline.after)) {
         ## booktabs change - Matthieu Stigler: fill the hline arguments
         ## separately, 1 Feb 2012
-	    ##
+        ##
         ## Code before booktabs change was:
-	    ##    add.to.row$pos[[npos+1]] <- hline.after
+        ##    add.to.row$pos[[npos+1]] <- hline.after
 
         if (!booktabs){
             add.to.row$pos[[npos+1]] <- hline.after
@@ -178,8 +191,8 @@ print.xtable <- function(x,
     if (!all(!is.na(match(type, c("latex","html"))))) {
         stop("\"type\" must be in {\"latex\", \"html\"}")
     }
-    ## Disabling the check on known floating environments as many users 
-    ## want to use additional environments. 	
+    ## Disabling the check on known floating environments as many users
+    ## want to use additional environments.
     #    if (!all(!is.na(match(floating.environment,
     #                          c("table","table*","sidewaystable",
     #                            "margintable"))))) {
@@ -324,7 +337,7 @@ print.xtable <- function(x,
             ESIZE <- "}\n"
         }
         BLABEL <- "\\label{"
-        ELABEL <- "}\n"		
+        ELABEL <- "}\n"
         ## Added caption width (jeff.laake@nooa.gov)
 	    if(!is.null(caption.width)){
 	        BCAPTION <- paste("\\parbox{",caption.width,"}{",sep="")
@@ -332,13 +345,13 @@ print.xtable <- function(x,
 	    } else {
 	        BCAPTION <- NULL
 	        ECAPTION <- NULL
-	    }		  
+	    }
 	    if (is.null(short.caption)){
 		   BCAPTION <- paste(BCAPTION,"\\caption{",sep="")
 	    } else {
 		   BCAPTION <- paste(BCAPTION,"\\caption[", short.caption, "]{", sep="")
-	    }	
-        ECAPTION <- paste(ECAPTION,"} \n",sep="")				
+	    }
+        ECAPTION <- paste(ECAPTION,"} \n",sep="")
         BROW <- ""
         EROW <- " \\\\ \n"
         BTH <- ""
@@ -423,9 +436,15 @@ print.xtable <- function(x,
         ETD  <- " </TD>"
         sanitize <- function(str) {
             result <- str
-            result <- gsub("&", "&amp ", result, fixed = TRUE)
-            result <- gsub(">", "&gt ", result, fixed = TRUE)
-            result <- gsub("<", "&lt ", result, fixed = TRUE)
+            ## Changed as suggested in bug report #2795
+            ## That is replacement of "&" is "&amp;"
+            ## instead of previous "&amp" etc
+            ## result <- gsub("&", "&amp ", result, fixed = TRUE)
+            ## result <- gsub(">", "&gt ", result, fixed = TRUE)
+            ## result <- gsub("<", "&lt ", result, fixed = TRUE)
+            result <- gsub("&", "&amp;", result, fixed = TRUE)
+            result <- gsub(">", "&gt;", result, fixed = TRUE)
+            result <- gsub("<", "&lt;", result, fixed = TRUE)
             ## Kurt Hornik <Kurt.Hornik@wu-wien.ac.at> on 2006/10/05
             ## recommended not escaping underscores.
             ## result <- gsub("_", "\\_", result, fixed=TRUE)
@@ -453,10 +472,10 @@ print.xtable <- function(x,
               info$language + " " + info$major + "." + info$minor +
               " by xtable " +  packageDescription('xtable')$Version +
               " package" + ECOMMENT
-        if (!is.null(timestamp)){		  
+        if (!is.null(timestamp)){
             result <- result + BCOMMENT + timestamp + ECOMMENT
         }
-    }		
+    }
     ## Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 only.contents
     if (!only.contents) {
         result <- result + BTABLE
@@ -552,26 +571,26 @@ print.xtable <- function(x,
                 format.args$decimal.mark <- options()$OutDec
             }
             if(!varying.digits){
-		curFormatArgs <- c(list(
-                                   x = xcol,
-                                   format = ifelse( attr( x, "digits",
-                                   exact = TRUE )[i+1] < 0, "E",
-                                   attr( x, "display", exact = TRUE )[i+1] ),
-                                   digits = abs( attr( x, "digits",
-                                   exact = TRUE )[i+1] )),
-                                   format.args)
+		curFormatArgs <-
+                    c(list(
+                      x = xcol,
+                      format =
+                      ifelse(attr(x, "digits", exact = TRUE )[i+1] < 0, "E",
+                                   attr(x, "display", exact = TRUE )[i+1]),
+                      digits = abs(attr(x, "digits", exact = TRUE )[i+1])),
+                      format.args)
                 cols[, i+pos] <- do.call("formatC", curFormatArgs)
             }else{
 		for( j in 1:nrow( cols ) ) {
-                    curFormatArgs <- c(list(
-                                       x = xcol[j],
-                                       format = ifelse( attr( x, "digits",
-                                       exact = TRUE )[j, i+1] < 0, "E",
-                                       attr( x, "display",
-                                            exact = TRUE )[i+1] ),
-                                       digits = abs( attr( x, "digits",
-                                       exact = TRUE )[j, i+1] )),
-                                       format.args)
+                    curFormatArgs <-
+                        c(list(
+                          x = xcol[j],
+                          format =
+                          ifelse(attr(x, "digits", exact = TRUE )[j, i+1] < 0,
+                                 "E", attr(x, "display", exact = TRUE )[i+1]),
+                          digits =
+                          abs(attr(x, "digits", exact = TRUE )[j, i+1])),
+                          format.args)
                     cols[j, i+pos] <- do.call("formatC", curFormatArgs)
 		}
             }
@@ -673,10 +692,10 @@ as.string <- function(x, file = "", append = FALSE) {
         switch(data.class(x),
                character = return(string(x, file, append)),
                numeric = return(string(as.character(x), file, append)),
-               stop("Cannot coerse argument to a string"))
+               stop("Cannot coerce argument to a string"))
     if (class(x) == "string")
         return(x)
-    stop("Cannot coerse argument to a string")
+    stop("Cannot coerce argument to a string")
 }
 
 is.string <- function(x) {
