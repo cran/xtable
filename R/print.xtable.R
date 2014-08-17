@@ -2,9 +2,9 @@
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2013 David B. Dahl <dahl@stat.tamu.edu>
+### Copyright 2000-2013 David B. Dahl <dahl@stat.byu.edu>
 ###
-### Maintained by Charles Roosen <croosen@mango-solutions.com>
+### Maintained by David Scott <d.scott@auckland.ac.nz>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -403,25 +403,25 @@ print.xtable <- function(x,
     } else {
         BCOMMENT <- "<!-- "
         ECOMMENT <- " -->\n"
-        BTABLE <- paste("<TABLE ", html.table.attributes, ">\n", sep = "")
-        ETABLE <- "</TABLE>\n"
+        BTABLE <- paste("<table ", html.table.attributes, ">\n", sep = "")
+        ETABLE <- "</table>\n"
         BENVIRONMENT <- ""
         EENVIRONMENT <- ""
         BTABULAR <- ""
         ETABULAR <- ""
         BSIZE <- ""
         ESIZE <- ""
-        BLABEL <- "<A NAME="
-        ELABEL <- "></A>\n"
-        BCAPTION <- paste("<CAPTION ALIGN=\"", caption.placement, "\"> ",
+        BLABEL <- "<a name="
+        ELABEL <- "></a>\n"
+        BCAPTION <- paste("<caption align=\"", caption.placement, "\"> ",
                           sep = "")
-        ECAPTION <- " </CAPTION>\n"
-        BROW <- "<TR>"
-        EROW <- " </TR>\n"
-        BTH <- " <TH> "
-        ETH <- " </TH> "
-        STH <- " </TH> <TH> "
-        BTD1 <- " <TD align=\""
+        ECAPTION <- " </caption>\n"
+        BROW <- "<tr>"
+        EROW <- " </tr>\n"
+        BTH <- " <th> "
+        ETH <- " </th> "
+        STH <- " </th> <th> "
+        BTD1 <- " <td align=\""
         align.tmp <- attr(x, "align", exact = TRUE)
         align.tmp <- align.tmp[align.tmp!="|"]
         BTD2 <- matrix(align.tmp[(2-pos):(ncol(x)+1)],
@@ -433,7 +433,7 @@ print.xtable <- function(x,
         BTD2[BTD2 == "l"] <- "left"
         BTD2[BTD2 == "c"] <- "center"
         BTD3 <- "\"> "
-        ETD  <- " </TD>"
+        ETD  <- " </td>"
         sanitize <- function(str) {
             result <- str
             ## Changed as suggested in bug report #2795

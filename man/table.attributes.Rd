@@ -42,6 +42,6 @@
   These functions retrieve or set table attributes of the object \code{x} of class \code{"xtable"}.  See
   \code{xtable} for a description of the options.
 }
-\author{David Dahl \email{dahl@stat.tamu.edu} with contributions and suggestions from many others (see source code).}
+\author{David Dahl \email{dahl@stat.byu.edu} with contributions and suggestions from many others (see source code).}
 \seealso{\code{\link{xtable}}, \code{\link{print.xtable}}, \code{\link{formatC}}}
 \keyword{print}

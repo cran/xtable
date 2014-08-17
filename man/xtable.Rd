@@ -82,7 +82,7 @@ xtable(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
   \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{
-  
+
   This function extracts tabular information from \code{x} and returns
   an object of class \code{"xtable"}.  The nature of the table generated
   depends on the class of \code{x}.  For example, \code{aov} objects
@@ -108,9 +108,9 @@ xtable(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
   }
   \value{An object of class \code{"xtable"} which inherits the
   \code{data.frame} class and contains several additional attributes
-  specifying the table formatting options.  
+  specifying the table formatting options.
 }
-\author{David Dahl \email{dahl@stat.tamu.edu} with contributions and
+\author{David Dahl \email{dahl@stat.byu.edu} with contributions and
   suggestions from many others (see source code).
 }
 \seealso{\code{\link{print.xtable}}, \code{\link{caption}},
@@ -218,7 +218,7 @@ print(fm1.table, format.args = list(big.mark = "'", decimal.mark = ","))
 
 ## Demonstration of "short caption" support.
 fm1sc <- aov(tlimth ~ sex + ethnicty + grade, data = tli)
-fm1sc.table <- xtable(fm1sc, 
+fm1sc.table <- xtable(fm1sc,
   caption = c("ANOVA Model with Predictors Sex, Ethnicity, and Grade",
     "ANOVA: Sex, Ethnicity, Grade"))
 print(fm1sc.table)
@@ -228,14 +228,14 @@ print(fm1sc.table)
 x <- matrix(rnorm(1000), ncol = 10)
 x.big <- xtable(x, label = 'tabbig',
                 caption = 'Example of longtable spanning several pages')
-print(x.big, tabular.environment = 'longtable', floating = FALSE) 
+print(x.big, tabular.environment = 'longtable', floating = FALSE)
 x <- x[1:30, ]
 x.small <- xtable(x, label = 'tabsmall', caption = 'regular table env')
-print(x.small)  # default, no longtable 
+print(x.small)  # default, no longtable
 
 ## Demonstration of sidewaystable support.
 ## Remember to insert \usepackage{rotating} on your LaTeX preamble
-print(x.small, floating.environment = 'sidewaystable') 
+print(x.small, floating.environment = 'sidewaystable')
 
 if(require(stats, quietly = TRUE)) {
   ## Demonstrate prcomp
@@ -251,7 +251,7 @@ if(require(stats, quietly = TRUE)) {
 #  print(xtable(pr2))
 }
 
-## Demonstrate include.rownames, include.colnames, 
+## Demonstrate include.rownames, include.colnames,
 ## only.contents and add.to.row arguments
 set.seed(2345)
 res <- matrix(sample(0:9, size = 6*9, replace = TRUE), ncol = 6, nrow = 9)
@@ -266,7 +266,7 @@ print(xres, add.to.row = addtorow, include.rownames = FALSE,
       include.colnames = TRUE, only.contents = TRUE,
       hline.after = c(0, 0, 9, 9))
 
-## Demonstrate include.rownames, include.colnames, 
+## Demonstrate include.rownames, include.colnames,
 ## only.contents and add.to.row arguments in Rweave files
 
 \dontrun{
@@ -275,7 +275,7 @@ print(xres, add.to.row = addtorow, include.rownames = FALSE,
  \begin{longtable}{
  <<results = tex, fig = FALSE>>=
  cat(paste(c('c', rep('cc', 34/2-1), 'c'), collapse = '@{\\hspace{2pt}}'))
- @ 
+ @
  }
  \hline
  \endhead
@@ -315,9 +315,9 @@ print(tli.table,
 print(tli.table, booktabs = TRUE)
 print(tli.table, booktabs = TRUE, hline.after = c(-1,0))
 print(tli.table, booktabs = TRUE, hline.after = NULL)
-print(tli.table, booktabs = TRUE, 
+print(tli.table, booktabs = TRUE,
   add.to.row = list(pos = list(2), command = c("\\vspace{2mm} \n")))
-print(tli.table, booktabs = TRUE, add.to.row = list(pos = list(2), 
+print(tli.table, booktabs = TRUE, add.to.row = list(pos = list(2),
   command = c("youhou\n")), tabular.environment = "longtable")
 
 \testonly{
@@ -378,7 +378,7 @@ print(tli.table, booktabs = TRUE, add.to.row = list(pos = list(2),
     print(temp.table, type = i, file = outFileName,
           append = TRUE, caption.placement = "bottom", table.placement = "htb")
   }
-} 
+}
 
 }
 \keyword{file}

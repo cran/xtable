@@ -7,7 +7,7 @@
 \title{String handling functions}
 \description{Private functions for conveniently working with strings.}
 \usage{
-  string(text,file="",append=FALSE) 
+  string(text,file="",append=FALSE)
   \method{print}{string}(x,...)
   \method{+}{string}(x,y)
   as.string(x,file="",append=FALSE)
@@ -25,6 +25,6 @@
   These functions are private functions used by \code{print.xtable}.  They are
   not intended to be used elsewhere.
 }
-\author{David Dahl \email{dahl@stat.tamu.edu} with contributions and suggestions from many others (see source code).}
+\author{David Dahl \email{dahl@stat.byu.edu} with contributions and suggestions from many others (see source code).}
 \seealso{\code{\link{print.xtable}}}
 \keyword{print}

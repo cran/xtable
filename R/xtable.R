@@ -2,7 +2,7 @@
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2013 David B. Dahl <dahl@stat.tamu.edu>
+### Copyright 2000-2013 David B. Dahl <dahl@stat.byu.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public

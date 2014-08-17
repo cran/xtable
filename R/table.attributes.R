@@ -2,7 +2,7 @@
 ###
 ### Produce LaTeX and HTML tables from R objects.
 ###
-### Copyright 2000-2013 David B. Dahl <dahl@stat.tamu.edu>
+### Copyright 2000-2013 David B. Dahl <dahl@stat.byu.edu>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public
@@ -72,8 +72,8 @@ label.xtable <- function(x,...) {
     aString.Width <- c(aString.Width,thisWidth)
   }
 
-  alignAllowed <- c("l","r","p","c","|","X") 
-  
+  alignAllowed <- c("l","r","p","c","|","X")
+
   if (any( !(aString.Align %in% alignAllowed))) {
     warning("Nonstandard alignments in align string")
   }
@@ -120,7 +120,7 @@ align.xtable <- function(x,...) {
         " ( nrow( x )" )
     }
   } else {
-    if( length(value)==1 ) { value <- rep(value, ncol(x)+1) } 
+    if( length(value)==1 ) { value <- rep(value, ncol(x)+1) }
     if( length( value ) >1 & length( value ) != ncol(x)+1 ) {
       stop( "if argument 'digits' is a vector of length more than one, it must have length equal",
         " to ", ncol(x)+1, " ( ncol(x) + 1 )" )

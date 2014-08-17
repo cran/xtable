@@ -1,7 +1,14 @@
-1.7-3 (2014-01-08)
+
+1.7-4 (NOT YET RELEASED)
+  * Changed tags in HTML to be all lower case, to be compatible with
+    HTML5, part of feature request(#5879)
   * Fixed booktabs bug (#2309), more of an enhancement really. Updated
     xtableGallery.snw to illustrate the change.
   * Moved vignettes from inst/doc to vignettes as now required by CRAN
+  * Changed email address of David Dahl to dahl@stat.byu.edu in 9 places
+
+1.7-3 (2014-03-06)
+  * Released to CRAN
 
 1.7-2 (2013-08-28, Not Released to CRAN)
   * Fixed HTML gsub bug (#2795)

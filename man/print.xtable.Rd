@@ -6,7 +6,7 @@
   code associated with the supplied object of class \code{xtable}.
 }
 \usage{
-\method{print}{xtable}(x, 
+\method{print}{xtable}(x,
   type = getOption("xtable.type", "latex"),
   file = getOption("xtable.file", ""),
   append = getOption("xtable.append", FALSE),
@@ -25,9 +25,9 @@
   only.contents = getOption("xtable.only.contents", FALSE),
   add.to.row = getOption("xtable.add.to.row", NULL),
   sanitize.text.function = getOption("xtable.sanitize.text.function", NULL),
-  sanitize.rownames.function = getOption("xtable.sanitize.rownames.function", 
+  sanitize.rownames.function = getOption("xtable.sanitize.rownames.function",
                                          sanitize.text.function),
-  sanitize.colnames.function = getOption("xtable.sanitize.colnames.function", 
+  sanitize.colnames.function = getOption("xtable.sanitize.colnames.function",
                                          sanitize.text.function),
   math.style.negative = getOption("xtable.math.style.negative", FALSE),
   html.table.attributes = getOption("xtable.html.table.attributes",
@@ -62,7 +62,7 @@
     Default value is \code{TRUE}. }
   \item{floating.environment}{If \code{floating=TRUE} and
     \code{type="latex"}, the resulting table uses the specified floating
-    environment. Possible values include \code{"table"}, \code{"table*"}, 
+    environment. Possible values include \code{"table"}, \code{"table*"},
     and other floating environments defined in LaTeX packages.
     Default value is \code{"table"}.}
   \item{table.placement}{If \code{floating=TRUE} and
@@ -165,14 +165,14 @@
     \code{tabularx}.  Note that table width specification is not
     supported with the \code{tabular} or \code{longtable} environments. }
   \item{comment}{If \code{TRUE}, the version and timestamp comment is
-    included.  Default value is \code{TRUE}. }  
+    included.  Default value is \code{TRUE}. }
   \item{timestamp}{Timestamp to include in LaTeX comment.  Set this
-    to \code{NULL} to exclude the timestamp. Default value is \code{date()}. }  
+    to \code{NULL} to exclude the timestamp. Default value is \code{date()}. }
   \item{...}{Additional arguments.  (Currently ignored.) }
 }
 \details{
   This function displays or writes to disk the code to produce a table
-  associated with an object \code{x} of class \code{"xtable"}. 
+  associated with an object \code{x} of class \code{"xtable"}.
   The resulting code is either a LaTeX or HTML table, depending on the
   value of \code{type}.  The function also (invisibly) returns a
   character vector of the results (which can be helpful for
@@ -181,15 +181,15 @@
   Since version 1.4 the non default behavior of \code{hline.after} is
   changed. To obtain the same results as the previous versions add to
   the \code{hline.after} vector the vector \code{c(-1, 0, nrow(x))}
-  where \code{nrow(x)} is the numbers of rows of the object. 
+  where \code{nrow(x)} is the numbers of rows of the object.
 
   From version 1.4-3, all non-numeric columns are sanitized, and all
   LaTeX special characters are sanitised for LaTeX output.  See Section
   3 of the \code{xtableGallery} vignette for an example of customising
   the sanitization. From version 1.4-4, the sanitization also applies to
   column names.  To remove any text sanitization, specify
-  \code{sanitize.text.function=function(x){x}}.  
-  
+  \code{sanitize.text.function=function(x){x}}.
+
   From version 1.6-1 the default values for the arguments other than
   \code{x} are obtainined using \code{getOption()}.  Hence the user can
   set the values once with \code{options()} rather than setting them in
@@ -201,10 +201,10 @@
   arguments. The recommended approach is to specify \code{digits} supply
   the argument \code{digits} to \code{xtable}, and to specify
   \code{format} supply the argument \code{display} to \code{xtable}. See
-  the examples.  
+  the examples.
 }
 \author{
-  David Dahl \email{dahl@stat.tamu.edu} with contributions and
+  David Dahl \email{dahl@stat.byu.edu} with contributions and
   suggestions from many others (see source code).
 }
 \references{
@@ -213,9 +213,9 @@
   Web. \url{http://www.tex.ac.uk/cgi-bin/texfaq2html?label=longtab}
 }
 \seealso{
-  \code{\link{xtable}}, \code{\link{caption}}, \code{\link{label}}, 
+  \code{\link{xtable}}, \code{\link{caption}}, \code{\link{label}},
   \code{\link{align}}, \code{\link{digits}}, \code{\link{display}},
-  \code{\link{formatC}} 
+  \code{\link{formatC}}
 }
 
 \examples{
