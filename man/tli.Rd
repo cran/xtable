@@ -7,7 +7,8 @@ This data set contains math scores and demographic data of
 Assessment of Academic Skills (TAAS).
 }
 \usage{data(tli)}
-\format{A data.frame containing 100 observations with the following columns:
+\format{A \code{data.frame} containing 100 observations with the
+  following columns:
         \describe{
           \item{\code{grade}}{Year in school of student}
           \item{\code{sex}}{Gender of student}

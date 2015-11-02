@@ -4,7 +4,7 @@
 ###
 ### Copyright 2000-2013 David B. Dahl <dahl@stat.byu.edu>
 ###
-### Maintained by Charles Roosen <croosen@mango-solutions.com>
+### Maintained by David Scott <d.scott@auckland.ac.nz>
 ###
 ### This file is part of the `xtable' library for R and related languages.
 ### It is made available under the terms of the GNU General Public

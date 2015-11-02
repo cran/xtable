@@ -71,7 +71,7 @@
     \code{NULL} or contain only elements of
     \{"h","t","b","p","!","H"\}.
     Default value is \code{"ht"}.}
-  \item{caption.placement}{The caption will be have placed at the bottom
+  \item{caption.placement}{The caption will be placed at the bottom
     of the table if \code{caption.placement} is \code{"bottom"} and at
     the top of the table if it equals \code{"top"}.
     Default value is \code{"bottom"}.}
@@ -79,55 +79,56 @@
     of the specified width if \code{caption.width} is not \code{NULL} and
 	\code{type="latex"}. Default value is \code{NULL}.}
   \item{latex.environments}{If \code{floating=TRUE} and
-    \code{type="latex"}, the specificed latex environments (provided as
+    \code{type="latex"}, the specified LaTeX environments (provided as
     a character vector) will enclose the tabular environment.
     Default value is \code{"center"}. }
   \item{tabular.environment}{When \code{type="latex"}, the tabular
     environment that will be used.
-    Defaults to \code{"tabular"}.
     When working with tables that extend more than one page, using
-    \code{tabular.environment="longtable"} and the LaTeX package
-    \code{"longtable"} (see Fairbairns, 2005) allows one to typeset them
-    uniformly. Note that \code{"floating"} should be set to
-    \code{"FALSE"} when using the \code{"longtable"} environment.}
-  \item{size}{An arbitrary character vector intended to be used to set
-    the font size in a LaTeX table.  The supplied value (if not
-    \code{NULL}) is inserted just before the tabular environment
-    starts.
+    \code{tabular.environment="longtable"} with the corresponding
+    LaTeX package (see Fairbairns, 2005) allows one to typeset them
+    uniformly. Note that \code{floating} should be set to
+    \code{FALSE} when using the \code{longtable} environment.
+    Default value is \code{"tabular"}.}
+  \item{size}{A character vector that is inserted just before the
+    tabular environment starts. This can be used to set the font size
+    and a variety of other table settings. Initial backslashes are
+    automatically prefixed, if not supplied by user.
     Default value is \code{NULL}. }
   \item{hline.after}{When \code{type="latex"}, a vector of numbers
-    between -1 and \code{"nrow(x)"}, inclusive, indicating the rows
+    between -1 and \code{nrow(x)}, inclusive, indicating the rows
     after which a horizontal line should appear.  If \code{NULL} is used
-    no lines are produced.
+    no lines are produced. Repeated values are allowed.
     Default value is \code{c(-1,0,nrow(x))} which means draw a line
     before and after the columns names and at the end of the
-    table. Repeated values are allowed.}
+    table.}
   \item{NA.string}{String to be used for missing values in table
     entries.
     Default value is \code{""}.}
-  \item{include.rownames}{logical. If \code{TRUE} the rows names is
+  \item{include.rownames}{If \code{TRUE} the rows names are
     printed.
     Default value is \code{TRUE}.}
-  \item{include.colnames}{logical. If \code{TRUE} the columns names is
+  \item{include.colnames}{If \code{TRUE} the columns names are
     printed.
     Default value is \code{TRUE}.}
-  \item{only.contents}{logical. If \code{TRUE} only the rows of the
-    table is printed.
+  \item{only.contents}{If \code{TRUE} only the rows of the
+    table are printed.
     Default value is \code{FALSE}. }
-  \item{add.to.row}{a list of two components. The first component (which
-    should be called 'pos') is a list contains the position of rows on
-    which extra commands should be added at the end, The second
+  \item{add.to.row}{A list of two components. The first component (which
+    should be called 'pos') is a list that contains the position of rows on
+    which extra commands should be added at the end. The second
     component (which should be called 'command') is a character vector
-    of the same length of the first component which contains the command
+    of the same length as the first component, which contains the command
     that should be added at the end of the specified rows.
     Default value is \code{NULL}, i.e. do not add commands.}
-  \item{sanitize.text.function}{All non-numeric enteries (except row and
-    column names) are sanitised in an attempt to remove characters which
+  \item{sanitize.text.function}{All non-numeric entries (except row and
+    column names) are sanitized in an attempt to remove characters which
     have special meaning for the output format. If
-    \code{sanitize.text.function} is not NULL (the default), it should
+    \code{sanitize.text.function} is not \code{NULL}, it should
     be a function taking a character vector and returning one, and will
     be used for the sanitization instead of the default internal
-    function.}
+    function.
+    Default value is \code{NULL}.}
   \item{sanitize.rownames.function}{Like the
     \code{sanitize.text.function}, but applicable to row names.
     The default uses the \code{sanitize.text.function}. }
@@ -138,32 +139,38 @@
     $-$ for the negative sign (as was the behavior prior to version 1.5-3).
     Default value is \code{FALSE}.}
   \item{html.table.attributes}{In an HTML table, attributes associated
-    with the \code{<TABLE>}tag.
-    Default value is \code{border=1}.}
+    with the \code{<TABLE>} tag.
+    Default value is \code{"border=1"}.}
   \item{print.results}{If \code{TRUE}, the generated table is printed to
     standard output.  Set this to \code{FALSE} if you will just be using
-    the character vector that is returned invisibly.}
+    the character vector that is returned invisibly.
+  Default value is \code{TRUE}.}
   \item{format.args}{List of arguments for the \code{formatC} function.
     For example, standard German number separators can be specified as
     \code{format.args=list(big.mark = "'", decimal.mark =
-      ","))}. \code{digits} and \code{format} arguments should not be
-    included in this list. See details. }
+      ","))}. The arguments \code{digits} and \code{format} should not be
+    included in this list. See details.
+    Default value is \code{NULL}.}
   \item{rotate.rownames}{If \code{TRUE}, the row names are displayed
-    vertically in LaTeX. }
+    vertically in LaTeX.
+    Default value is \code{FALSE}.}
   \item{rotate.colnames}{If \code{TRUE}, the column names are displayed
-    vertically in LaTeX. }
+    vertically in LaTeX.
+    Default value is \code{FALSE}.}
   \item{booktabs}{If \code{TRUE}, the \code{toprule}, \code{midrule} and
-    \code{bottomrule} tags from the LaTex "booktabs" package are used
+    \code{bottomrule} commands from the LaTeX "booktabs" package are used
     rather than \code{hline} for the horizontal line tags. }
   \item{scalebox}{If not \code{NULL}, a \code{scalebox} clause will be
     added around the tabular environment with the specified value used
-    as the scaling factor. }
+    as the scaling factor.
+    Default value is \code{NULL}.}
   \item{width}{If not \code{NULL}, the specified value is included in
-    parenthesis between the tabular environment \code{begin} tag and the
+    parentheses between the tabular environment \code{begin} tag and the
     alignment specification.  This allows specification of the table
     width when using tabular environments such as \code{tabular*} and
     \code{tabularx}.  Note that table width specification is not
-    supported with the \code{tabular} or \code{longtable} environments. }
+    supported with the \code{tabular} or \code{longtable} environments.
+    Default value is \code{NULL}.}
   \item{comment}{If \code{TRUE}, the version and timestamp comment is
     included.  Default value is \code{TRUE}. }
   \item{timestamp}{Timestamp to include in LaTeX comment.  Set this
@@ -184,8 +191,8 @@
   where \code{nrow(x)} is the numbers of rows of the object.
 
   From version 1.4-3, all non-numeric columns are sanitized, and all
-  LaTeX special characters are sanitised for LaTeX output.  See Section
-  3 of the \code{xtableGallery} vignette for an example of customising
+  LaTeX special characters are sanitized for LaTeX output.  See Section
+  3 of the \code{xtableGallery} vignette for an example of customizing
   the sanitization. From version 1.4-4, the sanitization also applies to
   column names.  To remove any text sanitization, specify
   \code{sanitize.text.function=function(x){x}}.
@@ -198,7 +205,7 @@
   The argument \code{format.args} is used to supply arguments to the
   \code{formatC} function, but will throw an error if values for
   \code{digits} or \code{format} are included in the list of
-  arguments. The recommended approach is to specify \code{digits} supply
+  arguments. The recommended approach to specify \code{digits} is to supply
   the argument \code{digits} to \code{xtable}, and to specify
   \code{format} supply the argument \code{display} to \code{xtable}. See
   the examples.
@@ -208,7 +215,7 @@
   suggestions from many others (see source code).
 }
 \references{
-  Fairbairns, Robin (2005) \emph{Tables longer than a single page} The
+  Fairbairns, Robin (2005) \emph{Tables longer than a single page.} The
   UK List of TeX Frequently Asked Questions on the
   Web. \url{http://www.tex.ac.uk/cgi-bin/texfaq2html?label=longtab}
 }

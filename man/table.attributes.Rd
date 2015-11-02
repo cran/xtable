@@ -43,5 +43,10 @@
   \code{xtable} for a description of the options.
 }
 \author{David Dahl \email{dahl@stat.byu.edu} with contributions and suggestions from many others (see source code).}
-\seealso{\code{\link{xtable}}, \code{\link{print.xtable}}, \code{\link{formatC}}}
+\seealso{
+  \code{\link{xtable}}, \code{\link{print.xtable}}
+
+  \code{\link{autoformat}}, \code{\link{xalign}}, \code{\link{xdigits}},
+  \code{\link{xdisplay}}
+}
 \keyword{print}

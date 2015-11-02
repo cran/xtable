@@ -1,6 +1,7 @@
 %\VignetteIndexEntry{xtable margintable}
 %\VignetteKeywords{LaTeX, HTML, table, margintable}
-
+% !Rnw weave = knitr
+% \VignetteEngine{knitr::knitr}
 
 \documentclass{tufte-handout}
 
@@ -10,8 +11,12 @@ A Margin Table Example
 }
 \author{David J. Scott}
 
-\usepackage{Sweave}
-\SweaveOpts{prefix.string=figdir/fig,debug=TRUE,eps=FALSE,echo=TRUE}
+
+
+<<include=FALSE>>=
+library(knitr)
+@
+
 \usepackage{rotating}
 \usepackage{longtable}
 \usepackage{booktabs}
@@ -55,7 +60,7 @@ x <- matrix(rnorm(6), ncol = 2)
 x.small <- xtable(x, label = 'tabsmall', caption = 'A margin table')
 @
 
-<<results=tex>>=
+<<results='asis'>>=
 print(x.small,floating.environment='margintable',
       latex.environments = "",
       table.placement = NULL)

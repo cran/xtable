@@ -1,29 +1,29 @@
+1.8-0
+  * autoformat, xalign, xdigits, xdisplay from Arni Magnusson, added
+    along with help file. Feature request #5686.
+  * New argument 'auto' in xtable(), to call xalign, xdigits, and
+    xdisplay at the time when xtable is created.
+  * Updated xtableGallery vignette, now with TOC and revised examples.
 
-1.7-4 (NOT YET RELEASED)
+1.7-4 (2014-09-11)
   * Changed tags in HTML to be all lower case, to be compatible with
-    HTML5, part of feature request(#5879)
+    HTML5, part of feature request. (#5879)
   * Fixed booktabs bug (#2309), more of an enhancement really. Updated
     xtableGallery.snw to illustrate the change.
-  * Moved vignettes from inst/doc to vignettes as now required by CRAN
-  * Changed email address of David Dahl to dahl@stat.byu.edu in 9 places
 
 1.7-3 (2014-03-06)
-  * Released to CRAN
-
-1.7-2 (2013-08-28, Not Released to CRAN)
-  * Fixed HTML gsub bug (#2795)
   * Dealt with format.args bug (#4770). No code changes, but the
     documentation of print.xtable was changed to warn of the problem
-    and to give a workaround as an example
+    and to give a workaround as an example.
 
 1.7-1 (2013-02-24)
-  * Fixed logicals bug (Req #1911)
+  * Fixed logicals bug. (Req #1911)
   * Changed implementation of centering of tables. Instead of
     inserting a centered environment, now a \centering command is
     inserted. (Req #2104)
   * Allow for margin tables as possible with document class
-    tufte-handout. An example of usage is found in the vignette
-	produced by margintable.Rnw which is in inst/doc. (Req #2168)
+    tufte-handout. An example of usage is found in the vignette.
+    produced by margintable.Rnw which is in inst/doc. (Req #2168)
   * Added "timestamp" argument to print.xtable().  Set it to NULL
     if no timestamp is desired. (Req #2246)
   * Added "comment" argument to print.xtable().  Set it to FALSE
@@ -32,7 +32,7 @@
     is placed in a "parbox" of the specified width. (Req #2247)
   * Remove the check on whether the "floating.environment" is in a
     list of known floating environments. Users want to use floating
-    environments from multiple options LaTeX packages (Req #2488,
+    environments from multiple options LaTeX packages. (Req #2488,
     #2578)
 
 1.7-0 (2012-02-10)
@@ -49,7 +49,7 @@
     "print.xtable".
   * Added "booktabs" argument to use the "\toprule", "\midrule", and
     "\bottomrule" tags from the Latex "booktabs" package rather than
-	using "\hline" for all horizontal lines.
+    using "\hline" for all horizontal lines.
   * Added "scalebox" argument to include a "\scalebox" clause around
     the tabular environment with the specified value used as the
     scaling factor.
@@ -59,8 +59,8 @@
     replacement function.
   * Changed the "print.xtable()" arguments to use "getOption()"
     to check the options for a default value.  This was suggested
-	since "print.xtable()" has a lot of arguments that the user
-	will typically leave unchanged between tables.
+    since "print.xtable()" has a lot of arguments that the user
+    will typically leave unchanged between tables.
   * Added an "is.null()" check on the "table.placement" argument.
   * Added examples using the new arguments to the vignette.
 
@@ -79,7 +79,8 @@
   * Use options()$OutDec for decimal mark.
 
 1.5-5 (2009-03-24)
-  * Added html.table.attributes to set the attributed of the <TABLE> tag for HTML tables.
+  * Added html.table.attributes to set the attributed of the <TABLE> tag for
+    HTML tables.
   * Accommodated logicals by converting to characters.
   * Add an extra space at end of each line for LaTeX tables.
   * Fixed typographical error in documentation.

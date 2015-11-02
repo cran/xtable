@@ -19,25 +19,25 @@
 \alias{xtable.zoo}
 \title{Create Export Tables}
 \description{
-  Function converting an R object to an \code{xtable} object, which can
+  Convert an R object to an \code{xtable} object, which can
   then be printed as a LaTeX or HTML table.
 }
 \usage{
 xtable(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
-       display = NULL, ...)
+       display = NULL, auto = FALSE, ...)
 }
 \arguments{
   \item{x}{An R object of class found among \code{methods(xtable)}.  See
     below on how to write additional method functions for \code{xtable}.}
   \item{caption}{Character vector of length 1 or 2 containing the
-    table's caption or title.  If length 2, the second item is the
+    table's caption or title.  If length is 2, the second item is the
     "short caption" used when LaTeX generates a "List of Tables". Set to
     \code{NULL} to suppress the caption.  Default value is \code{NULL}. }
   \item{label}{Character vector of length 1 containing the LaTeX label
     or HTML anchor. Set to \code{NULL} to suppress the label.  Default
     value is \code{NULL}. }
   \item{align}{Character vector of length equal to the number of columns
-    of the resulting table indicating the alignment of the corresponding
+    of the resulting table, indicating the alignment of the corresponding
     columns.  Also, \code{"|"} may be used to produce vertical lines
     between columns in LaTeX tables, but these are effectively ignored
     when considering the required length of the supplied vector.  If a
@@ -47,7 +47,7 @@ xtable(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
     one greater than \code{ncol(x)} if \code{x} is a
     \code{data.frame}. Use \code{"l"}, \code{"r"}, and \code{"c"} to
     denote left, right, and center alignment, respectively.  Use
-    \code{"p\{3cm\}"} etc for a LaTeX column of the specified width. For
+    \code{"p{3cm}"} etc. for a LaTeX column of the specified width. For
     HTML output the \code{"p"} alignment is interpreted as \code{"l"},
     ignoring the width request. Default depends on the class of
     \code{x}. }
@@ -55,17 +55,17 @@ xtable(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
     Numeric vector of length equal to one (in which case it will be
     replicated as necessary) or to the number of columns of the
     resulting table \bold{or} matrix of the same size as the resulting
-    table indicating the number of digits to display in the
+    table, indicating the number of digits to display in the
     corresponding columns. Since the row names are printed in the first
     column, the length of the vector \code{digits} or the number of
     columns of the matrix \code{digits} is one greater than
     \code{ncol(x)} if \code{x} is a \code{data.frame}. Default depends
-    of class of \code{x}. If values of \code{digits} are negative, the
+    on the class of \code{x}. If values of \code{digits} are negative, the
     corresponding values of \code{x} are displayed in scientific format
     with \code{abs(digits)} digits.}
   \item{display}{
     Character vector of length equal to the number of columns of the
-    resulting table indicating the format for the corresponding columns.
+    resulting table, indicating the format for the corresponding columns.
     Since the row names are printed in the first column, the length of
     \code{display} is one greater than \code{ncol(x)} if \code{x} is a
     \code{data.frame}.  These values are passed to the \code{formatC}
@@ -79,6 +79,12 @@ xtable(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
     but \code{digits} as number of \emph{significant} digits.  Note that
     this can lead to quite long result strings.  Default depends on the
     class of \code{x}.}
+  \item{auto}{
+    Logical, indicating whether to apply automatic format when no value
+    is passed to \code{align}, \code{digits}, or \code{display}. This
+    \sQuote{autoformat} (based on \code{xalign}, \code{xdigits}, and
+    \code{xdisplay}) can be useful to quickly format a typical
+    \code{matrix} or \code{data.frame}. Default value is \code{FALSE}.}
   \item{...}{Additional arguments.  (Currently ignored.)}
 }
 \details{
@@ -87,35 +93,37 @@ xtable(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
   an object of class \code{"xtable"}.  The nature of the table generated
   depends on the class of \code{x}.  For example, \code{aov} objects
   produce ANOVA tables while \code{data.frame} objects produce a table
-  of the entire data.frame.  One can optionally provide a caption
-  (called a title in HTML) or label (called an anchor in HTML), as well
+  of the entire data frame.  One can optionally provide a caption
+  or label (called an anchor in HTML), as well
   as formatting specifications.  Default values for \code{align},
   \code{digits}, and \code{display} are class dependent.
 
   The available method functions for \code{xtable} are given by
   \code{methods(xtable)}.  Users can extend the list of available
   classes by writing methods for the generic function \code{xtable}.
-  These methods functions should have \code{x} as their first argument
+  These methods functions should have \code{x} as their first argument,
   with additional arguments to specify \code{caption}, \code{label},
   \code{align}, \code{digits}, and \code{display}.  Optionally, other
-  arguments may be present to specify how the object \code{x} should be
+  arguments may be passed to specify how the object \code{x} should be
   manipulated.  All method functions should return an object whose class
-  if given by \code{c("xtable","data.frame")}.  The resulting object can
+  is \code{c("xtable","data.frame")}.  The resulting object can
   have attributes \code{caption} and \code{label}, but must have
-  attributes \code{align}, \code{digits}, and \code{display}.  It is
-  strongly recommened that you set these attributes through the provided
-  replacement functions as they perform validity checks.
-  }
-  \value{An object of class \code{"xtable"} which inherits the
+  attributes \code{align}, \code{digits}, and \code{display}.
+}
+\value{An object of class \code{"xtable"} which inherits the
   \code{data.frame} class and contains several additional attributes
   specifying the table formatting options.
 }
 \author{David Dahl \email{dahl@stat.byu.edu} with contributions and
   suggestions from many others (see source code).
 }
-\seealso{\code{\link{print.xtable}}, \code{\link{caption}},
+\seealso{
+  \code{\link{print.xtable}}, \code{\link{caption}},
   \code{\link{label}}, \code{\link{align}}, \code{\link{digits}},
-  \code{\link{display}}, \code{\link{formatC}}, \code{\link{methods}}
+  \code{\link{display}}
+
+  \code{\link{autoformat}}, \code{\link{xalign}}, \code{\link{xdigits}},
+  \code{\link{xdisplay}}
 }
 \examples{
 
@@ -124,19 +132,21 @@ data(tli)
 
 ## Demonstrate data.frame
 tli.table <- xtable(tli[1:20, ])
-digits(tli.table)[c(2, 6)] <- 0
 print(tli.table)
 print(tli.table, type = "html")
+xtable(mtcars)
+xtable(mtcars, auto = TRUE)
 
 ## Demonstrate data.frame with different digits in cells
 tli.table <- xtable(tli[1:20, ])
-digits(tli.table) <- matrix( 0:4, nrow = 20, ncol = ncol(tli)+1 )
+display(tli.table)[c(2,6)] <- "f"
+digits(tli.table) <- matrix(0:4, nrow = 20, ncol = ncol(tli)+1)
 print(tli.table)
 print(tli.table, type = "html")
 
 ## Demonstrate matrix
 design.matrix <- model.matrix(~ sex*grade, data = tli[1:20, ])
-design.table <- xtable(design.matrix)
+design.table <- xtable(design.matrix, auto = TRUE)
 print(design.table)
 print(design.table, type = "html")
 
