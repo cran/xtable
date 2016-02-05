@@ -22,12 +22,12 @@
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
 
-## The generic for toLatex() is declared in the base package "utils"
+### The generic for toLatex() is declared in the base package "utils"
 
 toLatex.xtable <- function(object, ...){
-  # Initially just capturing the output of print.xtable().  At some
-  # point this could be refactored to have print.xtable() call
-  # toLatex() instead. - CR, 30/01/2012
+  ## Initially just capturing the output of print.xtable().  At some
+  ## point this could be refactored to have print.xtable() call
+  ## toLatex() instead. - CR, 30/01/2012
   dotArgs <- list(...)
   dotArgs$x <- object
   dotArgs$type <- "latex"

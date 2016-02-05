@@ -26,7 +26,7 @@ xtable <- function(x, caption = NULL, label = NULL, align = NULL,
 }
 
 
-## data.frame and matrix objects
+### data.frame and matrix objects
 
 xtable.data.frame <- function(x, caption = NULL, label = NULL, align = NULL,
                               digits = NULL, display = NULL, auto = FALSE,
@@ -63,8 +63,10 @@ xtable.matrix <- function(x, caption = NULL, label = NULL, align = NULL,
                           digits = NULL, display = NULL, auto = FALSE, ...) {
   return(xtable.data.frame(data.frame(x, check.names = FALSE),
                            caption = caption, label = label, align = align,
-                           digits = digits, display = display, auto = auto))
+                           digits = digits, display = display, auto = auto,
+                           ...))
 }
+
 
 
 ### table objects (of 1 or 2 dimensions) by Guido Gay, 9 Feb 2007
@@ -76,20 +78,19 @@ xtable.table <- function(x, caption = NULL, label = NULL, align = NULL,
                                 dimnames = list(rownames(x),
                                                 names(dimnames(x)))),
                          caption = caption, label = label, align = align,
-                         digits = digits, display = display, auto = auto))
+                         digits = digits, display = display, auto = auto, ...))
   } else if (length(dim(x))==2) {
     return(xtable.matrix(matrix(x, ncol = dim(x)[2], nrow = dim(x)[1],
                                 dimnames = list(rownames(x), colnames(x))),
                          caption = caption, label = label, align = align,
-                         digits = digits, display = display, auto = auto))
+                         digits = digits, display = display, auto = auto, ...))
   } else {
     stop("xtable.table is not implemented for tables of > 2 dimensions")
   }
 }
 
 
-## anova objects
-
+### anova objects
 xtable.anova <- function(x, caption = NULL, label = NULL, align = NULL,
                          digits = NULL, display = NULL, auto = FALSE, ...) {
   suggested.digits <- c(0,rep(2, ncol(x)))
@@ -110,20 +111,19 @@ xtable.anova <- function(x, caption = NULL, label = NULL, align = NULL,
 }
 
 
-## aov objects
-
+### aov objects
 xtable.aov <- function(x, caption = NULL, label = NULL, align = NULL,
                        digits = NULL, display = NULL, auto = FALSE, ...) {
   return(xtable.anova(anova(x, ...), caption = caption, label = label,
                       align = align, digits = digits, display = display,
-                      auto = auto))
+                      auto = auto, ...))
 }
 
 xtable.summary.aov <- function(x, caption = NULL, label = NULL, align = NULL,
                                digits = NULL, display = NULL, auto = FALSE,
                                ...) {
   return(xtable.anova(x[[1]], caption = caption, label = label, align = align,
-                      digits = digits, display = display, auto = auto))
+                      digits = digits, display = display, auto = auto, ...))
 }
 
 xtable.summary.aovlist <- function(x, caption = NULL, label = NULL,
@@ -134,13 +134,13 @@ xtable.summary.aovlist <- function(x, caption = NULL, label = NULL,
             result <- xtable.summary.aov(x[[i]], caption = caption,
                                          label = label,
                                          align = align, digits = digits,
-                                         display = display, auto = auto)
+                                         display = display, auto = auto, ...)
         } else {
             result <- rbind(result,
                             xtable.anova(x[[i]][[1]], caption = caption,
                                          label = label, align = align,
                                          digits = digits, display = display,
-                                         auto = auto))
+                                         auto = auto, ...))
         }
     }
     return(result)
@@ -150,18 +150,17 @@ xtable.aovlist <- function(x, caption = NULL, label = NULL, align = NULL,
                            digits = NULL, display = NULL, auto = FALSE, ...) {
   return(xtable.summary.aovlist(summary(x), caption = caption, label = label,
                                 align = align, digits = digits,
-                                display = display, auto = auto))
+                                display = display, auto = auto, ...))
 }
 
 
 
-## lm objects
-
+### lm objects
 xtable.lm <- function(x, caption = NULL, label = NULL, align = NULL,
                       digits = NULL, display = NULL, auto = FALSE, ...) {
   return(xtable.summary.lm(summary(x), caption = caption, label = label,
                            align = align, digits = digits, display = display,
-                           auto = auto))
+                           auto = auto, ...))
 }
 
 xtable.summary.lm <- function(x, caption = NULL, label = NULL, align = NULL,
@@ -182,25 +181,25 @@ xtable.summary.lm <- function(x, caption = NULL, label = NULL, align = NULL,
 }
 
 
-## glm objects
-
+### glm objects
 xtable.glm <- function(x, caption = NULL, label = NULL, align = NULL,
                        digits = NULL, display = NULL, auto = FALSE, ...) {
   return(xtable.summary.glm(summary(x), caption = caption,
                             label = label, align = align,
-                            digits = digits, display = display, auto = auto))
+                            digits = digits, display = display,
+                            auto = auto, ...))
 }
 
 xtable.summary.glm <- function(x, caption = NULL, label = NULL, align = NULL,
                                digits = NULL, display = NULL, auto = FALSE,
                                ...) {
   return(xtable.summary.lm(x, caption = caption, label = label, align = align,
-                           digits = digits, display = display, auto = auto))
+                           digits = digits, display = display,
+                           auto = auto, ...))
 }
 
 
-## prcomp objects
-
+### prcomp objects
 xtable.prcomp <- function(x, caption = NULL, label = NULL, align = NULL,
                           digits = NULL, display = NULL, auto = FALSE, ...) {
   x <- data.frame(x$rotation, check.names = FALSE)
@@ -235,10 +234,10 @@ xtable.summary.prcomp <- function(x, caption = NULL, label = NULL, align = NULL,
 }
 
 
-# Slightly modified version of xtable.coxph contributed on r-help by
-#   Date: Wed, 2 Oct 2002 17:47:56 -0500 (CDT)
-#   From: Jun Yan <jyan@stat.wisc.edu>
-#   Subject: Re: [R] xtable for Cox model output
+### Slightly modified version of xtable.coxph contributed on r-help by
+###   Date: Wed, 2 Oct 2002 17:47:56 -0500 (CDT)
+###   From: Jun Yan <jyan@stat.wisc.edu>
+###   Subject: Re: [R] xtable for Cox model output
 xtable.coxph <- function (x, caption = NULL, label = NULL, align = NULL,
                           digits = NULL, display = NULL, auto = FALSE, ...)
 {
@@ -249,24 +248,23 @@ xtable.coxph <- function (x, caption = NULL, label = NULL, align = NULL,
     tmp <- cbind(beta, exp(beta), se, beta/se, 1 - pchisq((beta/se)^2, 1))
     dimnames(tmp) <- list(names(beta),
       c("coef", "exp(coef)", "se(coef)", "z", "p"))
-  }
-  else {
+  } else {
     tmp <- cbind( beta, exp(beta), se, beta/se,
       signif(1 - pchisq((beta/se)^2, 1), digits - 1))
     dimnames(tmp) <- list(names(beta),
       c("coef", "exp(coef)", "robust se", "z", "p"))
   }
   return(xtable(tmp, caption = caption, label = label, align = align,
-                digits = digits, display = display, auto = auto))
+                digits = digits, display = display, auto = auto, ...))
 }
 
-# Additional method: xtable.ts
-# Contributed by David Mitchell (davidm@netspeed.com.au)
-# Date: July 2003
+### Additional method: xtable.ts
+### Contributed by David Mitchell (davidm@netspeed.com.au)
+### Date: July 2003
 xtable.ts <- function(x, caption = NULL, label = NULL, align = NULL,
                       digits = NULL, display = NULL, auto = FALSE, ...) {
   if (inherits(x, "ts") && !is.null(ncol(x))) {
-    # COLNAMES <- paste(colnames(x));
+    ## COLNAMES <- paste(colnames(x));
     tp.1 <- trunc(time(x))
     tp.2 <- trunc(cycle(x))
     day.abb <- c("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
@@ -279,8 +277,7 @@ xtable.ts <- function(x, caption = NULL, label = NULL, align = NULL,
                        "Arg8", "Arg9", "Arg10", "Arg11",
                        paste(tp.1, month.abb[tp.2], sep = " "))
     tmp <- data.frame(x, row.names = ROWNAMES);
-  }
-  else if (inherits(x, "ts") && is.null(ncol(x))) {
+  } else if (inherits(x, "ts") && is.null(ncol(x))) {
     COLNAMES <- switch(frequency(x),
                        "Value",
                        "Arg2", "Arg3",              # Dummy arguments
@@ -297,11 +294,159 @@ xtable.ts <- function(x, caption = NULL, label = NULL, align = NULL,
     names(tmp) <- COLNAMES
   }
   return(xtable(tmp, caption = caption, label = label, align = align,
-                digits = digits, display = display, auto = auto))
+                digits = digits, display = display, auto = auto, ...))
 }
 
-# Suggested by Ajay Narottam Shah <ajayshah@mayin.org> in e-mail 2006/07/22
-xtable.zoo <- function(x, ...) {
-  return(xtable(as.ts(x), ...))
+### Suggested by Ajay Narottam Shah <ajayshah@mayin.org> in e-mail 2006/07/22
+xtable.zoo <- function(x, caption = NULL, label = NULL, align = NULL,
+                       digits = NULL, display = NULL, auto = FALSE, ...) {
+  return(xtable(as.ts(x), caption = caption, label = label,
+                align = align, digits = digits,
+                display = display, auto = auto, ...))
 }
 
+### Date: Fri, 29 May 2015 11:41:04 +0200
+### From: Martin G. <martin.gubri@framasoft.org>
+### Subject: [xtable] Code for spdep, splm and sphet objects outputs
+### package spdep
+### sarlm objects
+xtable.sarlm <- function(x, caption = NULL, label = NULL, align = NULL,
+                         digits = NULL, display = NULL, auto = FALSE, ...) {
+  return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
+                              align = align, digits = digits,
+                              display = display, auto = auto, ...))
+}
+
+xtable.summary.sarlm <- function(x, caption = NULL, label = NULL, align = NULL,
+                                digits = NULL, display = NULL, auto = FALSE,
+                                ...) {
+  x <- data.frame(x$Coef, check.names = FALSE)
+
+  class(x) <- c("xtable","data.frame")
+  caption(x) <- caption
+  label(x) <- label
+  if(auto && is.null(align))   align   <- xalign(x)
+  if(auto && is.null(digits))  digits  <- xdigits(x)
+  if(auto && is.null(display)) display <- xdisplay(x)
+  align(x) <- switch(1+is.null(align), align, c("r","r","r","r","r"))
+  digits(x) <- switch(1+is.null(digits), digits, c(0,4,4,2,4))
+  display(x) <- switch(1+is.null(display), display, c("s","f","f","f","f"))
+  return(x)
+}
+
+### spautolm objects: added by David Scott, 6/1/2016, after suggestion by
+### Guido Schulz
+### Date: Wed, 29 Apr 2015 10:45:16 +0200
+### Guido Schulz <schulzgu@student.hu-berlin.de>
+xtable.spautolm <- function(x, caption = NULL, label = NULL, align = NULL,
+                            digits = NULL, display = NULL, auto = FALSE, ...) {
+    return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
+                              align = align, digits = digits,
+                              display = display, auto = auto, ...))
+}
+
+xtable.summary.spautolm <- function(x, caption = NULL, label = NULL,
+                                    align = NULL, digits = NULL,
+                                    display = NULL, auto = FALSE, ...) {
+    return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
+                              align = align, digits = digits,
+                              display = display, auto = auto, ...))
+}
+
+
+### gmsar objects
+xtable.gmsar <- function(x, caption = NULL, label = NULL, align = NULL,
+                         digits = NULL, display = NULL, auto = FALSE, ...) {
+    return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
+                              align = align, digits = digits,
+                              display = display, auto = auto, ...))
+}
+
+xtable.summary.gmsar <- function(x, caption = NULL, label = NULL, align = NULL,
+                                 digits = NULL, display = NULL,
+                                 auto = FALSE, ...) {
+  return(xtable.summary.sarlm(x, caption = caption, label = label,
+                              align = align, digits = digits,
+                              display = display, auto = auto, ...))
+}
+
+### stsls objects
+xtable.stsls <- function(x, caption = NULL, label = NULL, align = NULL,
+                         digits = NULL, display = NULL, auto = FALSE, ...) {
+  return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
+                              align = align, digits = digits,
+                              display = display, auto = auto, ...))
+}
+
+xtable.summary.stsls <- function(x, caption = NULL, label = NULL, align = NULL,
+                                 digits = NULL, display = NULL,
+                                 auto = FALSE, ...) {
+  return(xtable.summary.sarlm(x, caption = caption, label = label,
+                              align = align, digits = digits,
+                              display = display, auto = auto, ...))
+}
+
+### pred.sarlm objects
+xtable.sarlm.pred <- function(x, caption = NULL, label = NULL, align = NULL,
+                              digits = NULL, display = NULL,
+                              auto = FALSE, ...) {
+  return(xtable(as.data.frame(x), caption = caption, label = label,
+                align = align, digits = digits,
+                display = display, auto = auto, ...))
+}
+
+
+### This method removed because of the need to copy code to pass CRAN checks
+### lagImpactMat is neither exported nor documented in spdep
+
+###lagImpact objects
+xtable.lagImpact <- function(x, caption = NULL, label = NULL, align = NULL,
+                             digits = NULL, display = NULL,
+                             auto = FALSE, ...) {
+  xtable(lagImpactMat(x), caption = caption, label = label,
+         align = align, digits = digits,
+         display = display, auto = auto, ...)
+}
+
+### package splm
+### splm objects
+xtable.splm <- function(x, caption = NULL, label = NULL, align = NULL,
+                        digits = NULL, display = NULL, auto = FALSE, ...) {
+  return(xtable.summary.splm(summary(x), caption = caption, label = label,
+                             align = align, digits = digits,
+                             display = display, auto = auto, ...))
+}
+
+xtable.summary.splm <- function(x, caption = NULL, label = NULL, align = NULL,
+                                digits = NULL, display = NULL, auto = FALSE,
+                                ...) {
+  x <- data.frame(x$CoefTable, check.names = FALSE)
+
+  class(x) <- c("xtable","data.frame")
+  caption(x) <- caption
+  label(x) <- label
+  if(auto && is.null(align))   align   <- xalign(x)
+  if(auto && is.null(digits))  digits  <- xdigits(x)
+  if(auto && is.null(display)) display <- xdisplay(x)
+  align(x) <- switch(1+is.null(align), align, c("r","r","r","r","r"))
+  digits(x) <- switch(1+is.null(digits), digits, c(0,4,4,2,4))
+  display(x) <- switch(1+is.null(display), display, c("s","f","f","f","f"))
+  return(x)
+}
+
+### package sphet
+### sphet objects
+xtable.sphet <- function(x, caption = NULL, label = NULL, align = NULL,
+                         digits = NULL, display = NULL, auto = FALSE, ...) {
+  return(xtable.summary.splm(summary(x), caption = caption, label = label,
+                             align = align, digits = digits,
+                             display = display, auto = auto, ...))
+}
+
+xtable.summary.sphet <- function(x, caption = NULL, label = NULL, align = NULL,
+                                 digits = NULL, display = NULL,
+                                 auto = FALSE, ...) {
+  return(xtable.summary.splm(x, caption = caption, label = label,
+                             align = align, digits = digits,
+                             display = display, auto = auto, ...))
+}

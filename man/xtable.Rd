@@ -7,6 +7,7 @@
 \alias{xtable.glm}
 \alias{xtable.lm}
 \alias{xtable.matrix}
+\alias{xtable.xtableMatharray}
 \alias{xtable.prcomp}
 \alias{xtable.coxph}
 \alias{xtable.summary.aov}
@@ -17,9 +18,25 @@
 \alias{xtable.ts}
 \alias{xtable.table}
 \alias{xtable.zoo}
+\alias{xtable.sarlm}
+\alias{xtable.summary.sarlm}
+\alias{xtable.gmsar}
+\alias{xtable.summary.gmsar}
+\alias{xtable.stsls}
+\alias{xtable.summary.stsls}
+\alias{xtable.sarlm.pred}
+%%%\alias{xtable.lagImpact}
+\alias{xtable.splm}
+\alias{xtable.summary.splm}
+\alias{xtable.sphet}
+\alias{xtable.summary.sphet}
+\alias{xtable.spautolm}
+\alias{xtable.summary.spautolm}
+
+
 \title{Create Export Tables}
 \description{
-  Convert an R object to an \code{xtable} object, which can
+  Convert an \R object to an \code{xtable} object, which can
   then be printed as a LaTeX or HTML table.
 }
 \usage{
@@ -27,7 +44,7 @@ xtable(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
        display = NULL, auto = FALSE, ...)
 }
 \arguments{
-  \item{x}{An R object of class found among \code{methods(xtable)}.  See
+  \item{x}{An \R object of class found among \code{methods(xtable)}.  See
     below on how to write additional method functions for \code{xtable}.}
   \item{caption}{Character vector of length 1 or 2 containing the
     table's caption or title.  If length is 2, the second item is the
@@ -110,9 +127,11 @@ xtable(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
   have attributes \code{caption} and \code{label}, but must have
   attributes \code{align}, \code{digits}, and \code{display}.
 }
-\value{An object of class \code{"xtable"} which inherits the
-  \code{data.frame} class and contains several additional attributes
-  specifying the table formatting options.
+\value{
+  For most \code{xtable} methods, an object of class \code{"xtable"}
+  which inherits the \code{data.frame} class and contains several
+  additional attributes specifying the table formatting options.
+
 }
 \author{David Dahl \email{dahl@stat.byu.edu} with contributions and
   suggestions from many others (see source code).
@@ -120,10 +139,9 @@ xtable(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
 \seealso{
   \code{\link{print.xtable}}, \code{\link{caption}},
   \code{\link{label}}, \code{\link{align}}, \code{\link{digits}},
-  \code{\link{display}}
-
-  \code{\link{autoformat}}, \code{\link{xalign}}, \code{\link{xdigits}},
-  \code{\link{xdisplay}}
+  \code{\link{display}}, \code{\link{autoformat}}, \code{\link{xalign}},
+  \code{\link{xdigits}}, \code{\link{xdisplay}},
+  \code{\link{xtableMatharray}}, \code{\link{xtableList}}
 }
 \examples{
 
