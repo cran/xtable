@@ -25,7 +25,7 @@
 \alias{xtable.stsls}
 \alias{xtable.summary.stsls}
 \alias{xtable.sarlm.pred}
-%%%\alias{xtable.lagImpact}
+\alias{xtable.lagImpact}
 \alias{xtable.splm}
 \alias{xtable.summary.splm}
 \alias{xtable.sphet}

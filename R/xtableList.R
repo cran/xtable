@@ -113,7 +113,9 @@ print.xtableList <- function(x,
       for (i in 1:length(x)){
         if( !is.null(command[[i]]) ){
           add.to.row$command[i] <-
-            paste0(mRule,"\n\\multicolumn{", nCols, "}{l}{",
+            paste0(mRule,"\n\\multicolumn{",
+                   nCols + include.rownames,
+                   "}{l}{",
                    command[[i]],
                    "}\\\\\n")
         } else {
@@ -123,13 +125,13 @@ print.xtableList <- function(x,
       ## Changed at request of Russ Lenth
       ## add.to.row$command[1:length(x)] <-
       ##   paste0(mRule,"\n\\multicolumn{", nCols, "}{l}{", command, "}\\\\\n")
-      
+
       if ( (booktabs) & length(attr(x, "message") > 0) ){
         attr(x, "message")[1] <-
           paste0("\\rule{0em}{2.5ex}", attr(x, "message")[1])
       }
       add.to.row$command[length(x) + 1] <-
-        paste0("\n\\multicolumn{", nCols, "}{l}{",
+        paste0("\n\\multicolumn{", nCols + include.rownames, "}{l}{",
                attr(x, "message"), "}\\\\\n",
                collapse = "")
       add.to.row$command[length(x) + 1] <-
@@ -163,7 +165,7 @@ print.xtableList <- function(x,
       add.to.row$command[1] <-
         if( !is.null(command[[1]]) ){
           add.to.row$command[1] <-
-            paste0("\n\\multicolumn{", nCols, "}{l}{",
+            paste0("\n\\multicolumn{", nCols + include.rownames, "}{l}{",
                    command[[1]],
                    "}\\\\ \n", colHead, "\n")
         } else {
@@ -174,7 +176,8 @@ print.xtableList <- function(x,
         add.to.row$command[i] <-
           if( !is.null(command[[i]]) ) {
             paste0(bRule,
-                   "\\\\ \n\\multicolumn{", nCols, "}{l}{",
+                   "\\\\ \n\\multicolumn{",
+                   nCols + include.rownames, "}{l}{",
                    command[[i]], "}",
                    "\\\\ \n",
                    colHead)
@@ -182,7 +185,7 @@ print.xtableList <- function(x,
             add.to.row$command[i] <- paste0("\n", colHead)
           }
       }
-      
+
       ## Changed at request of Russ Lenth
       ## add.to.row$command[1] <-
       ##   paste0("\n\\multicolumn{", nCols, "}{l}{", command[1],
@@ -199,7 +202,7 @@ print.xtableList <- function(x,
           paste0("\\rule{0em}{2.5ex}", attr(x, "message")[1])
       }
       add.to.row$command[length(x) + 1] <-
-        paste0("\n\\multicolumn{", nCols, "}{l}{",
+        paste0("\n\\multicolumn{", nCols + include.rownames, "}{l}{",
                attr(x, "message"), "}\\\\\n",
                collapse = "")
       add.to.row$command[length(x) + 1] <-

@@ -1,6 +1,6 @@
 \name{xtable-internal}
 \alias{xtableLSMeans}
-\alias{lagImpactMat}
+
 
 \title{Internal xtable Functions}
 \description{

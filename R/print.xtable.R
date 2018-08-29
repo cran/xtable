@@ -75,18 +75,18 @@ print.xtable <- function(x,
   ## PHEADER instead the string '\\hline\n' is used in the code
   ## Now hline.after counts how many time a position appear
   ## I left an automatic PHEADER in the longtable is this correct?
-  
+
   ## Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 include.rownames,
   ## include.colnames
   pos <- 0
   if (include.rownames) pos <- 1
-  
+
   ## Claudio Agostinelli <claudio@unive.it> dated 2006-07-28
   ## hline.after checks
   if (any(hline.after < -1) | any(hline.after > nrow(x))) {
-    stop("'hline.after' must be inside [-1, nrow(x)]")
+    stop("'hline.after' must be inside [-1, ", nrow(x), "]")
   }
-  
+
   ## Claudio Agostinelli <claudio@unive.it> dated 2006-07-28
   ## add.to.row checks
   if (!is.null(add.to.row)) {
@@ -104,7 +104,7 @@ print.xtable <- function(x,
         }
         if (any(unlist(add.to.row$pos) < -1) |
             any(unlist(add.to.row$pos) > nrow(x))) {
-          stop("the values in add.to.row$pos must be inside the interval [-1, nrow(x)]")
+          stop("the values in add.to.row$pos must be inside the interval [-1, ", nrow(x), "]")
         }
       } else {
         stop("the first argument ('pos') of 'add.to.row' must be a list, the second argument ('command') must be a vector of mode character")
@@ -117,13 +117,13 @@ print.xtable <- function(x,
                        command = vector(length = 0, mode = "character"))
     npos <- 0
   }
-  
+
   ## Claudio Agostinelli <claudio@unive.it> dated 2006-07-28 add.to.row
   ## Add further commands at the end of rows
   if (type == "latex") {
     ## Original code before changes in version 1.6-1
     ## PHEADER <- "\\hline\n"
-    
+
     ## booktabs code from Matthieu Stigler <matthieu.stigler@gmail.com>,
     ## 1 Feb 2012
     if(!booktabs){
@@ -153,7 +153,7 @@ print.xtable <- function(x,
   } else {
     PHEADER <- ""
   }
-  
+
   lastcol <- rep(" ", nrow(x)+2)
   if (!is.null(hline.after)) {
     ## booktabs change - Matthieu Stigler: fill the hline arguments
@@ -161,7 +161,7 @@ print.xtable <- function(x,
     ##
     ## Code before booktabs change was:
     ##    add.to.row$pos[[npos+1]] <- hline.after
-    
+
     if (!booktabs){
       add.to.row$pos[[npos+1]] <- hline.after
     } else {
@@ -171,7 +171,7 @@ print.xtable <- function(x,
     }
     add.to.row$command <- c(add.to.row$command, PHEADER)
   }
-  
+
   if ( length(add.to.row$command) > 0 ) {
     for (i in 1:length(add.to.row$command)) {
       addpos <- add.to.row$pos[[i]]
@@ -186,7 +186,7 @@ print.xtable <- function(x,
       }
     }
   }
-  
+
   if (length(type)>1) stop("\"type\" must have length 1")
   type <- tolower(type)
   if (!all(!is.na(match(type, c("latex","html"))))) {
@@ -212,7 +212,7 @@ print.xtable <- function(x,
   if (!all(!is.na(match(caption.placement, c("bottom","top"))))) {
     stop("\"caption.placement\" must be either {\"bottom\",\"top\"}")
   }
-  
+
   if (type == "latex") {
     BCOMMENT <- "% "
     ECOMMENT <- "\n"
@@ -267,7 +267,7 @@ print.xtable <- function(x,
       BENVIRONMENT <- ""
       EENVIRONMENT <- ""
     }
-    
+
     tmp.index.start <- 1
     if ( ! include.rownames ) {
       while ( attr(x, "align", exact = TRUE)[tmp.index.start] == '|' )
@@ -285,7 +285,7 @@ print.xtable <- function(x,
     } else {
       WIDTH <- paste("{", width, "}", sep = "")
     }
-    
+
     BTABULAR <-
       paste("\\begin{", tabular.environment, "}",
             WIDTH, "{",
@@ -296,7 +296,7 @@ print.xtable <- function(x,
               "}\n"),
               sep = "", collapse = ""),
             sep = "")
-    
+
     ## fix 10-26-09 (robert.castelo@upf.edu) the following
     ## 'if' condition is added here to support
     ## a caption on the top of a longtable
@@ -317,14 +317,14 @@ print.xtable <- function(x,
     BTABULAR <- paste(BTABULAR, lastcol[1], sep = "")
     ## the \hline at the end, if present, is set in full matrix
     ETABULAR <- paste("\\end{", tabular.environment, "}\n", sep = "")
-    
+
     ## Add scalebox - CR, 7/2/12
     if (!is.null(scalebox)){
       BTABULAR <- paste("\\scalebox{", scalebox, "}{\n", BTABULAR,
                         sep = "")
       ETABULAR <- paste(ETABULAR, "}\n", sep = "")
     }
-    
+
     ## BSIZE contributed by Benno <puetz@mpipsykl.mpg.de> in e-mail
     ## dated Wednesday, December 01, 2004
     if (is.null(size) || !is.character(size)) {
@@ -404,7 +404,7 @@ print.xtable <- function(x,
       BTD3 <- "\"> "
       ETD  <- " </td>"
     }
-  
+
   result <- string("", file = file, append = append)
   info <- R.Version()
   ## modified Claudio Agostinelli <claudio@unive.it> dated 2006-07-28
@@ -454,10 +454,10 @@ print.xtable <- function(x,
       CNAMES <- paste("\\begin{sideways}", CNAMES, "\\end{sideways}")
     }
     result <- result + paste(CNAMES, collapse = STH)
-    
+
     result <- result + ETH + EROW
   }
-  
+
   cols <- matrix("", nrow = nrow(x), ncol = ncol(x)+pos)
   if (include.rownames) {
     ## David G. Whiting in e-mail 2007-10-09
@@ -502,7 +502,7 @@ print.xtable <- function(x,
       xcol <- sapply(xcol, unlist)
     ina <- is.na(xcol)
     is.numeric.column <- is.numeric(xcol)
-    
+
     if(is.character(xcol)) {
       cols[, i+pos] <- xcol
     } else {
@@ -555,7 +555,7 @@ print.xtable <- function(x,
       }
     }
   }
-  
+
   multiplier <- 5
   full <- matrix("", nrow = nrow(x), ncol = multiplier*(ncol(x)+pos)+2)
   full[, 1] <- BROW
@@ -564,10 +564,10 @@ print.xtable <- function(x,
   full[, multiplier*(0:(ncol(x)+pos-1))+4] <- BTD3
   full[, multiplier*(0:(ncol(x)+pos-1))+5] <- cols
   full[, multiplier*(0:(ncol(x)+pos-1))+6] <- ETD
-  
+
   full[, multiplier*(ncol(x)+pos)+2] <- paste(EROW, lastcol[-(1:2)],
                                               sep = " ")
-  
+
   if (type == "latex") full[, 2] <- ""
   result <- result + lastcol[2] + paste(t(full), collapse = "")
   if (!only.contents) {
@@ -608,11 +608,11 @@ print.xtable <- function(x,
     result <- result + ETABLE
   }
   result <- sanitize.final(result, type = type)
-  
+
   if (print.results){
     print(result)
   }
-  
+
   return(invisible(result$text))
 }
 

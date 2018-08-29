@@ -110,7 +110,7 @@ print.xtableFtable <- function(x,
     nCharCols <- attr(x, "nChars")[2]
     nRowVars <- length(attr(x, "row.vars"))
     nColVars <- length(attr(x, "col.vars"))
-    
+
     ## change class so format method will find format.ftable
     ## even though format.ftable is not exported from 'stats'
     class(x) <- "ftable"
@@ -180,18 +180,31 @@ print.xtableFtable <- function(x,
     print.xtable(fmtFtbl, hline.after = hline.after,
                  include.rownames = FALSE, include.colnames = FALSE,
                  booktabs = booktabs,
-                 sanitize.text.function = as.is)
+                 sanitize.text.function = as.is,
+                 file = file,
+                 append = append,
+                 floating = floating,
+                 floating.environment = floating.environment,
+                 table.placement = table.placement,
+                 caption.placement = caption.placement,
+                 caption.width = caption.width,
+                 latex.environments = latex.environments,
+                 tabular.environment = tabular.environment,
+                 size = size,
+                 NA.string = NA.string,
+                 only.contents = only.contents,
+                 add.to.row = add.to.row,,
+                 math.style.negative = math.style.negative,
+                 math.style.exponents = math.style.exponents,
+                 print.results = print.results,
+                 format.args = format.args,
+                 scalebox = scalebox,
+                 width = width,
+                 comment = comment,
+                 timestamp = timestamp,
+                 ...)
   } else {
     stop("print.xtableFtable not yet implemented for this type")
   }
 }
 
-## format.xtableFtable <- function(x, quote = TRUE, digits = getOption("digits"),
-##                                 method = c("non.compact", "row.compact",
-##                                            "col.compact", "compact"),
-##                                 lsep = " | ", ...){
-##   class(x) <- "ftable"
-  
-##   format(x, quote = quote, digits = digits,
-##          method = method, lsep = lsep, ...)
-## }
