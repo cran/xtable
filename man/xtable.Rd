@@ -139,9 +139,12 @@ xtable(x, caption = NULL, label = NULL, align = NULL, digits = NULL,
 \seealso{
   \code{\link{print.xtable}}, \code{\link{caption}},
   \code{\link{label}}, \code{\link{align}}, \code{\link{digits}},
-  \code{\link{display}}, \code{\link{autoformat}}, \code{\link{xalign}},
-  \code{\link{xdigits}}, \code{\link{xdisplay}},
-  \code{\link{xtableMatharray}}, \code{\link{xtableList}}
+  \code{\link{display}}
+
+  \code{\link{autoformat}}, \code{\link{xalign}}, \code{\link{xdigits}},
+  \code{\link{xdisplay}}
+
+  \code{\link{xtableList}}, \code{\link{xtableMatharray}}
 }
 \examples{
 

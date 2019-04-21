@@ -56,7 +56,7 @@
   David Scott \email{d.scott@auckland.ac.nz}.
 }
 \seealso{
-  \code{\link{print.xtable}}
+  \code{\link{xtableMatharray}}, \code{\link{print.xtable}}
 }
 
 \examples{

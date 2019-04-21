@@ -6,11 +6,9 @@
   Create and Export Lists of Tables
 }
 \description{
-  \code{xtableList} creates an object which contains information about
-  lists of table which can be used by \code{print.xtableList} to produce
-  a character string which when included in a document produces a nicely
-  formatted table made up of the information in the individual tables
-  which comprised the original list of tables.
+  \code{xtableList} creates an object from a list of tables, which can
+  be used by \code{print.xtableList} to produce a composite table
+  containing the information from the individual tables.
 }
 \usage{
 xtableList(x, caption = NULL, label = NULL,
@@ -98,7 +96,7 @@ xtableList(x, caption = NULL, label = NULL,
     list if length equal to the number of R objects making up \code{x},
     all members being vectors of the same length, either length one or
     of length equal to the number of columns in the resulting table. See
-    \sQuote{Details} for further information.}
+    details for further information.}
   \item{display}{
     Either \code{NULL}, or a vector of length one, or a vector of length
     equal to the number of columns in the resulting table, indicating
@@ -106,7 +104,7 @@ xtableList(x, caption = NULL, label = NULL,
     list if length equal to the number of R objects making up \code{x},
     all members being vectors of the same length, either length one or
     of length equal to the number of columns in the resulting table. See
-    \sQuote{Details} for further information.}
+    details for further information.}
   \item{type}{Type of table to produce. Possible values for \code{type}
     are \code{"latex"} or \code{"html"}.
     Default value is \code{"latex"}.}
@@ -298,23 +296,17 @@ xtableList(x, caption = NULL, label = NULL,
   also have a \code{"message"} attribute.
 
   \code{print.xtableList} produces a character string containing LaTeX
-  markup which produces a nicely formatted table comprised of subtables,
-  when included in a LaTeX document.
+  markup which produces a composite table in a LaTeX document.
 }
 \author{
   David Scott \email{d.scott@auckland.ac.nz}.
 }
-\note{
-  The functions \code{xtableList} and \code{print.xtableList} are
-  new and their behaviour may change in the future based on user
-  experience and recommendations.
-}
-
-
 \seealso{
-  \code{\link{xtable}}, \code{\link{caption}}, \code{\link{label}},
-  \code{\link{align}}, \code{\link{digits}}, \code{\link{display}},
-  \code{\link{formatC}}, \code{\link{print.xtable}}.
+  \code{\link{xtable}}, \code{\link{print.xtable}},
+  \code{\link{formatC}}
+
+  \code{\link{caption}}, \code{\link{label}}, \code{\link{align}},
+  \code{\link{digits}}, \code{\link{display}}
 }
 \examples{
 data(mtcars)

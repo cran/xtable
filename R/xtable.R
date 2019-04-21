@@ -310,141 +310,141 @@ xtable.zoo <- function(x, caption = NULL, label = NULL, align = NULL,
 ### Subject: [xtable] Code for spdep, splm and sphet objects outputs
 ### package spdep
 ### sarlm objects
-xtable.sarlm <- function(x, caption = NULL, label = NULL, align = NULL,
-                         digits = NULL, display = NULL, auto = FALSE, ...) {
-  return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
-                              align = align, digits = digits,
-                              display = display, auto = auto, ...))
-}
+## xtable.sarlm <- function(x, caption = NULL, label = NULL, align = NULL,
+##                          digits = NULL, display = NULL, auto = FALSE, ...) {
+##   return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
+##                               align = align, digits = digits,
+##                               display = display, auto = auto, ...))
+## }
 
-xtable.summary.sarlm <- function(x, caption = NULL, label = NULL, align = NULL,
-                                digits = NULL, display = NULL, auto = FALSE,
-                                ...) {
-  x <- data.frame(x$Coef, check.names = FALSE)
+## xtable.summary.sarlm <- function(x, caption = NULL, label = NULL, align = NULL,
+##                                 digits = NULL, display = NULL, auto = FALSE,
+##                                 ...) {
+##   x <- data.frame(x$Coef, check.names = FALSE)
 
-  class(x) <- c("xtable","data.frame")
-  caption(x) <- caption
-  label(x) <- label
-  if(auto && is.null(align))   align   <- xalign(x)
-  if(auto && is.null(digits))  digits  <- xdigits(x)
-  if(auto && is.null(display)) display <- xdisplay(x)
-  align(x) <- switch(1+is.null(align), align, c("r","r","r","r","r"))
-  digits(x) <- switch(1+is.null(digits), digits, c(0,4,4,2,4))
-  display(x) <- switch(1+is.null(display), display, c("s","f","f","f","f"))
-  return(x)
-}
+##   class(x) <- c("xtable","data.frame")
+##   caption(x) <- caption
+##   label(x) <- label
+##   if(auto && is.null(align))   align   <- xalign(x)
+##   if(auto && is.null(digits))  digits  <- xdigits(x)
+##   if(auto && is.null(display)) display <- xdisplay(x)
+##   align(x) <- switch(1+is.null(align), align, c("r","r","r","r","r"))
+##   digits(x) <- switch(1+is.null(digits), digits, c(0,4,4,2,4))
+##   display(x) <- switch(1+is.null(display), display, c("s","f","f","f","f"))
+##   return(x)
+## }
 
-### spautolm objects: added by David Scott, 6/1/2016, after suggestion by
-### Guido Schulz
-### Date: Wed, 29 Apr 2015 10:45:16 +0200
-### Guido Schulz <schulzgu@student.hu-berlin.de>
-xtable.spautolm <- function(x, caption = NULL, label = NULL, align = NULL,
-                            digits = NULL, display = NULL, auto = FALSE, ...) {
-    return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
-                              align = align, digits = digits,
-                              display = display, auto = auto, ...))
-}
+## ### spautolm objects: added by David Scott, 6/1/2016, after suggestion by
+## ### Guido Schulz
+## ### Date: Wed, 29 Apr 2015 10:45:16 +0200
+## ### Guido Schulz <schulzgu@student.hu-berlin.de>
+## xtable.spautolm <- function(x, caption = NULL, label = NULL, align = NULL,
+##                             digits = NULL, display = NULL, auto = FALSE, ...) {
+##     return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
+##                               align = align, digits = digits,
+##                               display = display, auto = auto, ...))
+## }
 
-xtable.summary.spautolm <- function(x, caption = NULL, label = NULL,
-                                    align = NULL, digits = NULL,
-                                    display = NULL, auto = FALSE, ...) {
-    return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
-                              align = align, digits = digits,
-                              display = display, auto = auto, ...))
-}
+## xtable.summary.spautolm <- function(x, caption = NULL, label = NULL,
+##                                     align = NULL, digits = NULL,
+##                                     display = NULL, auto = FALSE, ...) {
+##     return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
+##                               align = align, digits = digits,
+##                               display = display, auto = auto, ...))
+## }
 
 
-### gmsar objects
-xtable.gmsar <- function(x, caption = NULL, label = NULL, align = NULL,
-                         digits = NULL, display = NULL, auto = FALSE, ...) {
-    return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
-                              align = align, digits = digits,
-                              display = display, auto = auto, ...))
-}
+## ### gmsar objects
+## xtable.gmsar <- function(x, caption = NULL, label = NULL, align = NULL,
+##                          digits = NULL, display = NULL, auto = FALSE, ...) {
+##     return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
+##                               align = align, digits = digits,
+##                               display = display, auto = auto, ...))
+## }
 
-xtable.summary.gmsar <- function(x, caption = NULL, label = NULL, align = NULL,
-                                 digits = NULL, display = NULL,
-                                 auto = FALSE, ...) {
-  return(xtable.summary.sarlm(x, caption = caption, label = label,
-                              align = align, digits = digits,
-                              display = display, auto = auto, ...))
-}
+## xtable.summary.gmsar <- function(x, caption = NULL, label = NULL, align = NULL,
+##                                  digits = NULL, display = NULL,
+##                                  auto = FALSE, ...) {
+##   return(xtable.summary.sarlm(x, caption = caption, label = label,
+##                               align = align, digits = digits,
+##                               display = display, auto = auto, ...))
+## }
 
-### stsls objects
-xtable.stsls <- function(x, caption = NULL, label = NULL, align = NULL,
-                         digits = NULL, display = NULL, auto = FALSE, ...) {
-  return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
-                              align = align, digits = digits,
-                              display = display, auto = auto, ...))
-}
+## ### stsls objects
+## xtable.stsls <- function(x, caption = NULL, label = NULL, align = NULL,
+##                          digits = NULL, display = NULL, auto = FALSE, ...) {
+##   return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
+##                               align = align, digits = digits,
+##                               display = display, auto = auto, ...))
+## }
 
-xtable.summary.stsls <- function(x, caption = NULL, label = NULL, align = NULL,
-                                 digits = NULL, display = NULL,
-                                 auto = FALSE, ...) {
-  return(xtable.summary.sarlm(x, caption = caption, label = label,
-                              align = align, digits = digits,
-                              display = display, auto = auto, ...))
-}
+## xtable.summary.stsls <- function(x, caption = NULL, label = NULL, align = NULL,
+##                                  digits = NULL, display = NULL,
+##                                  auto = FALSE, ...) {
+##   return(xtable.summary.sarlm(x, caption = caption, label = label,
+##                               align = align, digits = digits,
+##                               display = display, auto = auto, ...))
+## }
 
-### pred.sarlm objects
-xtable.sarlm.pred <- function(x, caption = NULL, label = NULL, align = NULL,
-                              digits = NULL, display = NULL,
-                              auto = FALSE, ...) {
-  return(xtable(as.data.frame(x), caption = caption, label = label,
-                align = align, digits = digits,
-                display = display, auto = auto, ...))
-}
+## ### pred.sarlm objects
+## xtable.sarlm.pred <- function(x, caption = NULL, label = NULL, align = NULL,
+##                               digits = NULL, display = NULL,
+##                               auto = FALSE, ...) {
+##   return(xtable(as.data.frame(x), caption = caption, label = label,
+##                 align = align, digits = digits,
+##                 display = display, auto = auto, ...))
+## }
 
-### lagImpact objects
-xtable.lagImpact <- function(x, caption = NULL, label = NULL, align = NULL,
-                             digits = NULL, display = NULL,
-                             auto = FALSE, ...) {
-  requireNamespace('spdep')
-  lagImpactMat <- get('lagImpactMat', environment(spdep::spdep))
-  xtable(lagImpactMat(x), caption = caption, label = label,
-         align = align, digits = digits,
-         display = display, auto = auto, ...)
-}
+## ### lagImpact objects
+## xtable.lagImpact <- function(x, caption = NULL, label = NULL, align = NULL,
+##                              digits = NULL, display = NULL,
+##                              auto = FALSE, ...) {
+##   requireNamespace('spdep')
+##   lagImpactMat <- get('lagImpactMat', environment(spdep::spdep))
+##   xtable(lagImpactMat(x), caption = caption, label = label,
+##          align = align, digits = digits,
+##          display = display, auto = auto, ...)
+## }
 
 ### package splm
 ### splm objects
-xtable.splm <- function(x, caption = NULL, label = NULL, align = NULL,
-                        digits = NULL, display = NULL, auto = FALSE, ...) {
-  return(xtable.summary.splm(summary(x), caption = caption, label = label,
-                             align = align, digits = digits,
-                             display = display, auto = auto, ...))
-}
+## xtable.splm <- function(x, caption = NULL, label = NULL, align = NULL,
+##                         digits = NULL, display = NULL, auto = FALSE, ...) {
+##   return(xtable.summary.splm(summary(x), caption = caption, label = label,
+##                              align = align, digits = digits,
+##                              display = display, auto = auto, ...))
+## }
 
-xtable.summary.splm <- function(x, caption = NULL, label = NULL, align = NULL,
-                                digits = NULL, display = NULL, auto = FALSE,
-                                ...) {
-  x <- data.frame(x$CoefTable, check.names = FALSE)
+## xtable.summary.splm <- function(x, caption = NULL, label = NULL, align = NULL,
+##                                 digits = NULL, display = NULL, auto = FALSE,
+##                                 ...) {
+##   x <- data.frame(x$CoefTable, check.names = FALSE)
 
-  class(x) <- c("xtable","data.frame")
-  caption(x) <- caption
-  label(x) <- label
-  if(auto && is.null(align))   align   <- xalign(x)
-  if(auto && is.null(digits))  digits  <- xdigits(x)
-  if(auto && is.null(display)) display <- xdisplay(x)
-  align(x) <- switch(1+is.null(align), align, c("r","r","r","r","r"))
-  digits(x) <- switch(1+is.null(digits), digits, c(0,4,4,2,4))
-  display(x) <- switch(1+is.null(display), display, c("s","f","f","f","f"))
-  return(x)
-}
+##   class(x) <- c("xtable","data.frame")
+##   caption(x) <- caption
+##   label(x) <- label
+##   if(auto && is.null(align))   align   <- xalign(x)
+##   if(auto && is.null(digits))  digits  <- xdigits(x)
+##   if(auto && is.null(display)) display <- xdisplay(x)
+##   align(x) <- switch(1+is.null(align), align, c("r","r","r","r","r"))
+##   digits(x) <- switch(1+is.null(digits), digits, c(0,4,4,2,4))
+##   display(x) <- switch(1+is.null(display), display, c("s","f","f","f","f"))
+##   return(x)
+## }
 
 ### package sphet
 ### sphet objects
-xtable.sphet <- function(x, caption = NULL, label = NULL, align = NULL,
-                         digits = NULL, display = NULL, auto = FALSE, ...) {
-  return(xtable.summary.splm(summary(x), caption = caption, label = label,
-                             align = align, digits = digits,
-                             display = display, auto = auto, ...))
-}
+## xtable.sphet <- function(x, caption = NULL, label = NULL, align = NULL,
+##                          digits = NULL, display = NULL, auto = FALSE, ...) {
+##   return(xtable.summary.splm(summary(x), caption = caption, label = label,
+##                              align = align, digits = digits,
+##                              display = display, auto = auto, ...))
+## }
 
-xtable.summary.sphet <- function(x, caption = NULL, label = NULL, align = NULL,
-                                 digits = NULL, display = NULL,
-                                 auto = FALSE, ...) {
-  return(xtable.summary.splm(x, caption = caption, label = label,
-                             align = align, digits = digits,
-                             display = display, auto = auto, ...))
-}
+## xtable.summary.sphet <- function(x, caption = NULL, label = NULL, align = NULL,
+##                                  digits = NULL, display = NULL,
+##                                  auto = FALSE, ...) {
+##   return(xtable.summary.splm(x, caption = caption, label = label,
+##                              align = align, digits = digits,
+##                              display = display, auto = auto, ...))
+## }

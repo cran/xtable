@@ -110,11 +110,10 @@ xtableFtable(x, caption = NULL, label = NULL,
     \code{"s"}, and all data columns will have format \code{"d"}. The
     actual length of \code{display} depends on the value of
     \code{method}.}
-  \item{quote}{a character string giving the set of quoting characters
-    for \code{format.ftable} used in \code{print.xtableFtable}; to
+  \item{quote}{A character string giving the set of quoting characters
+    for \code{format.ftable} used in \code{print.xtableFtable}. To
     disable quoting altogether, use \code{quote=""}.}
-
-  \item{method}{string specifying how the \code{"xtableFtable"} object is
+  \item{method}{String specifying how the \code{"xtableFtable"} object is
     printed in the \code{print} method.  Can be abbreviated.  Available
     methods are (see the examples in \code{\link{print.ftable}}):
     \describe{
@@ -129,7 +128,7 @@ xtableFtable(x, caption = NULL, label = NULL,
         separated by the string \code{lsep}.}
     }
   }
-  \item{lsep}{only for \code{method = "compact"}, the separation string
+  \item{lsep}{Only for \code{method = "compact"}, the separation string
     for row and column labels.}
   \item{type}{Type of table to produce. Possible values for \code{type}
     are \code{"latex"} or \code{"html"}.
@@ -219,7 +218,7 @@ xtableFtable(x, caption = NULL, label = NULL,
     \code{"$$"}, then use \verb{$5 \times 10^{5}$} for 5e5. If
     \code{"ensuremath"}, then use \verb{\\ensuremath{5 \times 10^{5}}}
     for 5e5. If \code{"UTF-8"} or \code{"UTF-8"}, then use UTF-8 to
-    approximate the LaTeX typsetting for 5e5.
+    approximate the LaTeX typesetting for 5e5.
     Default value is \code{FALSE}.}
   \item{html.table.attributes}{In an HTML table, attributes associated
     with the \code{<TABLE>} tag.
@@ -324,7 +323,8 @@ xtableFtable(x, caption = NULL, label = NULL,
 }
 
 \seealso{
-  \code{\link{ftable}}, \code{\link{print.ftable}},
+  \code{\link{ftable}}, \code{\link{print.ftable}}
+
   \code{\link{xtable}}, \code{\link{caption}}, \code{\link{label}},
   \code{\link{align}}, \code{\link{digits}}, \code{\link{display}},
   \code{\link{formatC}}

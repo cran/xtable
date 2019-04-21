@@ -8,7 +8,7 @@
   Convert an array of numbers or mathematical expressions into an
  \code{xtableMatharray} object so it can be printed. A convenience
  function to enable the printing of arrays in mathematical expressions
- in LaTeX
+ in LaTeX.
 }
 \usage{
 xtableMatharray(x, caption = NULL, label = NULL, align = NULL,
