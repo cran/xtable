@@ -425,7 +425,7 @@ print.xtable <- function(x,
     if ( floating == TRUE ) {
       if ((!is.null(caption)) &&
           (type == "html" ||caption.placement == "top")) {
-        result <- result + BCAPTION + caption + ECAPTION
+        result <- result + BCAPTION + as.string(caption) + ECAPTION
       }
       if (!is.null(attr(x, "label", exact = TRUE)) &&
           (type == "latex" && caption.placement == "top")) {
@@ -582,7 +582,7 @@ print.xtable <- function(x,
       ## that bottom caption interferes with a top caption of a longtable
       if(caption.placement == "bottom"){
         if ((!is.null(caption)) && (type == "latex")) {
-          result <- result + BCAPTION + caption + ECAPTION
+          result <- result + BCAPTION + as.string(caption) + ECAPTION
         }
       }
       if (!is.null(attr(x, "label", exact = TRUE))) {
@@ -596,7 +596,7 @@ print.xtable <- function(x,
     if ( floating == TRUE ) {
       if ((!is.null(caption)) &&
           (type == "latex" && caption.placement == "bottom")) {
-        result <- result + BCAPTION + caption + ECAPTION
+        result <- result + BCAPTION + as.string(caption) + ECAPTION
       }
       if (!is.null(attr(x, "label", exact = TRUE)) &&
           caption.placement == "bottom") {
@@ -633,17 +633,19 @@ string <- function(text, file = "", append = FALSE) {
 }
 
 as.string <- function(x, file = "", append = FALSE) {
-  if (is.null(attr(x, "class", exact = TRUE)))
-    switch(data.class(x),
-           character = return(string(x, file, append)),
-           numeric = return(string(as.character(x), file, append)),
-           stop("Cannot coerce argument to a string"))
-  if (class(x) == "string")
+  if (is.string(x)) {
     return(x)
-  stop("Cannot coerce argument to a string")
+  } else if (is.character(x)) {
+    return(string(x, file, append))
+  } else if (data.class(x) == "numeric") {
+    return(string(as.character(x), file, append))
+  } else {
+    stop("Cannot coerce argument to a string")
+  }
 }
 
+
 is.string <- function(x) {
-  return(class(x) == "string")
+  return(is(x, "string"))
 }
 

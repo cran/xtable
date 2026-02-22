@@ -305,11 +305,11 @@ xtable.zoo <- function(x, caption = NULL, label = NULL, align = NULL,
                 display = display, auto = auto, ...))
 }
 
-### Date: Fri, 29 May 2015 11:41:04 +0200
-### From: Martin G. <martin.gubri@framasoft.org>
-### Subject: [xtable] Code for spdep, splm and sphet objects outputs
-### package spdep
-### sarlm objects
+## ### Date: Fri, 29 May 2015 11:41:04 +0200
+## ### From: Martin G. <martin.gubri@framasoft.org>
+## ### Subject: [xtable] Code for spdep, splm and sphet objects outputs
+## ### package spdep
+## ### sarlm objects
 ## xtable.sarlm <- function(x, caption = NULL, label = NULL, align = NULL,
 ##                          digits = NULL, display = NULL, auto = FALSE, ...) {
 ##   return(xtable.summary.sarlm(summary(x), caption = caption, label = label,
@@ -406,8 +406,8 @@ xtable.zoo <- function(x, caption = NULL, label = NULL, align = NULL,
 ##          display = display, auto = auto, ...)
 ## }
 
-### package splm
-### splm objects
+## ## package splm
+## ## splm objects
 ## xtable.splm <- function(x, caption = NULL, label = NULL, align = NULL,
 ##                         digits = NULL, display = NULL, auto = FALSE, ...) {
 ##   return(xtable.summary.splm(summary(x), caption = caption, label = label,
@@ -432,8 +432,8 @@ xtable.zoo <- function(x, caption = NULL, label = NULL, align = NULL,
 ##   return(x)
 ## }
 
-### package sphet
-### sphet objects
+## ## package sphet
+## ## sphet objects
 ## xtable.sphet <- function(x, caption = NULL, label = NULL, align = NULL,
 ##                          digits = NULL, display = NULL, auto = FALSE, ...) {
 ##   return(xtable.summary.splm(summary(x), caption = caption, label = label,

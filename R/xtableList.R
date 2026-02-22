@@ -46,6 +46,7 @@ print.xtableList <- function(x,
   hline.after = NULL,
   NA.string = getOption("xtable.NA.string", ""),
   include.rownames = getOption("xtable.include.rownames", TRUE),
+  include.colnames = getOption("xtable.include.colnames", TRUE),
   colnames.format = "single",
   only.contents = getOption("xtable.only.contents", FALSE),
   add.to.row = NULL,
@@ -105,21 +106,22 @@ print.xtableList <- function(x,
     }
     if (colnames.format == "single"){
 
-      add.to.row <- list(pos = NULL, command = NULL)
-      add.to.row$pos <- as.list(c(0, combinedRowNums[-length(x)],
+      ##add.to.row <- list(pos = NULL, command = NULL)
+      pos <- as.list(c(0, combinedRowNums[-length(x)],
                                   dim(combined)[1]))
-      command <- sapply(x, attr, "subheading")
+        comm <- unlist(sapply(x, attr, "subheading"))
+        command <- vector("character", length(x))
 
       for (i in 1:length(x)){
-        if( !is.null(command[[i]]) ){
-          add.to.row$command[i] <-
+        if( !is.null(comm[i]) ){
+          command[i] <-
             paste0(mRule,"\n\\multicolumn{",
                    nCols + include.rownames,
                    "}{l}{",
-                   command[[i]],
+                   comm[i],
                    "}\\\\\n")
         } else {
-          add.to.row$command[i] <- paste0(mRule, "\n")
+          command[i] <- paste0(mRule, "\n")
         }
       }
       ## Changed at request of Russ Lenth
@@ -130,16 +132,20 @@ print.xtableList <- function(x,
         attr(x, "message")[1] <-
           paste0("\\rule{0em}{2.5ex}", attr(x, "message")[1])
       }
-      add.to.row$command[length(x) + 1] <-
+      command[length(x) + 1] <-
         paste0("\n\\multicolumn{", nCols + include.rownames, "}{l}{",
                attr(x, "message"), "}\\\\\n",
                collapse = "")
-      add.to.row$command[length(x) + 1] <-
-        paste0(bRule, add.to.row$command[length(x) + 1])
+      command[length(x) + 1] <-
+        paste0(bRule, command[length(x) + 1])
 
+      add.to.row$pos <- c(add.to.row$pos, pos)
+      add.to.row$command <- c(add.to.row$command, command)
       class(combined) <- c("xtableList", "data.frame")
       hline.after <- c(-1)
-      include.colnames <- TRUE
+      ## Allow use of own colnames, support request from
+      ## Seunghoon Lee, 26 May 2020
+      ##include.colnames <- TRUE
     }
 
     ## Create headings for columns if multiple headings are needed
@@ -159,14 +165,14 @@ print.xtableList <- function(x,
       colHead <- paste0(tRule, "\n", colHead, " \\\\", mRule, "\n")
       add.to.row <- list(pos = NULL, command = NULL)
       add.to.row$pos <- as.list(c(0, c(combinedRowNums[1:length(x)])))
-      command <- sapply(x, attr, "subheading")
+      command <- unlist(sapply(x, attr, "subheading"))
 
 
       add.to.row$command[1] <-
-        if( !is.null(command[[1]]) ){
+        if( !is.null(command[1]) ){
           add.to.row$command[1] <-
             paste0("\n\\multicolumn{", nCols + include.rownames, "}{l}{",
-                   command[[1]],
+                   command[1],
                    "}\\\\ \n", colHead, "\n")
         } else {
           add.to.row$command[1] <- colHead
@@ -174,7 +180,7 @@ print.xtableList <- function(x,
 
       for (i in 2:length(x)) {
         add.to.row$command[i] <-
-          if( !is.null(command[[i]]) ) {
+          if( !is.null(command[i]) ) {
             paste0(bRule,
                    "\\\\ \n\\multicolumn{",
                    nCols + include.rownames, "}{l}{",

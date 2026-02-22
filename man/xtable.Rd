@@ -351,65 +351,7 @@ print(tli.table, booktabs = TRUE,
 print(tli.table, booktabs = TRUE, add.to.row = list(pos = list(2),
   command = c("youhou\n")), tabular.environment = "longtable")
 
-\testonly{
-  for(i in c("latex","html")) {
-    outFileName <- paste("xtable.", ifelse(i=="latex", "tex", i), sep = "")
-    print(tli.table, type = i, file = outFileName, append = FALSE)
-    print(design.table, type = i, file = outFileName, append = TRUE)
-    print(fm1.table, type = i, file = outFileName, append = TRUE)
-    print(fm2.table, type = i, file = outFileName, append = TRUE)
-    print(fm2.table, type = i, file = outFileName, append = TRUE,
-          math.style.negative = TRUE)
-    print(xtable(anova(fm2)), type = i, file = outFileName, append = TRUE)
-    print(xtable(anova(fm2b, fm2)), type = i, file = outFileName, append = TRUE)
-    print(fm3.table, type = i, file = outFileName, append = TRUE)
-    print(xtable(anova(fm3)), type = i, file = outFileName, append = TRUE)
-    print(xtable(npk.aov), type = i, file = outFileName, append = TRUE)
-    print(xtable(anova(npk.aov)), type = i, file = outFileName, append = TRUE)
-    print(xtable(summary(npk.aov)), type = i, file = outFileName, append = TRUE)
-    print(xtable(npk.aovE), type = i, file = outFileName, append = TRUE)
-    print(xtable(summary(npk.aovE)),
-          type = i, file = outFileName, append = TRUE)
-    if(i=="latex") cat("\\\clearpage\n", file = outFileName, append = TRUE)
-    print(xtable(lm.D9),
-          type = i, file = outFileName, append = TRUE, latex.environment = NULL)
-    print(xtable(lm.D9),
-          type = i, file = outFileName, append = TRUE, latex.environment = "")
-    print(xtable(lm.D9),
-          type = i, file = outFileName, append = TRUE,
-          latex.environment = "center")
-    print(xtable(anova(lm.D9)), type = i, file = outFileName, append = TRUE)
-    print(xtable(glm.D93), type = i, file = outFileName, append = TRUE)
-    print(xtable(anova(glm.D93, test = "Chisq")),
-          type = i, file = outFileName, append = TRUE)
-    print(xtable(glm.D93, align = "r|llrc"),
-          include.rownames = FALSE, include.colnames = TRUE,
-          type = i, file = outFileName, append = TRUE)
-    print(xtable(glm.D93, align = "r||llrc"),
-          include.rownames = TRUE, include.colnames = FALSE,
-          type = i, file = outFileName, append = TRUE)
-    print(xtable(glm.D93, align = "|r||llrc"),
-          include.rownames = FALSE, include.colnames = FALSE,
-          type = i, file = outFileName, append = TRUE)
-    print(xtable(glm.D93, align = "|r||llrc|"),
-          type = i, file = outFileName, append = TRUE)
-    print(xtable(anova(glm.D93)),
-          hline.after = c(1), size = "small",
-          type = i, file = outFileName, append = TRUE)
-    if(require(stats, quietly = TRUE)) {
-      print(xtable(pr1), type = i, file = outFileName, append = TRUE)
-      print(xtable(summary(pr1)), type = i, file = outFileName, append = TRUE)
-      # print(xtable(pr2), type = i, file = outFileName, append = TRUE)
-    }
-    temp.table <- xtable(ts(cumsum(1+round(rnorm(100), 2)),
-                            start = c(1954, 7), frequency = 12))
-    caption(temp.table) <- "Time series example"
-    print(temp.table, type = i, file = outFileName,
-          append = TRUE, caption.placement = "top", table.placement = "h")
-    print(temp.table, type = i, file = outFileName,
-          append = TRUE, caption.placement = "bottom", table.placement = "htb")
-  }
-}
+
 
 }
 \keyword{file}

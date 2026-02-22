@@ -303,9 +303,8 @@ xtableFtable(x, caption = NULL, label = NULL,
 
 }
 \references{
-  Fairbairns, Robin (2005) \emph{Tables longer than a single page.} The
-  UK List of TeX Frequently Asked Questions on the
-  Web. \url{http://www.tex.ac.uk/cgi-bin/texfaq2html?label=longtab}
+  The TeX FAQ, \emph{Tables longer than a single page.}
+  \url{https://texfaq.org/FAQ-longtab}
 }
 \author{
   David Scott \email{d.scott@auckland.ac.nz}.

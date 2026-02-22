@@ -4,6 +4,7 @@
 \alias{is.string}
 \alias{as.string}
 \alias{+.string}
+
 \title{String handling functions}
 \description{Private functions for conveniently working with strings.}
 \usage{

@@ -29,6 +29,7 @@ xtableList(x, caption = NULL, label = NULL,
   hline.after = NULL,
   NA.string = getOption("xtable.NA.string", ""),
   include.rownames = getOption("xtable.include.rownames", TRUE),
+  include.colnames = getOption("xtable.include.colnames", TRUE),
   colnames.format = "single",
   only.contents = getOption("xtable.only.contents", FALSE),
   add.to.row = NULL,
@@ -166,6 +167,9 @@ xtableList(x, caption = NULL, label = NULL,
     entries.
     Default value is \code{""}.}
   \item{include.rownames}{If \code{TRUE} the rows names are
+    printed.
+    Default value is \code{TRUE}.}
+  \item{include.colnames}{If \code{TRUE} the columns names are
     printed.
     Default value is \code{TRUE}.}
   \item{colnames.format}{Either \code{"single"} or \code{"multiple"}.
