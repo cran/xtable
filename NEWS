@@ -1,3 +1,8 @@
+1-8-9 (2026-05-28) not submitted to CRAN
+  * print.xtable: align the first LaTeX data row with subsequent rows when
+    hline.after inserts rules (fixes misaligned first body row below the header
+    in Sweave/knitr output).
+
 1-8-7 (2023-12-06) not submitted to CRAN
   * Responding to emails from Ripley on 16 November 2023 and 17 November 2023
     advising that update 3.01 to xcolor.sty does not support option 'usenames',

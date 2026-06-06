@@ -569,7 +569,27 @@ print.xtable <- function(x,
                                               sep = " ")
 
   if (type == "latex") full[, 2] <- ""
-  result <- result + lastcol[2] + paste(t(full), collapse = "")
+
+  rows <- vapply(seq_len(nrow(x)),
+                 function(i) paste(full[i, ], collapse = ""),
+                 "")
+
+  ## Align the first data row with subsequent rows in LaTeX output.
+  ## Without this, row 1 lacks the leading spaces that rows 2+ inherit
+  ## from the lastcol / hline.after assembly (reported for Sweave/knitr).
+  if (type == "latex" && nrow(x) > 1L) {
+    ## Leading spaces on rows 2+ come from the lastcol / EROW assembly
+    ## (often visible only after newline split), not always at rows[2] start.
+    lead <- regexpr("\n  ", rows[1L], perl = TRUE)
+
+    if (lead[1L] > 0L && !grepl("^  ", rows[1L], perl = TRUE))
+      rows[1L] <- paste0("  ", rows[1L])
+    else if (!grepl("^  ", rows[1L], perl = TRUE) &&
+             grepl("^  ", rows[2L], perl = TRUE))
+      rows[1L] <- paste0("  ", rows[1L])
+  }
+
+  result <- result + lastcol[2] + paste(rows, collapse = "")
   if (!only.contents) {
     if (tabular.environment == "longtable") {
       ## booktabs change added the if() - 1 Feb 2012
